@@ -20,6 +20,13 @@
 **Fix Applied:** Created `scripts/preflight.js` with ES module syntax  
 **Preventive Rule:** Always ensure required scripts exist before running npm commands
 
+### Preflight Script File Mismatch
+**Date:** December 2024  
+**Error:** `❌ Missing required file: public/brand/logo.svg`  
+**File:** `scripts/preflight.js`  
+**Fix Applied:** Updated preflight script to check for `public/brand/logo-loading.svg` instead of `public/brand/logo.svg`  
+**Preventive Rule:** Ensure preflight script checks for files that actually exist in the project
+
 ### Missing Loading Component
 **Date:** December 2024  
 **Error:** `HE_Loading_Component` import failed - component didn't exist  

@@ -34,7 +34,7 @@ const requiredFiles = [
   'src/app/layout.tsx',
   'src/app/page.tsx',
   'src/app/globals.css',
-  'public/brand/logo.svg',
+  'public/brand/logo-loading.svg',
   'public/icons/ui/logo-header.svg'
 ];
 
