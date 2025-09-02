@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Aspect ratio responsive containers */
+  .hero-container {
+    min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  /* Responsive background handling */
+  .hero-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  /* Content positioning for different aspect ratios */
+  .hero-content {
+    padding: clamp(1rem, 5vw, 3rem);
+    max-width: min(90vw, 1200px);
+  }
+}
+
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+  
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+}
+
+/* Aspect Ratio Responsive Design */
+@media (min-aspect-ratio: 21/9) {
+  /* Ultra-wide screens */
+  .hero-container {
+    height: 100vh;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(3rem, 8vw, 8rem);
+  }
+  
+  .hero-content p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  /* Mobile portrait and tablets */
+  .hero-container {
+    min-height: 100dvh;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    line-height: 1.1;
+  }
+  
+  .hero-content p {
+    font-size: clamp(0.875rem, 3vw, 1.25rem);
+  }
+}
+
+@media (aspect-ratio: 1/1) {
+  /* Square screens */
+  .hero-content {
+    padding: 2rem;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-container {
+    height: 100vh;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+  }
+  
+  .hero-content p {
+    font-size: clamp(0.75rem, 2vw, 1rem);
+  }
+}
+
+/* Custom cursors for project overlay */
+.cursor-left {
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M20 24l-8-8 8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, auto;
+}
+.cursor-right {
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M12 24l8-8-8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, auto;
+}
+.cursor-pointer { cursor: pointer; }
+.cursor-grabbing { cursor: grabbing; }
+
+/* === Preloader visuals (scoped via class names) === */
+
+/* No-scroll class for studio animation */
+.no-scroll { 
+  overflow: hidden; 
+  height: 100vh; 
+}
+
+/* Background gradient sweep from grey (#fbfbfe) -> white (#ffffff) -> accent orange (#F36C21) */
+@keyframes preloader-sweep {
+  0%   { background: #fbfbfe; }
+  40%  { background: #ffffff; }
+  100% { background: #F36C21; }
+}
+.preloader-bg {
+  animation: preloader-sweep 1.2s ease-in forwards;
+  background: #ffffff;
+}
+
+/* Very subtle noise using a procedural gradient trick */
+.preloader-noise {
+  mix-blend-mode: multiply;
+  opacity: 0.06;
+  background-image:
+    radial-gradient(circle at 25% 35%, rgba(0,0,0,0.4) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 75% 65%, rgba(0,0,0,0.35) 0.5px, transparent 0.6px);
+  background-size: 3px 3px, 3px 3px;
+}
+
+/* Gentle logo glow (kept very subtle) */
+.preloader-glow {
+  filter: blur(12px);
+  background: radial-gradient(circle, rgba(243,108,33,0.12) 0%, transparent 60%);
+}
+
+/* Reduced-motion users get a non-animated neutral white */
+@media (prefers-reduced-motion: reduce) {
+  .preloader-bg {
+    animation: none !important;
+    background: #ffffff !important;
+  }
+  .preloader-noise,
+  .preloader-glow {
+    display: none !important;
+  }
+}
+
+:root {
+  --pre-bg: #ffffff;
+}
+
+.pre-bg { background: var(--pre-bg); }
+
+.pre-grain {
+  mix-blend-mode: multiply;
+  opacity: 0.06;
+  background-image:
+    radial-gradient(circle at 25% 35%, rgba(0,0,0,0.4) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 75% 65%, rgba(0,0,0,0.35) 0.5px, transparent 0.6px);
+  background-size: 3px 3px, 3px 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pre-grain { display: none; }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

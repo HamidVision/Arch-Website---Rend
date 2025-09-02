@@ -1,0 +1,100 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.profiles.windows": {
+			"PowerShell": {
+				"source": "PowerShell",
+				"icon": "terminal-powershell",
+				"color": "#012456"
+			},
+			"PowerShell Ext": {
+				"source": "PowerShell",
+				"icon": "terminal-powershell",
+				"color": "#012456",
+				"args": ["-NoExit", "-Command", "Write-Host 'PowerShell Extension Terminal' -ForegroundColor Green"]
+			},
+			"Puppeteer": {
+				"source": "PowerShell",
+				"icon": "puppet",
+				"color": "#ff6b35",
+				"args": ["-NoExit", "-Command", "Write-Host 'Puppeteer MCP Server Terminal - DO NOT CLOSE' -ForegroundColor Red; Write-Host 'This terminal is dedicated to running the Puppeteer MCP server.' -ForegroundColor Yellow; Write-Host 'Use this terminal only for: npx @modelcontextprotocol/server-puppeteer' -ForegroundColor Cyan"],
+				"overrideName": true,
+				"hideFromUser": false
+			},
+			"Bash": {
+				"source": "Git Bash",
+				"icon": "terminal-bash",
+				"color": "#4e9a06"
+			},
+			"Main Terminal": {
+				"source": "PowerShell",
+				"icon": "terminal",
+				"color": "#007acc"
+			}
+		},
+		"terminal.integrated.defaultProfile.windows": "Main Terminal",
+		"terminal.integrated.persistentSessionReviveProcess": "never",
+		"terminal.integrated.enablePersistentSessions": false,
+		"terminal.integrated.confirmOnExit": "hasChildProcesses",
+		"terminal.integrated.confirmOnKill": "editorAndTerminal",
+		"terminal.integrated.enableBell": false,
+		"terminal.integrated.showExitAlert": true,
+		"terminal.integrated.tabs.enabled": true,
+		"terminal.integrated.tabs.focusMode": "singleClick",
+		"terminal.integrated.tabs.hideCondition": "never"
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Start Frontend",
+				"type": "shell",
+				"command": "npm run dev",
+				"problemMatcher": [],
+				"presentation": {
+					"panel": "dedicated",
+					"group": "frontend",
+					"reveal": "always"
+				}
+			},
+			{
+				"label": "Start Backend",
+				"type": "shell",
+				"command": "npm run server",
+				"problemMatcher": [],
+				"presentation": {
+					"panel": "dedicated",
+					"group": "backend",
+					"reveal": "always"
+				}
+			},
+			{
+				"label": "Start Puppeteer MCP Server",
+				"type": "shell",
+				"command": "npx @modelcontextprotocol/server-puppeteer",
+				"problemMatcher": [],
+				"presentation": {
+					"panel": "dedicated",
+					"group": "puppeteer",
+					"reveal": "always",
+					"focus": true
+				},
+				"options": {
+					"shell": {
+						"executable": "powershell.exe",
+						"args": ["-NoExit", "-Command"]
+					}
+				}
+			}
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.powershell"
+		]
+	}
+}
