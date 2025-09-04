@@ -1,68 +1,95 @@
 # Error Log
 
-## Error Tracking and Resolution
-
-### Template
-**Date:** [Date]  
-**Error:** [Error description]  
-**File:** [File where error occurred]  
-**Fix Applied:** [How the error was resolved]  
-**Preventive Rule:** [How to prevent this error in the future]
+## Version v0.1.1 (Current)
+**Date**: December 2024
+**Status**: No active errors
 
 ---
 
-## Error Entries
+## Version v0.1 (Completed)
+**Date**: December 2024
+**Status**: ✅ All errors resolved
 
-### Missing Preflight Script
-**Date:** December 2024  
-**Error:** `Cannot find module 'D:\Projects\Arch-Website-Rend\scripts\preflight.js'`  
-**File:** `package.json` (predev script)  
-**Fix Applied:** Created `scripts/preflight.js` with ES module syntax  
-**Preventive Rule:** Always ensure required scripts exist before running npm commands
+### Final Issues Resolved
+- ✅ **HE Logo Visual Glitch**: Fixed morphing and duplication issues
+  - **Solution**: Improved z-index (z-[70]), better font styling, explicit button properties
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
 
-### Preflight Script File Mismatch
-**Date:** December 2024  
-**Error:** `❌ Missing required file: public/brand/logo.svg`  
-**File:** `scripts/preflight.js`  
-**Fix Applied:** Updated preflight script to check for `public/brand/logo-loading.svg` instead of `public/brand/logo.svg`  
-**Preventive Rule:** Ensure preflight script checks for files that actually exist in the project
+- ✅ **Scroll Progress Bar Alignment**: Fixed "one step behind" issue
+  - **Solution**: Added +0.5 offset to rawIndex calculation for proper centering
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
 
-### Missing Loading Component
-**Date:** December 2024  
-**Error:** `HE_Loading_Component` import failed - component didn't exist  
-**File:** `src/app/layout.tsx`  
-**Fix Applied:** Created `src/components/HE_Loading_Component.tsx` with proper loading screen functionality  
-**Preventive Rule:** Verify all imported components exist before committing changes
+- ✅ **Scroll Boundary Issues**: Fixed jumping at first/last tiles
+  - **Solution**: Removed problematic offset and used Math.round with clamping
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
 
-### Missing ProjectsOverlay Component
-**Date:** December 2024  
-**Error:** `ProjectsOverlay` component referenced but not found  
-**File:** `src/components/Header.tsx`  
-**Fix Applied:** Created `src/components/ProjectsOverlay.tsx` with project grid modal  
-**Preventive Rule:** Check all dynamic imports have corresponding component files
+- ✅ **Zoom Functionality**: Fixed zoom targeting wrong tile
+  - **Solution**: Removed hardcoded middleTileIndex, use currentIndex
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
 
-### Git Merge Conflict
-**Date:** December 2024  
-**Error:** Merge conflict when pushing to GitHub repository  
-**File:** Git repository  
-**Fix Applied:** Resolved merge conflict and committed changes  
-**Preventive Rule:** Always pull latest changes before pushing to avoid conflicts
+- ✅ **Portfolio Button Behavior**: Fixed zoom-out closing overlay
+  - **Solution**: Modified handlePortfolioToggle to only change zoom state
+  - **Files**: `src/components/Header.tsx`
+  - **Date**: December 2024
+
+### Previous Issues (v0.1)
+- ✅ **JSX Syntax Error**: Fixed malformed JSX structure in ProjectsOverlay
+  - **Solution**: Rewrote entire return statement with proper JSX syntax
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
+
+- ✅ **Missing Zoom Animation**: Added proper zoom-out animation
+  - **Solution**: Added exit animation with scale and opacity
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
+
+- ✅ **Fullscreen Zoom**: Fixed zoom not being truly fullscreen
+  - **Solution**: Changed container to w-screen h-screen when zoomed
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
+
+- ✅ **Close Button Visibility**: Fixed X icon showing when zoomed
+  - **Solution**: Added conditional rendering for close button
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
 
 ---
 
-## Prevention Guidelines
+## Version v0.0.1 (Initial Setup)
+**Date**: December 2024
+**Status**: ✅ All errors resolved
 
-1. **Before Committing:**
-   - Run `npm run check` to ensure no linting errors
-   - Verify all imports resolve correctly
-   - Test the application locally
+### Initial Setup Issues
+- ✅ **Missing Preflight Script**: Created scripts/preflight.js
+  - **Solution**: Added ES module preflight check script
+  - **Files**: `scripts/preflight.js`
+  - **Date**: December 2024
 
-2. **Before Pushing:**
-   - Pull latest changes from remote repository
-   - Resolve any merge conflicts
-   - Ensure all files are properly staged
+- ✅ **Missing Loading Component**: Created HE_Loading_Component.tsx
+  - **Solution**: Implemented loading screen with logo and text
+  - **Files**: `src/components/HE_Loading_Component.tsx`
+  - **Date**: December 2024
 
-3. **Development Workflow:**
-   - Create components before importing them
-   - Test changes incrementally
-   - Document any workarounds or fixes
+- ✅ **Missing ProjectsOverlay Component**: Created ProjectsOverlay.tsx
+  - **Solution**: Implemented basic projects modal
+  - **Files**: `src/components/ProjectsOverlay.tsx`
+  - **Date**: December 2024
+
+- ✅ **Deprecated appDir Warning**: Removed experimental config
+  - **Solution**: Removed experimental: { appDir: true } from next.config.js
+  - **Files**: `next.config.js`
+  - **Date**: December 2024
+
+- ✅ **Git Merge Conflict**: Resolved LICENSE file conflict
+  - **Solution**: Used git pull with --allow-unrelated-histories
+  - **Files**: `LICENSE`
+  - **Date**: December 2024
+
+- ✅ **Preflight Asset Check**: Updated to check correct logo file
+  - **Solution**: Changed check from logo.svg to logo-loading.svg
+  - **Files**: `scripts/preflight.js`
+  - **Date**: December 2024
