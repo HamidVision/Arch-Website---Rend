@@ -1,10 +1,29 @@
 # Error Log
 
-## Version v0.1.1 (Current)
+## Version v0.1.2 (Current)
 **Date**: December 2024
 **Status**: No active errors
 
 ---
+
+## Version v0.1.1 (Completed)
+**Date**: December 2024
+**Status**: ✅ All errors resolved
+
+### Issues Resolved
+- ✅ **CSS Syntax Error**: Fixed unexpected closing brace in globals.css
+  - **Solution**: Restructured CSS layers properly, moved project-specific styles to utilities layer
+  - **Files**: `src/app/globals.css`
+  - **Date**: December 2024
+
+- ✅ **Scroll Behavior**: Implemented smooth scrolling for project pages
+  - **Solution**: Added scroll-behavior: smooth and scroll-snap classes
+  - **Files**: `src/app/globals.css`, `src/app/undergrad-projects/page.tsx`
+  - **Date**: December 2024
+
+---
+
+## Version v0.1 (Completed)
 
 ## Version v0.1 (Completed)
 **Date**: December 2024

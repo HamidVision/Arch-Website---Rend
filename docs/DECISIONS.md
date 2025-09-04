@@ -1,16 +1,62 @@
 # Design Decisions
 
-## Version v0.1.1 (Current)
+## Version v0.1.2 (Current)
 **Date**: December 2024
 **Status**: Planning Phase
 
 ### Upcoming Decisions
-- Individual page routing strategy for each tile
-- Content management system approach
-- Performance optimization techniques
+- Content integration strategy for individual project pages
+- Asset organization and optimization approach
+- Performance enhancement techniques
 - Mobile responsiveness improvements
 
 ---
+
+## Version v0.1.1 (Completed)
+**Date**: December 2024
+**Status**: ✅ All decisions implemented
+
+### Architecture Decisions
+
+#### **Enhanced Option 1 Vertical Layout**
+- **Decision**: Implement sophisticated vertical scrolling interface for Undergrad Projects
+- **Rationale**: Provides immersive, full-height project presentation with smooth navigation
+- **Implementation**: Full-screen project cards with scroll snap and progress indicators
+- **Result**: Professional, engaging user experience that maintains design consistency
+
+#### **Scroll Snap Behavior**
+- **Decision**: Use CSS scroll-snap-type: y mandatory for smooth vertical scrolling
+- **Rationale**: Ensures projects snap to viewport center for optimal viewing
+- **Implementation**: `.projects-container` with scroll-snap-type, `.project-card` with scroll-snap-align
+- **Result**: Smooth, controlled scrolling with precise positioning
+
+#### **Progress Indicator System**
+- **Decision**: Real-time scroll position tracking with visual dots
+- **Rationale**: Provides clear navigation context and current position awareness
+- **Implementation**: useEffect with scroll event listener and state management
+- **Result**: Intuitive navigation feedback without overwhelming the interface
+
+#### **Navigation Consistency**
+- **Decision**: Unified navigation pattern across all project pages
+- **Rationale**: Maintains user orientation and provides consistent interaction patterns
+- **Implementation**: HE logo (top-left) and Portfolio/Menu buttons (top-right) on all pages
+- **Result**: Seamless navigation experience across the entire application
+
+#### **Typography Hierarchy**
+- **Decision**: Apply established font classes consistently across new pages
+- **Rationale**: Maintains visual consistency and brand identity
+- **Implementation**: font-title (700), font-subtitle (400), font-body (300) classes
+- **Result**: Cohesive typography that reinforces design system
+
+#### **Component Architecture**
+- **Decision**: Reusable page structure for individual project pages
+- **Rationale**: Reduces code duplication and ensures consistency
+- **Implementation**: Template-based approach with consistent layout and navigation
+- **Result**: Maintainable codebase with consistent user experience
+
+---
+
+## Version v0.1 (Completed)
 
 ## Version v0.1 (Completed)
 **Date**: December 2024
