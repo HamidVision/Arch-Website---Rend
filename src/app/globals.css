@@ -96,6 +96,16 @@
     padding: clamp(1rem, 5vw, 3rem);
     max-width: min(90vw, 1200px);
   }
+  
+  /* Hide scrollbar for webkit browsers */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }
 
 @layer utilities {
