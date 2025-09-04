@@ -9,7 +9,8 @@ const DesignPhilosophyPage: React.FC = () => {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [showText, setShowText] = useState(true);
-  const [showBackground, setShowBackground] = useState(false);
+  const [showTextBackground, setShowTextBackground] = useState(true);
+  const [showPageBackground, setShowPageBackground] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -22,9 +23,10 @@ const DesignPhilosophyPage: React.FC = () => {
     // Text animation timing
     const textTimer = setTimeout(() => {
       setShowText(false);
-      // Show background after text fades out
+      setShowTextBackground(false);
+      // Show page background after text fades out
       setTimeout(() => {
-        setShowBackground(true);
+        setShowPageBackground(true);
       }, 1000); // 1 second delay after text fades
     }, 9000); // 9 seconds total
     
@@ -40,9 +42,31 @@ const DesignPhilosophyPage: React.FC = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black">
-      {/* Background Image - Only show after text animation */}
+      {/* Text Background - Shows during text animation */}
       <AnimatePresence>
-        {showBackground && (
+        {showTextBackground && (
+          <motion.div 
+            className="fixed inset-0 z-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <Image
+              src={isMobile ? '/design-philosophy/design-philosophy-phone.jpg' : '/design-philosophy/design-philosophy-21.9-bg.jpg'}
+              alt="Design Philosophy Text Background"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Page Background - Shows after text animation */}
+      <AnimatePresence>
+        {showPageBackground && (
           <motion.div 
             className="fixed inset-0 z-0"
             initial={{ opacity: 0 }}
@@ -51,7 +75,7 @@ const DesignPhilosophyPage: React.FC = () => {
           >
             <Image
               src={isMobile ? '/design-philosophy/design-philosophy-phone.jpg' : '/design-philosophy/design-philosophy-21.9.jpg'}
-              alt="Design Philosophy Background"
+              alt="Design Philosophy Page Background"
               fill
               className="object-cover"
               priority
