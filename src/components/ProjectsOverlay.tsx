@@ -115,7 +115,9 @@ const ProjectsOverlay: React.FC = () => {
         const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
         const adjustedScrollPosition = scrollPosition - leftPadding;
         const newIndex = Math.round(adjustedScrollPosition / tileWidth);
-        setCurrentIndex(Math.max(0, Math.min(newIndex, tiles.length - 1)));
+        // Add a small offset to account for scroll snap behavior
+        const finalIndex = Math.max(0, Math.min(newIndex + 0.5, tiles.length - 1));
+        setCurrentIndex(Math.round(finalIndex));
       };
 
       container.addEventListener('scroll', handleScroll);
@@ -133,32 +135,17 @@ const ProjectsOverlay: React.FC = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Close button */}
-          <button
-            onClick={handleClose}
-            className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
-            aria-label="Close projects overlay"
-          >
-            ×
-          </button>
+                     {/* Close button */}
+           <button
+             onClick={handleClose}
+             className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
+             aria-label="Close projects overlay"
+           >
+             ×
+           </button>
 
-          {/* Header */}
-          <motion.div
-            className="text-center pt-20 pb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl font-light text-white mb-4 tracking-wider uppercase">
-              Portfolio
-            </h2>
-            <p className="text-gray-400 text-lg">
-              Explore my work across different disciplines
-            </p>
-          </motion.div>
-
-          {/* Horizontal Scrolling Container */}
-          <div className="flex-1 overflow-hidden flex items-center">
+           {/* Horizontal Scrolling Container */}
+           <div className="flex-1 overflow-hidden flex items-center">
             <div
               ref={scrollContainerRef}
               className="flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center"
