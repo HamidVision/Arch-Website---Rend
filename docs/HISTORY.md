@@ -1,85 +1,70 @@
 # Project History
 
-## Version 0.2 (v0.2) - Portfolio Overlay Redesign
-**Date:** December 2024  
-**Status:** ✅ Complete
+## Version v0.1.1 (Current)
+**Date**: December 2024
+**Status**: In Development
 
-### What Changed
-- **Portfolio Overlay**: Completely redesigned to match M+M website aesthetic
-- **Horizontal Scrolling**: Implemented 7-tile horizontal scrolling layout
-- **Mouse Wheel Navigation**: Added smooth horizontal scrolling with mouse wheel
-- **Progress Bar**: Added bottom progress indicator with navigation dots
-- **Tile Design**: Created gradient-based tiles with hover effects
-- **Content Structure**: Organized into 7 main sections as requested
-
-### Files Touched
-- `src/components/ProjectsOverlay.tsx` - Complete redesign with horizontal scrolling
-- `src/app/globals.css` - Added scrollbar-hide utility class
-- `docs/HISTORY.md` - Updated project history
-
-### Why
-- Replicate the professional M+M website design aesthetic
-- Provide intuitive horizontal navigation experience
-- Create organized content structure for portfolio sections
-- Implement modern UI patterns with smooth animations
-
-### Follow-ups
-- [ ] Test all 7 tile sections thoroughly
-- [ ] Create individual page routes for each tile
-- [ ] Add actual content and images to tiles
-- [ ] Optimize performance for smooth scrolling
-- [ ] Test mobile responsiveness
+### Planned Features
+- Individual project pages for each tile
+- Content development for each section
+- Additional animations and interactions
+- Performance optimizations
 
 ---
 
-## Version 0.1 (v0.1) - Initial Foundation
-**Date:** December 2024  
-**Status:** ✅ Complete
+## Version v0.1 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
 
-### What Changed
-- **Loading Page**: Created HE_Loading_Component with orange diamond logo
-- **Home Page**: Implemented hero image background with architectural building
-- **Navigation**: Added Header component with logo and menu overlay
-- **Assets**: Integrated custom logo.png and hero.jpg images
-- **Project Structure**: Established Next.js 14 foundation with TypeScript
+### Final Features Implemented
+- ✅ **Portfolio Overlay Complete**: Full M+M-style horizontal scrolling interface
+- ✅ **Two-Step Portfolio Button**: Open → Zoom → Zoom-out functionality
+- ✅ **7 Project Tiles**: Design Philosophy, Undergrad Projects, Graduate Projects, Computer Science Projects, Research Papers, About Me, Contact
+- ✅ **Horizontal Scrolling**: Mouse wheel navigation through tiles
+- ✅ **Progress Bar**: Accurate position indicator with dots navigation
+- ✅ **Zoom Functionality**: Click Portfolio button to zoom into current tile
+- ✅ **True Fullscreen Zoom**: 100vw × 100vh zoomed view
+- ✅ **Smooth Animations**: Zoom-in/out with scale animations
+- ✅ **HE Logo Navigation**: Click logo to return to homepage
+- ✅ **Scroll Accuracy**: Fixed progress bar alignment and boundary issues
+- ✅ **Responsive Design**: Proper centering and 4:3 aspect ratio tiles
 
-### Files Touched
-- `src/components/HE_Loading_Component.tsx` - Loading screen component
-- `src/components/Header.tsx` - Navigation header
-- `src/components/ProjectsOverlay.tsx` - Projects modal
-- `src/app/layout.tsx` - Root layout with loading component
-- `src/app/page.tsx` - Home page with hero background
-- `scripts/preflight.js` - Development checks
+### Technical Achievements
+- **Scroll Calculation Fixes**: Resolved "one step behind" progress bar issue
+- **Boundary Handling**: Fixed scroll jumping at first/last tiles
+- **State Management**: Proper three-state Portfolio button behavior
+- **Animation System**: Smooth transitions using Framer Motion
+- **CSS Scroll Snap**: Implemented controlled horizontal scrolling
+- **Z-index Management**: Proper layering of overlay elements
+
+### Previous Features (v0.1)
+- ✅ **Loading Screen**: Custom splash screen with logo and text
+- ✅ **Home Page**: Hero image with interactive boxes and GSAP animations
+- ✅ **Navigation**: Header with logo, Portfolio button, and hamburger menu
+- ✅ **Responsive Design**: Mobile-friendly layout
+- ✅ **Image Optimization**: Next.js Image component integration
+- ✅ **GitHub Integration**: Version control and deployment setup
+
+### Files Modified in v0.1
+- `src/components/Header.tsx` - Portfolio button logic and state management
+- `src/components/ProjectsOverlay.tsx` - Complete portfolio overlay implementation
+- `src/components/HE_Loading_Component.tsx` - Loading screen with logo
+- `src/app/page.tsx` - Home page with hero image
+- `src/app/layout.tsx` - Root layout integration
+- `package.json` - Dependencies and scripts
 - `next.config.js` - Next.js configuration
-
-### Why
-- Establish solid foundation for architecture portfolio website
-- Create professional loading experience similar to Minale + Mann
-- Set up clean, minimalist design aesthetic
-- Prepare for future development phases
-
-### Follow-ups
-- [ ] Test all components thoroughly
-- [ ] Optimize performance and loading times
-- [ ] Add more project pages
-- [ ] Implement contact and about pages
+- `docs/` - Complete documentation suite
 
 ---
 
-## Template for Future Entries
+## Version v0.0.1 (Initial Setup)
+**Date**: December 2024
+**Status**: ✅ Complete
 
-### Version X.X (vX.X) - [Feature Name]
-**Date:** [Date]  
-**Status:** [✅ Complete / 🚧 In Progress / ❌ Failed]
-
-#### What Changed
-- [List of changes made]
-
-#### Files Touched
-- [List of files modified/created]
-
-#### Why
-- [Reason for changes]
-
-#### Follow-ups
-- [ ] [Action items]
+### Initial Setup
+- ✅ **Next.js 14 Project**: App Router setup with TypeScript
+- ✅ **Tailwind CSS**: Utility-first styling framework
+- ✅ **Framer Motion**: Animation library integration
+- ✅ **GSAP**: Timeline-based animations
+- ✅ **Basic Structure**: Component architecture and routing
+- ✅ **Development Environment**: Hot reload and build system
