@@ -83,3 +83,7 @@ yarn-error.log*
 
 # Turbo
 .turbo
+
+# Large files (PSD, etc.)
+*.psd
+external-assests/**/*.psd
