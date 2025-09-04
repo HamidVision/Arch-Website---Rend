@@ -155,6 +155,15 @@
   .animation-delay-1000 {
     animation-delay: 1000ms;
   }
+  
+  /* Project page specific styles */
+  .project-card {
+    scroll-snap-align: start;
+  }
+  
+  .projects-container {
+    scroll-snap-type: y mandatory;
+  }
 }
 
 /* Aspect Ratio Responsive Design */
