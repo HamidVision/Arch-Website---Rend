@@ -68,13 +68,13 @@ const ProjectsOverlay: React.FC = () => {
     const container = scrollContainerRef.current;
     
     if (container) {
-      const scrollAmount = delta > 0 ? 432 : -432; // Scroll by 432px (tile width + gap)
+      const scrollAmount = delta > 0 ? 864 : -864; // Scroll by 864px (tile width + gap)
       container.scrollLeft += scrollAmount;
       
       // Update current index based on scroll position
       const scrollPosition = container.scrollLeft;
-      const tileWidth = 432; // 24rem (384px) + 48px gap
-      const leftPadding = window.innerWidth / 2 - 192; // Center of screen minus half tile width
+      const tileWidth = 864; // 48rem (768px) + 96px gap
+      const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
       const adjustedScrollPosition = scrollPosition - leftPadding;
       const newIndex = Math.round(adjustedScrollPosition / tileWidth);
       setCurrentIndex(Math.max(0, Math.min(newIndex, tiles.length - 1)));
@@ -95,8 +95,8 @@ const ProjectsOverlay: React.FC = () => {
   const scrollToTile = (index: number) => {
     const container = scrollContainerRef.current;
     if (container) {
-      const tileWidth = 432; // 24rem (384px) + 48px gap
-      const leftPadding = window.innerWidth / 2 - 192; // Center of screen minus half tile width
+      const tileWidth = 864; // 48rem (768px) + 96px gap
+      const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
       container.scrollTo({
         left: leftPadding + (index * tileWidth),
         behavior: 'smooth'
@@ -104,6 +104,24 @@ const ProjectsOverlay: React.FC = () => {
       setCurrentIndex(index);
     }
   };
+
+  // Add scroll event listener for more accurate position tracking
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const handleScroll = () => {
+        const scrollPosition = container.scrollLeft;
+        const tileWidth = 864; // 48rem (768px) + 96px gap
+        const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
+        const adjustedScrollPosition = scrollPosition - leftPadding;
+        const newIndex = Math.round(adjustedScrollPosition / tileWidth);
+        setCurrentIndex(Math.max(0, Math.min(newIndex, tiles.length - 1)));
+      };
+
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [tiles.length]);
 
   return (
     <AnimatePresence>
@@ -147,13 +165,13 @@ const ProjectsOverlay: React.FC = () => {
               onWheel={handleWheel}
               style={{ scrollSnapType: 'x mandatory' }}
             >
-              {/* Add left padding to center first tile */}
-              <div className="flex-shrink-0 w-[calc(50vw-12rem)]"></div>
+                             {/* Add left padding to center first tile */}
+               <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
               
                              {tiles.map((tile, index) => (
                  <motion.div
                    key={tile.id}
-                   className="flex-shrink-0 w-[24rem] h-[18rem] cursor-pointer group"
+                   className="flex-shrink-0 w-[48rem] h-[36rem] cursor-pointer group"
                    style={{ scrollSnapAlign: 'center' }}
                    initial={{ opacity: 0, x: 50 }}
                    animate={{ opacity: 1, x: 0 }}
@@ -184,8 +202,8 @@ const ProjectsOverlay: React.FC = () => {
                  </motion.div>
                ))}
               
-              {/* Add right padding to center last tile */}
-              <div className="flex-shrink-0 w-[calc(50vw-12rem)]"></div>
+                             {/* Add right padding to center last tile */}
+               <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
             </div>
           </div>
 
