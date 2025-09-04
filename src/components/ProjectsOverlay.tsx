@@ -4,11 +4,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-const ProjectsOverlay: React.FC = () => {
+interface ProjectsOverlayProps {
+  isZoomed: boolean;
+  onClose: () => void;
+}
+
+const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Middle tile index (Computer Science Projects)
+  const middleTileIndex = 3;
 
   const tiles = [
     {
@@ -90,7 +98,18 @@ const ProjectsOverlay: React.FC = () => {
 
   const handleClose = () => {
     setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
   };
+
+  // Scroll to middle tile when zoomed
+  useEffect(() => {
+    if (isZoomed) {
+      scrollToTile(middleTileIndex);
+      setCurrentIndex(middleTileIndex);
+    }
+  }, [isZoomed]);
 
   const scrollToTile = (index: number) => {
     const container = scrollContainerRef.current;
@@ -128,13 +147,13 @@ const ProjectsOverlay: React.FC = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          className="fixed inset-0 bg-black/95 z-[60] flex flex-col"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
+                 <motion.div
+           className={`fixed inset-0 bg-black/95 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           exit={{ opacity: 0 }}
+           transition={{ duration: 0.3 }}
+         >
                      {/* Close button */}
            <button
              onClick={handleClose}
@@ -144,18 +163,56 @@ const ProjectsOverlay: React.FC = () => {
              ×
            </button>
 
-           {/* Horizontal Scrolling Container */}
-           <div className="flex-1 overflow-hidden flex items-center">
-            <div
-              ref={scrollContainerRef}
-              className="flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center"
-              onWheel={handleWheel}
-              style={{ scrollSnapType: 'x mandatory' }}
-            >
-                             {/* Add left padding to center first tile */}
-               <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
-              
-                             {tiles.map((tile, index) => (
+                      {/* Horizontal Scrolling Container */}
+           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
+             <div
+               ref={scrollContainerRef}
+               className={`${isZoomed ? 'w-[80vw] h-[80vh]' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
+               onWheel={isZoomed ? undefined : handleWheel}
+               style={isZoomed ? {} : { scrollSnapType: 'x mandatory' }}
+             >
+               {!isZoomed && (
+                 <>
+                   {/* Add left padding to center first tile */}
+                   <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
+                 </>
+               )}
+               
+               {isZoomed ? (
+                 // Show only the middle tile when zoomed
+                 <motion.div
+                   key={tiles[middleTileIndex].id}
+                   className="w-full h-full cursor-pointer group"
+                   initial={{ scale: 0.8, opacity: 0 }}
+                   animate={{ scale: 1, opacity: 1 }}
+                   transition={{ duration: 0.5 }}
+                   onClick={() => handleTileClick(tiles[middleTileIndex].id)}
+                 >
+                   <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                     {/* Gradient overlay */}
+                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                     
+                     {/* Arrow indicator */}
+                     <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                       </svg>
+                     </div>
+                   </div>
+                   
+                   {/* Title and subtitle below tile */}
+                   <div className="mt-6 text-white text-center">
+                     <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
+                       {tiles[middleTileIndex].title}
+                     </h3>
+                     <p className="text-lg text-gray-300">
+                       {tiles[middleTileIndex].subtitle}
+                     </p>
+                   </div>
+                 </motion.div>
+               ) : (
+                 // Show all tiles when not zoomed
+                 tiles.map((tile, index) => (
                  <motion.div
                    key={tile.id}
                    className="flex-shrink-0 w-[48rem] h-[36rem] cursor-pointer group"
@@ -188,13 +245,14 @@ const ProjectsOverlay: React.FC = () => {
                    </div>
                  </motion.div>
                ))}
-              
-                             {/* Add right padding to center last tile */}
+               {/* Add right padding to center last tile */}
                <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
-            </div>
-          </div>
+             </div>
+           </div>
+           )}
 
-          {/* Progress Bar */}
+           {/* Progress Bar - Only show when not zoomed */}
+           {!isZoomed && (
           <div className="px-8 pb-8">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-4">
