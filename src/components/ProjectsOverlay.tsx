@@ -15,9 +15,6 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Middle tile index (Computer Science Projects)
-  const middleTileIndex = 3;
-
   const tiles = [
     {
       id: 'design-philosophy',
@@ -103,13 +100,12 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
     }, 300);
   };
 
-  // Scroll to middle tile when zoomed
+  // Scroll to current tile when zoomed
   useEffect(() => {
     if (isZoomed) {
-      scrollToTile(middleTileIndex);
-      setCurrentIndex(middleTileIndex);
+      scrollToTile(currentIndex);
     }
-  }, [isZoomed]);
+  }, [isZoomed, currentIndex]);
 
   const scrollToTile = (index: number) => {
     const container = scrollContainerRef.current;
@@ -180,31 +176,32 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                 </>
               )}
               
-              {isZoomed ? (
-                // Show only the middle tile when zoomed
-                <motion.div
-                  key={tiles[middleTileIndex].id}
-                  className="w-full h-full cursor-pointer group"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  onClick={() => handleTileClick(tiles[middleTileIndex].id)}
-                >
-                  <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  
-                  {/* Title and subtitle below tile */}
-                  <div className="mt-6 text-white text-center">
-                    <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
-                      {tiles[middleTileIndex].title}
-                    </h3>
-                    <p className="text-lg text-gray-300">
-                      {tiles[middleTileIndex].subtitle}
-                    </p>
-                  </div>
-                </motion.div>
+                             {isZoomed ? (
+                 // Show only the current tile when zoomed
+                 <motion.div
+                   key={tiles[currentIndex].id}
+                   className="w-full h-full cursor-pointer group"
+                   initial={{ scale: 0.8, opacity: 0 }}
+                   animate={{ scale: 1, opacity: 1 }}
+                   exit={{ scale: 0.8, opacity: 0 }}
+                   transition={{ duration: 0.5 }}
+                   onClick={() => handleTileClick(tiles[currentIndex].id)}
+                 >
+                   <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[currentIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                     {/* Gradient overlay */}
+                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                   </div>
+                   
+                   {/* Title and subtitle below tile */}
+                   <div className="mt-6 text-white text-center">
+                     <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
+                       {tiles[currentIndex].title}
+                     </h3>
+                     <p className="text-lg text-gray-300">
+                       {tiles[currentIndex].subtitle}
+                     </p>
+                   </div>
+                 </motion.div>
               ) : (
                 // Show all tiles when not zoomed
                 tiles.map((tile, index) => (
