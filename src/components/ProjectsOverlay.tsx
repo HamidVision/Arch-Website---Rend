@@ -80,25 +80,15 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
     const container = scrollContainerRef.current;
     
     if (container) {
-      const scrollAmount = delta > 0 ? 864 : -864; // Scroll by 864px (tile width + gap)
-      container.scrollLeft += scrollAmount;
+      // Reduce scroll sensitivity for smoother transitions
+      const scrollSensitivity = 0.5; // Reduce from 1.0 to 0.5
+      const scrollAmount = delta * scrollSensitivity;
       
-      // Update current index based on scroll position
-      const scrollPosition = container.scrollLeft;
-      const tileWidth = 864; // 48rem (768px) + 96px gap
-      const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
-      const adjustedScrollPosition = scrollPosition - leftPadding;
-      
-      // Calculate the raw index with offset to account for centering
-      const rawIndex = (adjustedScrollPosition / tileWidth) + 0.5;
-      
-      // Use Math.round for more accurate snapping
-      const newIndex = Math.round(rawIndex);
-      
-      // Clamp to valid range
-      const clampedIndex = Math.max(0, Math.min(newIndex, tiles.length - 1));
-      
-      setCurrentIndex(clampedIndex);
+      // Use smooth scrolling instead of instant jumps
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -140,26 +130,35 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
+      let scrollTimeout: NodeJS.Timeout;
+      
       const handleScroll = () => {
-        const scrollPosition = container.scrollLeft;
-        const tileWidth = 864; // 48rem (768px) + 96px gap
-        const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
-        const adjustedScrollPosition = scrollPosition - leftPadding;
-        
-        // Calculate the raw index with offset to account for centering
-        const rawIndex = (adjustedScrollPosition / tileWidth) + 0.5;
-        
-        // Use Math.round for more accurate snapping
-        const newIndex = Math.round(rawIndex);
-        
-        // Clamp to valid range
-        const clampedIndex = Math.max(0, Math.min(newIndex, tiles.length - 1));
-        
-        setCurrentIndex(clampedIndex);
+        // Debounce scroll events for smoother performance
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const scrollPosition = container.scrollLeft;
+          const tileWidth = 864; // 48rem (768px) + 96px gap
+          const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
+          const adjustedScrollPosition = scrollPosition - leftPadding;
+          
+          // Calculate the raw index with offset to account for centering
+          const rawIndex = (adjustedScrollPosition / tileWidth) + 0.5;
+          
+          // Use Math.round for more accurate snapping
+          const newIndex = Math.round(rawIndex);
+          
+          // Clamp to valid range
+          const clampedIndex = Math.max(0, Math.min(newIndex, tiles.length - 1));
+          
+          setCurrentIndex(clampedIndex);
+        }, 50); // 50ms debounce
       };
 
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
+      container.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+        clearTimeout(scrollTimeout);
+      };
     }
   }, [tiles.length]);
 
@@ -200,7 +199,10 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
               ref={scrollContainerRef}
               className={`${isZoomed ? 'w-screen h-screen' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
               onWheel={isZoomed ? undefined : handleWheel}
-              style={isZoomed ? {} : { scrollSnapType: 'x mandatory' }}
+              style={isZoomed ? {} : { 
+                scrollSnapType: 'x mandatory',
+                scrollBehavior: 'smooth'
+              }}
             >
               {!isZoomed && (
                 <>
