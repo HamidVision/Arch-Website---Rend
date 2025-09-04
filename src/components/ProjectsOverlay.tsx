@@ -177,6 +177,15 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
             </button>
           )}
 
+          {/* Logo - Always show, positioned top-left */}
+          <button 
+            onClick={() => router.push('/')} 
+            className="absolute top-8 left-8 text-white text-2xl font-bold hover:text-gray-300 transition-colors z-10"
+            aria-label="Go to homepage"
+          >
+            HE
+          </button>
+
           {/* Horizontal Scrolling Container */}
           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
             <div
