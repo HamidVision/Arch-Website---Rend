@@ -41,11 +41,14 @@
 		"terminal.integrated.enablePersistentSessions": false,
 		"terminal.integrated.confirmOnExit": "hasChildProcesses",
 		"terminal.integrated.confirmOnKill": "editorAndTerminal",
-		"terminal.integrated.enableBell": false,
 		"terminal.integrated.showExitAlert": true,
 		"terminal.integrated.tabs.enabled": true,
 		"terminal.integrated.tabs.focusMode": "singleClick",
-		"terminal.integrated.tabs.hideCondition": "never"
+		"terminal.integrated.tabs.hideCondition": "never",
+		"accessibility.signals.terminalBell": {
+			"sound": "off"
+		},
+		"terminal.integrated.enableVisualBell": false
 	},
 	"tasks": {
 		"version": "2.0.0",

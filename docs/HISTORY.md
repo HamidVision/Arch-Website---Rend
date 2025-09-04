@@ -1,5 +1,37 @@
 # Project History
 
+## Version 0.2 (v0.2) - Portfolio Overlay Redesign
+**Date:** December 2024  
+**Status:** ✅ Complete
+
+### What Changed
+- **Portfolio Overlay**: Completely redesigned to match M+M website aesthetic
+- **Horizontal Scrolling**: Implemented 7-tile horizontal scrolling layout
+- **Mouse Wheel Navigation**: Added smooth horizontal scrolling with mouse wheel
+- **Progress Bar**: Added bottom progress indicator with navigation dots
+- **Tile Design**: Created gradient-based tiles with hover effects
+- **Content Structure**: Organized into 7 main sections as requested
+
+### Files Touched
+- `src/components/ProjectsOverlay.tsx` - Complete redesign with horizontal scrolling
+- `src/app/globals.css` - Added scrollbar-hide utility class
+- `docs/HISTORY.md` - Updated project history
+
+### Why
+- Replicate the professional M+M website design aesthetic
+- Provide intuitive horizontal navigation experience
+- Create organized content structure for portfolio sections
+- Implement modern UI patterns with smooth animations
+
+### Follow-ups
+- [ ] Test all 7 tile sections thoroughly
+- [ ] Create individual page routes for each tile
+- [ ] Add actual content and images to tiles
+- [ ] Optimize performance for smooth scrolling
+- [ ] Test mobile responsiveness
+
+---
+
 ## Version 0.1 (v0.1) - Initial Foundation
 **Date:** December 2024  
 **Status:** ✅ Complete
