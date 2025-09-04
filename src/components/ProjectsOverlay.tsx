@@ -180,8 +180,9 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           {/* Logo - Always show, positioned top-left */}
           <button 
             onClick={() => router.push('/')} 
-            className="absolute top-8 left-8 text-white text-2xl font-bold hover:text-gray-300 transition-colors z-10"
+            className="absolute top-8 left-8 text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
             aria-label="Go to homepage"
+            style={{ fontFamily: 'inherit', textRendering: 'optimizeLegibility' }}
           >
             HE
           </button>
