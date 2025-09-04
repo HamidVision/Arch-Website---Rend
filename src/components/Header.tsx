@@ -23,9 +23,8 @@ const Header: React.FC = () => {
       // When overlay is open but not zoomed, zoom into middle tile
       setIsZoomed(true);
     } else if (isProjectsOpen && isZoomed) {
-      // When zoomed, close everything
+      // When zoomed, zoom out to normal view
       setIsZoomed(false);
-      setIsProjectsOpen(false);
     } else {
       // First click - open projects overlay
       setIsProjectsOpen(true);
