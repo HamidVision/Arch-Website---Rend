@@ -81,8 +81,17 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       const tileWidth = 864; // 48rem (768px) + 96px gap
       const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
       const adjustedScrollPosition = scrollPosition - leftPadding;
-      const newIndex = Math.round(adjustedScrollPosition / tileWidth);
-      setCurrentIndex(Math.max(0, Math.min(newIndex, tiles.length - 1)));
+      
+      // Calculate the raw index
+      const rawIndex = adjustedScrollPosition / tileWidth;
+      
+      // Use Math.round for more accurate snapping
+      const newIndex = Math.round(rawIndex);
+      
+      // Clamp to valid range
+      const clampedIndex = Math.max(0, Math.min(newIndex, tiles.length - 1));
+      
+      setCurrentIndex(clampedIndex);
     }
   };
 
@@ -129,10 +138,17 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
         const tileWidth = 864; // 48rem (768px) + 96px gap
         const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
         const adjustedScrollPosition = scrollPosition - leftPadding;
-        const newIndex = Math.round(adjustedScrollPosition / tileWidth);
-        // Add a small offset to account for scroll snap behavior
-        const finalIndex = Math.max(0, Math.min(newIndex + 0.5, tiles.length - 1));
-        setCurrentIndex(Math.round(finalIndex));
+        
+        // Calculate the raw index
+        const rawIndex = adjustedScrollPosition / tileWidth;
+        
+        // Use Math.round for more accurate snapping
+        const newIndex = Math.round(rawIndex);
+        
+        // Clamp to valid range
+        const clampedIndex = Math.max(0, Math.min(newIndex, tiles.length - 1));
+        
+        setCurrentIndex(clampedIndex);
       };
 
       container.addEventListener('scroll', handleScroll);
