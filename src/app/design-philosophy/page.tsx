@@ -144,21 +144,21 @@ const DesignPhilosophyPage: React.FC = () => {
             transition={{ duration: 1 }}
           >
             <div className="max-w-4xl mx-auto text-center">
-              <motion.h1
-                className="text-6xl md:text-8xl font-light text-white mb-8 tracking-wider uppercase"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              >
-                Design Philosophy
-              </motion.h1>
+                             <motion.h1
+                 className="text-6xl md:text-8xl font-title text-white mb-8 tracking-wider uppercase"
+                 initial={{ opacity: 0, y: 50 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ duration: 0.8, delay: 0.2 }}
+               >
+                 Design Philosophy
+               </motion.h1>
               
-              <motion.div
-                className="text-white/90 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-              >
+                             <motion.div
+                 className="text-white/90 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto font-body"
+                 initial={{ opacity: 0, y: 50 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ duration: 0.8, delay: 0.4 }}
+               >
                 <p className="mb-6">
                   At the intersection of creativity and functionality, our design philosophy 
                   embraces the fundamental principles that shape exceptional architectural experiences.
@@ -183,35 +183,35 @@ const DesignPhilosophyPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <div className="text-center">
-                  <h3 className="text-2xl font-light text-white mb-4 tracking-wider uppercase">
-                    Context
-                  </h3>
-                  <p className="text-white/80 text-sm leading-relaxed">
-                    Understanding the unique environmental, cultural, and social context 
-                    that shapes each project's identity and purpose.
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <h3 className="text-2xl font-light text-white mb-4 tracking-wider uppercase">
-                    Innovation
-                  </h3>
-                  <p className="text-white/80 text-sm leading-relaxed">
-                    Pushing boundaries through creative problem-solving and embracing 
-                    new technologies and methodologies in architectural design.
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <h3 className="text-2xl font-light text-white mb-4 tracking-wider uppercase">
-                    Sustainability
-                  </h3>
-                  <p className="text-white/80 text-sm leading-relaxed">
-                    Creating environmentally responsible designs that minimize impact 
-                    while maximizing functionality and aesthetic appeal.
-                  </p>
-                </div>
+                                 <div className="text-center">
+                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                     Context
+                   </h3>
+                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                     Understanding the unique environmental, cultural, and social context 
+                     that shapes each project's identity and purpose.
+                   </p>
+                 </div>
+                 
+                 <div className="text-center">
+                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                     Innovation
+                   </h3>
+                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                     Pushing boundaries through creative problem-solving and embracing 
+                     new technologies and methodologies in architectural design.
+                   </p>
+                 </div>
+                 
+                 <div className="text-center">
+                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                     Sustainability
+                   </h3>
+                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                     Creating environmentally responsible designs that minimize impact 
+                     while maximizing functionality and aesthetic appeal.
+                   </p>
+                 </div>
               </motion.div>
             </div>
           </motion.div>

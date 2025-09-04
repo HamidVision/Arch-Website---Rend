@@ -4,6 +4,33 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Font Family Definitions */
+@layer base {
+  :root {
+    --font-title: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-subtitle: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  }
+}
+
+/* Font Utility Classes */
+@layer utilities {
+  .font-title {
+    font-family: var(--font-title);
+    font-weight: 700; /* Bold */
+  }
+  
+  .font-subtitle {
+    font-family: var(--font-subtitle);
+    font-weight: 400; /* Regular */
+  }
+  
+  .font-body {
+    font-family: var(--font-body);
+    font-weight: 300; /* Light */
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
