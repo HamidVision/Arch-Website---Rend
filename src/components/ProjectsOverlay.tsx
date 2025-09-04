@@ -82,8 +82,8 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
       const adjustedScrollPosition = scrollPosition - leftPadding;
       
-      // Calculate the raw index
-      const rawIndex = adjustedScrollPosition / tileWidth;
+      // Calculate the raw index with offset to account for centering
+      const rawIndex = (adjustedScrollPosition / tileWidth) + 0.5;
       
       // Use Math.round for more accurate snapping
       const newIndex = Math.round(rawIndex);
@@ -139,8 +139,8 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
         const leftPadding = window.innerWidth / 2 - 384; // Center of screen minus half tile width
         const adjustedScrollPosition = scrollPosition - leftPadding;
         
-        // Calculate the raw index
-        const rawIndex = adjustedScrollPosition / tileWidth;
+        // Calculate the raw index with offset to account for centering
+        const rawIndex = (adjustedScrollPosition / tileWidth) + 0.5;
         
         // Use Math.round for more accurate snapping
         const newIndex = Math.round(rawIndex);
