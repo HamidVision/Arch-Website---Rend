@@ -263,43 +263,43 @@
 /* Aspect Ratio Responsive Background Images */
 /* This ensures 21:9 images display optimally across all screen ratios */
 
-/* Default for 21:9 images - show left portion */
+/* Default for 21:9 images - show right portion */
 .bg-image-21-9 {
-  object-position: left center;
+  object-position: right center;
 }
 
-/* 16:9 screens - show left portion */
+/* 16:9 screens - show right portion */
 @media (max-aspect-ratio: 21/9) and (min-aspect-ratio: 16/9) {
   .bg-image-21-9 {
-    object-position: left center;
+    object-position: right center;
   }
 }
 
-/* 16:10 screens - show left portion */
+/* 16:10 screens - show right portion */
 @media (max-aspect-ratio: 16/9) and (min-aspect-ratio: 16/10) {
   .bg-image-21-9 {
-    object-position: left center;
+    object-position: right center;
   }
 }
 
-/* 4:3 and similar screens - show left portion */
+/* 4:3 and similar screens - show right portion */
 @media (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
   .bg-image-21-9 {
-    object-position: left center;
+    object-position: right center;
   }
 }
 
-/* 3:2 screens - show left portion */
+/* 3:2 screens - show right portion */
 @media (max-aspect-ratio: 4/3) and (min-aspect-ratio: 3/2) {
   .bg-image-21-9 {
-    object-position: left center;
+    object-position: right center;
   }
 }
 
 /* Mobile portrait and very narrow screens */
 @media (max-aspect-ratio: 3/2) {
   .bg-image-21-9 {
-    object-position: left center;
+    object-position: right center;
   }
 }
 
