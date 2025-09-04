@@ -11,6 +11,7 @@ const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
+  const [isZoomed, setIsZoomed] = useState(false);
   const router = useRouter();
 
   const navigateToFirstProject = () => {
@@ -18,12 +19,23 @@ const Header: React.FC = () => {
   };
 
   const handlePortfolioToggle = () => {
-    if (isProjectsOpen) {
-      // When overlay already open, go to first project (acts like clicking a project)
-      navigateToFirstProject();
+    if (isProjectsOpen && !isZoomed) {
+      // When overlay is open but not zoomed, zoom into middle tile
+      setIsZoomed(true);
+    } else if (isProjectsOpen && isZoomed) {
+      // When zoomed, close everything
+      setIsZoomed(false);
+      setIsProjectsOpen(false);
     } else {
+      // First click - open projects overlay
       setIsProjectsOpen(true);
+      setIsZoomed(false);
     }
+  };
+
+  const handleCloseProjects = () => {
+    setIsProjectsOpen(false);
+    setIsZoomed(false);
   };
 
   const HamburgerIcon: React.FC<{ onClick: () => void; isOpen: boolean }> = ({ onClick, isOpen }) => (
@@ -93,7 +105,7 @@ const Header: React.FC = () => {
           </nav>
         </div>
       )}
-      {isProjectsOpen && <ProjectsOverlay />}
+      {isProjectsOpen && <ProjectsOverlay isZoomed={isZoomed} onClose={handleCloseProjects} />}
     </>
   );
 };
