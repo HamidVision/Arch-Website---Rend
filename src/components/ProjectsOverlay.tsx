@@ -154,20 +154,22 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Close button */}
-          <button
-            onClick={handleClose}
-            className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
-            aria-label="Close projects overlay"
-          >
-            ×
-          </button>
+          {/* Close button - Only show when not zoomed */}
+          {!isZoomed && (
+            <button
+              onClick={handleClose}
+              className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
+              aria-label="Close projects overlay"
+            >
+              ×
+            </button>
+          )}
 
           {/* Horizontal Scrolling Container */}
           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
             <div
               ref={scrollContainerRef}
-              className={`${isZoomed ? 'w-[80vw] h-[80vh]' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
+              className={`${isZoomed ? 'w-screen h-screen' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
               onWheel={isZoomed ? undefined : handleWheel}
               style={isZoomed ? {} : { scrollSnapType: 'x mandatory' }}
             >
@@ -188,16 +190,9 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                   transition={{ duration: 0.5 }}
                   onClick={() => handleTileClick(tiles[middleTileIndex].id)}
                 >
-                  <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                  <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                    
-                    {/* Arrow indicator */}
-                    <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
                   </div>
                   
                   {/* Title and subtitle below tile */}
