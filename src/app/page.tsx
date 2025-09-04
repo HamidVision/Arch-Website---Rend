@@ -206,7 +206,7 @@ const Hero: React.FC = () => {
         <img 
           src="/images/hero.jpg" 
           alt="Hero Background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover bg-image-16-9"
         />
         <div className="absolute inset-0 bg-black/40"></div>
       </div>

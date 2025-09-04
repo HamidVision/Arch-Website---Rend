@@ -56,7 +56,7 @@ const DesignPhilosophyPage: React.FC = () => {
               src={isMobile ? '/design-philosophy/design-philosophy-phone.jpg' : '/design-philosophy/design-philosophy-21.9-bg.jpg'}
               alt="Design Philosophy Text Background"
               fill
-              className="object-cover"
+              className="object-cover bg-image-21-9"
               priority
             />
             <div className="absolute inset-0 bg-black/40"></div>
@@ -77,7 +77,7 @@ const DesignPhilosophyPage: React.FC = () => {
               src={isMobile ? '/design-philosophy/design-philosophy-phone.jpg' : '/design-philosophy/design-philosophy-21.9.jpg'}
               alt="Design Philosophy Page Background"
               fill
-              className="object-cover"
+              className="object-cover bg-image-21-9"
               priority
             />
             <div className="absolute inset-0 bg-black/40"></div>

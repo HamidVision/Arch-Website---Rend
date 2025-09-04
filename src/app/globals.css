@@ -260,6 +260,97 @@
   .pre-grain { display: none; }
 }
 
+/* Aspect Ratio Responsive Background Images */
+/* This ensures 21:9 images display optimally across all screen ratios */
+
+/* Default for 21:9 images - show center portion */
+.bg-image-21-9 {
+  object-position: center center;
+}
+
+/* 16:9 screens - show slightly more top portion */
+@media (max-aspect-ratio: 21/9) and (min-aspect-ratio: 16/9) {
+  .bg-image-21-9 {
+    object-position: center 20%;
+  }
+}
+
+/* 16:10 screens - show more top portion */
+@media (max-aspect-ratio: 16/9) and (min-aspect-ratio: 16/10) {
+  .bg-image-21-9 {
+    object-position: center 15%;
+  }
+}
+
+/* 4:3 and similar screens - show top portion */
+@media (max-aspect-ratio: 16/10) and (min-aspect-ratio: 4/3) {
+  .bg-image-21-9 {
+    object-position: center 10%;
+  }
+}
+
+/* 3:2 screens - show top portion */
+@media (max-aspect-ratio: 4/3) and (min-aspect-ratio: 3/2) {
+  .bg-image-21-9 {
+    object-position: center 5%;
+  }
+}
+
+/* Mobile portrait and very narrow screens */
+@media (max-aspect-ratio: 3/2) {
+  .bg-image-21-9 {
+    object-position: center 0%;
+  }
+}
+
+/* For 16:9 images on different screens */
+.bg-image-16-9 {
+  object-position: center center;
+}
+
+@media (max-aspect-ratio: 16/9) {
+  .bg-image-16-9 {
+    object-position: center 10%;
+  }
+}
+
+@media (max-aspect-ratio: 4/3) {
+  .bg-image-16-9 {
+    object-position: center 5%;
+  }
+}
+
+/* For 4:3 images on different screens */
+.bg-image-4-3 {
+  object-position: center center;
+}
+
+@media (min-aspect-ratio: 16/9) {
+  .bg-image-4-3 {
+    object-position: center 20%;
+  }
+}
+
+/* Utility classes for specific positioning */
+.bg-position-top {
+  object-position: center 0%;
+}
+
+.bg-position-center {
+  object-position: center center;
+}
+
+.bg-position-bottom {
+  object-position: center 100%;
+}
+
+.bg-position-left {
+  object-position: 0% center;
+}
+
+.bg-position-right {
+  object-position: 100% center;
+}
 
 
 @layer base {
