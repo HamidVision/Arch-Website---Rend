@@ -21,49 +21,56 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       title: 'Design Philosophy',
       subtitle: 'Core principles and approach',
       description: 'Exploring the fundamental principles that guide our design thinking and creative process.',
-      color: 'from-blue-600 to-purple-600'
+      color: 'from-blue-600 to-purple-600',
+      image: '/design-philosophy/design-philosophy-tile.jpg'
     },
     {
       id: 'undergrad-projects',
       title: 'Undergrad Projects',
       subtitle: 'Academic foundation',
       description: 'Early architectural explorations and foundational design projects from undergraduate studies.',
-      color: 'from-green-600 to-teal-600'
+      color: 'from-green-600 to-teal-600',
+      image: null
     },
     {
       id: 'graduate-projects',
       title: 'Graduate Projects',
       subtitle: 'Advanced research',
       description: 'Sophisticated design solutions and research-driven projects from graduate studies.',
-      color: 'from-orange-600 to-red-600'
+      color: 'from-orange-600 to-red-600',
+      image: null
     },
     {
       id: 'computer-science',
       title: 'Computer Science Projects',
       subtitle: 'Digital innovation',
       description: 'Technology-driven projects bridging architecture and computational design.',
-      color: 'from-purple-600 to-indigo-600'
+      color: 'from-purple-600 to-indigo-600',
+      image: null
     },
     {
       id: 'research-papers',
       title: 'Research Papers & Publications',
       subtitle: 'Academic contributions',
       description: 'Published research and theoretical contributions to architectural discourse.',
-      color: 'from-indigo-600 to-blue-600'
+      color: 'from-indigo-600 to-blue-600',
+      image: null
     },
     {
       id: 'about',
       title: 'About Me',
       subtitle: 'Personal journey',
       description: 'Background, experience, and the story behind the work.',
-      color: 'from-teal-600 to-green-600'
+      color: 'from-teal-600 to-green-600',
+      image: null
     },
     {
       id: 'contact',
       title: 'Contact',
       subtitle: 'Get in touch',
       description: 'Let\'s discuss your project and explore collaboration opportunities.',
-      color: 'from-red-600 to-orange-600'
+      color: 'from-red-600 to-orange-600',
+      image: null
     }
   ];
 
@@ -214,6 +221,14 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                    onClick={() => handleTileClick(tiles[currentIndex].id)}
                  >
                    <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[currentIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                     {/* Background image or gradient */}
+                     {tiles[currentIndex].image ? (
+                       <img
+                         src={tiles[currentIndex].image}
+                         alt={tiles[currentIndex].title}
+                         className="w-full h-full object-cover"
+                       />
+                     ) : null}
                      {/* Gradient overlay */}
                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
                    </div>
@@ -241,6 +256,14 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                     onClick={() => handleTileClick(tile.id)}
                   >
                     <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
+                      {/* Background image or gradient */}
+                      {tile.image ? (
+                        <img
+                          src={tile.image}
+                          alt={tile.title}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      ) : null}
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
                       
