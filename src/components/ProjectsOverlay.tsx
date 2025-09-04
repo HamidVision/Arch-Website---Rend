@@ -147,148 +147,154 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   return (
     <AnimatePresence>
       {isVisible && (
-                 <motion.div
-           className={`fixed inset-0 bg-black/95 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           exit={{ opacity: 0 }}
-           transition={{ duration: 0.3 }}
-         >
-                     {/* Close button */}
-           <button
-             onClick={handleClose}
-             className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
-             aria-label="Close projects overlay"
-           >
-             ×
-           </button>
+        <motion.div
+          className={`fixed inset-0 bg-black/95 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* Close button */}
+          <button
+            onClick={handleClose}
+            className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
+            aria-label="Close projects overlay"
+          >
+            ×
+          </button>
 
-                      {/* Horizontal Scrolling Container */}
-           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
-             <div
-               ref={scrollContainerRef}
-               className={`${isZoomed ? 'w-[80vw] h-[80vh]' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
-               onWheel={isZoomed ? undefined : handleWheel}
-               style={isZoomed ? {} : { scrollSnapType: 'x mandatory' }}
-             >
-               {!isZoomed && (
-                 <>
-                   {/* Add left padding to center first tile */}
-                   <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
-                 </>
-               )}
-               
-               {isZoomed ? (
-                 // Show only the middle tile when zoomed
-                 <motion.div
-                   key={tiles[middleTileIndex].id}
-                   className="w-full h-full cursor-pointer group"
-                   initial={{ scale: 0.8, opacity: 0 }}
-                   animate={{ scale: 1, opacity: 1 }}
-                   transition={{ duration: 0.5 }}
-                   onClick={() => handleTileClick(tiles[middleTileIndex].id)}
-                 >
-                   <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
-                     {/* Gradient overlay */}
-                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                     
-                     {/* Arrow indicator */}
-                     <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                       </svg>
-                     </div>
-                   </div>
-                   
-                   {/* Title and subtitle below tile */}
-                   <div className="mt-6 text-white text-center">
-                     <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
-                       {tiles[middleTileIndex].title}
-                     </h3>
-                     <p className="text-lg text-gray-300">
-                       {tiles[middleTileIndex].subtitle}
-                     </p>
-                   </div>
-                 </motion.div>
-               ) : (
-                 // Show all tiles when not zoomed
-                 tiles.map((tile, index) => (
-                 <motion.div
-                   key={tile.id}
-                   className="flex-shrink-0 w-[48rem] h-[36rem] cursor-pointer group"
-                   style={{ scrollSnapAlign: 'center' }}
-                   initial={{ opacity: 0, x: 50 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                   onClick={() => handleTileClick(tile.id)}
-                 >
-                   <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
-                     {/* Gradient overlay */}
-                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                     
-                     {/* Arrow indicator */}
-                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                       </svg>
-                     </div>
-                   </div>
-                   
-                   {/* Title and subtitle below tile */}
-                   <div className="mt-4 text-white">
-                     <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
-                       {tile.title}
-                     </h3>
-                     <p className="text-sm text-gray-300">
-                       {tile.subtitle}
-                     </p>
-                   </div>
-                 </motion.div>
-               ))}
-               {/* Add right padding to center last tile */}
-               <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
-             </div>
-           </div>
-           )}
-
-           {/* Progress Bar - Only show when not zoomed */}
-           {!isZoomed && (
-          <div className="px-8 pb-8">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-white text-sm tracking-wider uppercase">
-                  {tiles[currentIndex].title}
-                </span>
-                <span className="text-gray-400 text-sm">
-                  {currentIndex + 1} / {tiles.length}
-                </span>
-              </div>
+          {/* Horizontal Scrolling Container */}
+          <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
+            <div
+              ref={scrollContainerRef}
+              className={`${isZoomed ? 'w-[80vw] h-[80vh]' : 'flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center'}`}
+              onWheel={isZoomed ? undefined : handleWheel}
+              style={isZoomed ? {} : { scrollSnapType: 'x mandatory' }}
+            >
+              {!isZoomed && (
+                <>
+                  {/* Add left padding to center first tile */}
+                  <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
+                </>
+              )}
               
-              {/* Progress bar */}
-              <div className="w-full bg-gray-800 h-px relative">
+              {isZoomed ? (
+                // Show only the middle tile when zoomed
                 <motion.div
-                  className="absolute top-0 left-0 h-full bg-white"
-                  initial={{ width: '0%' }}
-                  animate={{ width: `${((currentIndex + 1) / tiles.length) * 100}%` }}
-                  transition={{ duration: 0.3 }}
-                />
-              </div>
+                  key={tiles[middleTileIndex].id}
+                  className="w-full h-full cursor-pointer group"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  onClick={() => handleTileClick(tiles[middleTileIndex].id)}
+                >
+                  <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tiles[middleTileIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                    
+                    {/* Arrow indicator */}
+                    <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* Title and subtitle below tile */}
+                  <div className="mt-6 text-white text-center">
+                    <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
+                      {tiles[middleTileIndex].title}
+                    </h3>
+                    <p className="text-lg text-gray-300">
+                      {tiles[middleTileIndex].subtitle}
+                    </p>
+                  </div>
+                </motion.div>
+              ) : (
+                // Show all tiles when not zoomed
+                tiles.map((tile, index) => (
+                  <motion.div
+                    key={tile.id}
+                    className="flex-shrink-0 w-[48rem] h-[36rem] cursor-pointer group"
+                    style={{ scrollSnapAlign: 'center' }}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    onClick={() => handleTileClick(tile.id)}
+                  >
+                    <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                      
+                      {/* Arrow indicator */}
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    {/* Title and subtitle below tile */}
+                    <div className="mt-4 text-white">
+                      <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
+                        {tile.title}
+                      </h3>
+                      <p className="text-sm text-gray-300">
+                        {tile.subtitle}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))
+              )}
               
-              {/* Navigation dots */}
-              <div className="flex justify-center mt-4 space-x-2">
-                {tiles.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollToTile(index)}
-                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                      index === currentIndex ? 'bg-white' : 'bg-gray-600 hover:bg-gray-400'
-                    }`}
-                    aria-label={`Go to ${tiles[index].title}`}
-                  />
-                ))}
-              </div>
+              {!isZoomed && (
+                <>
+                  {/* Add right padding to center last tile */}
+                  <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
+                </>
+              )}
             </div>
           </div>
+
+          {/* Progress Bar - Only show when not zoomed */}
+          {!isZoomed && (
+            <div className="px-8 pb-8">
+              <div className="max-w-6xl mx-auto">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-white text-sm tracking-wider uppercase">
+                    {tiles[currentIndex].title}
+                  </span>
+                  <span className="text-gray-400 text-sm">
+                    {currentIndex + 1} / {tiles.length}
+                  </span>
+                </div>
+                
+                {/* Progress bar */}
+                <div className="w-full bg-gray-800 h-px relative">
+                  <motion.div
+                    className="absolute top-0 left-0 h-full bg-white"
+                    initial={{ width: '0%' }}
+                    animate={{ width: `${((currentIndex + 1) / tiles.length) * 100}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+                
+                {/* Navigation dots */}
+                <div className="flex justify-center mt-4 space-x-2">
+                  {tiles.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => scrollToTile(index)}
+                      className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                        index === currentIndex ? 'bg-white' : 'bg-gray-600 hover:bg-gray-400'
+                      }`}
+                      aria-label={`Go to ${tiles[index].title}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
