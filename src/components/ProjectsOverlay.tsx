@@ -68,12 +68,12 @@ const ProjectsOverlay: React.FC = () => {
     const container = scrollContainerRef.current;
     
     if (container) {
-      const scrollAmount = delta > 0 ? 400 : -400; // Scroll by 400px
+      const scrollAmount = delta > 0 ? 600 : -600; // Scroll by 600px (tile width + gap)
       container.scrollLeft += scrollAmount;
       
       // Update current index based on scroll position
       const scrollPosition = container.scrollLeft;
-      const tileWidth = container.scrollWidth / tiles.length;
+      const tileWidth = 600; // 24rem (384px) + 48px gap = ~432px, but we'll use 600 for smoother scrolling
       const newIndex = Math.round(scrollPosition / tileWidth);
       setCurrentIndex(Math.max(0, Math.min(newIndex, tiles.length - 1)));
     }
@@ -93,9 +93,10 @@ const ProjectsOverlay: React.FC = () => {
   const scrollToTile = (index: number) => {
     const container = scrollContainerRef.current;
     if (container) {
-      const tileWidth = container.scrollWidth / tiles.length;
+      const tileWidth = 600; // 24rem (384px) + 48px gap
+      const leftPadding = window.innerWidth / 2 - 192; // Center of screen minus half tile width
       container.scrollTo({
-        left: index * tileWidth,
+        left: leftPadding + (index * tileWidth),
         behavior: 'smooth'
       });
       setCurrentIndex(index);
@@ -137,18 +138,21 @@ const ProjectsOverlay: React.FC = () => {
           </motion.div>
 
           {/* Horizontal Scrolling Container */}
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1 overflow-hidden flex items-center">
             <div
               ref={scrollContainerRef}
-              className="flex gap-8 px-8 h-full overflow-x-auto scrollbar-hide"
+              className="flex gap-12 px-8 h-full overflow-x-auto scrollbar-hide items-center"
               onWheel={handleWheel}
               style={{ scrollSnapType: 'x mandatory' }}
             >
+              {/* Add left padding to center first tile */}
+              <div className="flex-shrink-0 w-[calc(50vw-12rem)]"></div>
+              
               {tiles.map((tile, index) => (
                 <motion.div
                   key={tile.id}
-                  className="flex-shrink-0 w-80 h-96 cursor-pointer group"
-                  style={{ scrollSnapAlign: 'start' }}
+                  className="flex-shrink-0 w-[24rem] h-[32rem] cursor-pointer group"
+                  style={{ scrollSnapAlign: 'center' }}
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
@@ -159,22 +163,22 @@ const ProjectsOverlay: React.FC = () => {
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
                     
                     {/* Content */}
-                    <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-                      <div className="mb-4">
-                        <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
+                    <div className="absolute inset-0 p-12 flex flex-col justify-end text-white">
+                      <div className="mb-6">
+                        <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
                           {tile.title}
                         </h3>
-                        <p className="text-sm text-gray-200 mb-4">
+                        <p className="text-lg text-gray-200 mb-6">
                           {tile.subtitle}
                         </p>
-                        <p className="text-sm text-gray-300 leading-relaxed">
+                        <p className="text-base text-gray-300 leading-relaxed">
                           {tile.description}
                         </p>
                       </div>
                       
                       {/* Arrow indicator */}
-                      <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                       </div>
@@ -182,6 +186,9 @@ const ProjectsOverlay: React.FC = () => {
                   </div>
                 </motion.div>
               ))}
+              
+              {/* Add right padding to center last tile */}
+              <div className="flex-shrink-0 w-[calc(50vw-12rem)]"></div>
             </div>
           </div>
 
