@@ -30,7 +30,12 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Academic foundation',
       description: 'Early architectural explorations and foundational design projects from undergraduate studies.',
       color: 'from-green-600 to-teal-600',
-      image: null
+      image: '/undergrad-projects/main-tile.jpg',
+      icons: [
+        '/undergrad-projects/icons/site-analysis.png',
+        '/undergrad-projects/icons/border-crossing.png',
+        '/undergrad-projects/icons/congregation-center.png'
+      ]
     },
     {
       id: 'graduate-projects',
@@ -38,7 +43,12 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Advanced research',
       description: 'Sophisticated design solutions and research-driven projects from graduate studies.',
       color: 'from-orange-600 to-red-600',
-      image: null
+      image: null,
+      icons: [
+        '/graduate-projects/icons/momentum-hub.png',
+        '/graduate-projects/icons/nook.png',
+        '/graduate-projects/icons/wellness-bazaar.png'
+      ]
     },
     {
       id: 'computer-science',
@@ -166,7 +176,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className={`fixed inset-0 bg-black/95 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
+          className={`fixed inset-0 bg-white/70 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -176,7 +186,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           {!isZoomed && (
             <button
               onClick={handleClose}
-              className="absolute top-8 right-8 text-white text-2xl hover:text-gray-300 transition-colors z-10"
+              className="absolute top-8 right-8 text-black text-2xl hover:text-gray-600 transition-colors z-10"
               aria-label="Close projects overlay"
             >
               ×
@@ -186,7 +196,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           {/* Logo - Always show, positioned top-left */}
           <button 
             onClick={() => router.push('/')} 
-            className="absolute top-8 left-8 text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
+            className="absolute top-8 left-8 text-black text-2xl font-semibold tracking-wide hover:text-gray-600 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
             aria-label="Go to homepage"
             style={{ fontFamily: 'inherit', textRendering: 'optimizeLegibility' }}
           >
@@ -213,80 +223,119 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
               
                              {isZoomed ? (
                  // Show only the current tile when zoomed
-                 <motion.div
-                   key={tiles[currentIndex].id}
-                   className="w-full h-full cursor-pointer group"
-                   initial={{ scale: 0.8, opacity: 0 }}
-                   animate={{ scale: 1, opacity: 1 }}
-                   exit={{ scale: 0.8, opacity: 0 }}
-                   transition={{ duration: 0.5 }}
-                   onClick={() => handleTileClick(tiles[currentIndex].id)}
-                 >
-                   <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[currentIndex].color} group-hover:scale-105 transition-transform duration-300`}>
-                     {/* Background image or gradient */}
-                     {tiles[currentIndex].image ? (
-                       <img
-                         src={tiles[currentIndex].image}
-                         alt={tiles[currentIndex].title}
-                         className="w-full h-full object-cover"
-                       />
-                     ) : null}
-                     {/* Gradient overlay */}
-                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                   </div>
+                 <div className="w-full h-full relative">
+                   {/* Project Icons Floating Above Tile */}
+                   {tiles[currentIndex].icons && (
+                     <div className="absolute -top-24 left-8 flex justify-center space-x-4 z-10">
+                       {tiles[currentIndex].icons.map((icon, iconIndex) => (
+                         <div
+                           key={iconIndex}
+                           className="w-16 h-16 bg-white rounded-lg flex items-center justify-center shadow-lg"
+                         >
+                           <img
+                             src={icon}
+                             alt={`Project ${iconIndex + 1}`}
+                             className="w-12 h-12 object-contain"
+                           />
+                         </div>
+                       ))}
+                     </div>
+                   )}
                    
-                   {/* Title and subtitle below tile */}
-                   <div className="mt-6 text-white text-center">
-                     <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
-                       {tiles[currentIndex].title}
-                     </h3>
-                     <p className="text-lg text-gray-300">
-                       {tiles[currentIndex].subtitle}
-                     </p>
-                   </div>
-                 </motion.div>
+                   <motion.div
+                     key={tiles[currentIndex].id}
+                     className="w-full h-full cursor-pointer group"
+                     initial={{ scale: 0.8, opacity: 0 }}
+                     animate={{ scale: 1, opacity: 1 }}
+                     exit={{ scale: 0.8, opacity: 0 }}
+                     transition={{ duration: 0.5 }}
+                     onClick={() => handleTileClick(tiles[currentIndex].id)}
+                   >
+                     <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[currentIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                       {/* Background image or gradient */}
+                       {tiles[currentIndex].image ? (
+                         <img
+                           src={tiles[currentIndex].image}
+                           alt={tiles[currentIndex].title}
+                           className="w-full h-full object-cover"
+                         />
+                       ) : null}
+                       {/* Gradient overlay */}
+                       <div className="absolute inset-0 bg-white/20 group-hover:bg-white/10 transition-colors duration-300" />
+                     </div>
+                     
+                     {/* Title and subtitle below tile */}
+                     <div className="mt-6 text-black text-center">
+                       <h3 className="text-4xl font-light mb-4 tracking-wider uppercase">
+                         {tiles[currentIndex].title}
+                       </h3>
+                       <p className="text-lg text-gray-600">
+                         {tiles[currentIndex].subtitle}
+                       </p>
+                     </div>
+                   </motion.div>
+                 </div>
               ) : (
                 // Show all tiles when not zoomed
                 tiles.map((tile, index) => (
-                  <motion.div
-                    key={tile.id}
-                    className="flex-shrink-0 w-[48rem] h-[36rem] cursor-pointer group"
-                    style={{ scrollSnapAlign: 'center' }}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    onClick={() => handleTileClick(tile.id)}
-                  >
-                    <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
-                      {/* Background image or gradient */}
-                      {tile.image ? (
-                        <img
-                          src={tile.image}
-                          alt={tile.title}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      ) : null}
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                      
-                      {/* Arrow indicator */}
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                  <div key={tile.id} className="flex-shrink-0 w-[48rem] h-[36rem] relative">
+                    {/* Project Icons Floating Above Tile */}
+                    {tile.icons && (
+                      <div className="absolute -top-20 left-8 flex justify-center space-x-3 z-10">
+                        {tile.icons.map((icon, iconIndex) => (
+                          <div
+                            key={iconIndex}
+                            className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-lg"
+                          >
+                            <img
+                              src={icon}
+                              alt={`Project ${iconIndex + 1}`}
+                              className="w-8 h-8 object-contain"
+                            />
+                          </div>
+                        ))}
                       </div>
-                    </div>
+                    )}
                     
-                    {/* Title and subtitle below tile */}
-                    <div className="mt-4 text-white">
-                      <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
-                        {tile.title}
-                      </h3>
-                      <p className="text-sm text-gray-300">
-                        {tile.subtitle}
-                      </p>
-                    </div>
-                  </motion.div>
+                    <motion.div
+                      className="w-full h-full cursor-pointer group"
+                      style={{ scrollSnapAlign: 'center' }}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      onClick={() => handleTileClick(tile.id)}
+                    >
+                      <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
+                        {/* Background image or gradient */}
+                        {tile.image ? (
+                          <img
+                            src={tile.image}
+                            alt={tile.title}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        ) : null}
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-white/20 group-hover:bg-white/10 transition-colors duration-300" />
+                        
+                        {/* Arrow indicator */}
+                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      {/* Title and subtitle below tile */}
+                      <div className="mt-4 text-black">
+                        <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
+                          {tile.title}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {tile.subtitle}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
                 ))
               )}
               
@@ -304,18 +353,18 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
             <div className="px-8 pb-8">
               <div className="max-w-6xl mx-auto">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-white text-sm tracking-wider uppercase">
+                  <span className="text-black text-sm tracking-wider uppercase">
                     {tiles[currentIndex].title}
                   </span>
-                  <span className="text-gray-400 text-sm">
+                  <span className="text-gray-600 text-sm">
                     {currentIndex + 1} / {tiles.length}
                   </span>
                 </div>
                 
                 {/* Progress bar */}
-                <div className="w-full bg-gray-800 h-px relative">
+                <div className="w-full bg-gray-300 h-px relative">
                   <motion.div
-                    className="absolute top-0 left-0 h-full bg-white"
+                    className="absolute top-0 left-0 h-full bg-black"
                     initial={{ width: '0%' }}
                     animate={{ width: `${((currentIndex + 1) / tiles.length) * 100}%` }}
                     transition={{ duration: 0.3 }}
@@ -329,7 +378,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                       key={index}
                       onClick={() => scrollToTile(index)}
                       className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                        index === currentIndex ? 'bg-white' : 'bg-gray-600 hover:bg-gray-400'
+                        index === currentIndex ? 'bg-black' : 'bg-gray-400 hover:bg-gray-600'
                       }`}
                       aria-label={`Go to ${tiles[index].title}`}
                     />

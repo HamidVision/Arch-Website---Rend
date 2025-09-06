@@ -9,6 +9,7 @@ const UndergradProjectsPage: React.FC = () => {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [currentProject, setCurrentProject] = useState(0);
+  const [isWidescreen, setIsWidescreen] = useState(false);
 
   const projects = [
     {
@@ -17,7 +18,7 @@ const UndergradProjectsPage: React.FC = () => {
       subtitle: 'Understanding Context & Place',
       description: 'Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.',
       color: 'from-emerald-600 to-teal-600',
-      image: null // Will be provided later
+      image: '/undergrad-projects/site-analysis/site-tile.jpg'
     },
     {
       id: 'border-crossing',
@@ -25,7 +26,7 @@ const UndergradProjectsPage: React.FC = () => {
       subtitle: 'Thresholds & Transitions',
       description: 'Exploration of architectural thresholds, spatial transitions, and the design of boundary conditions that define and connect spaces.',
       color: 'from-blue-600 to-indigo-600',
-      image: null // Will be provided later
+      image: '/undergrad-projects/border-crossing/border-tile.jpg'
     },
     {
       id: 'congregation-center',
@@ -33,7 +34,7 @@ const UndergradProjectsPage: React.FC = () => {
       subtitle: 'Community & Gathering',
       description: 'Design for communal spaces that foster connection, facilitate gatherings, and create meaningful social interactions.',
       color: 'from-purple-600 to-pink-600',
-      image: null // Will be provided later
+      image: '/undergrad-projects/congregation-center/congregation-tile.jpg'
     }
   ];
 
@@ -42,21 +43,35 @@ const UndergradProjectsPage: React.FC = () => {
       setIsMobile(window.innerWidth < 768);
     };
     
+    const checkAspectRatio = () => {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      const isWide = aspectRatio > 1.5; // Only use split-screen for truly widescreen ratios (16:9+)
+      // console.log(`Aspect ratio: ${aspectRatio.toFixed(2)}, isWidescreen: ${isWide}, width: ${window.innerWidth}, height: ${window.innerHeight}`);
+      setIsWidescreen(isWide);
+    };
+    
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkAspectRatio();
+    window.addEventListener('resize', () => {
+      checkMobile();
+      checkAspectRatio();
+    });
     
     // Track scroll position to update current project
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
       const projectIndex = Math.floor(scrollPosition / windowHeight);
-      setCurrentProject(Math.max(0, Math.min(projectIndex, projects.length - 1)));
+      setCurrentProject(Math.max(0, Math.min(projectIndex, projects.length)));
     };
     
     window.addEventListener('scroll', handleScroll);
     
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('resize', () => {
+        checkMobile();
+        checkAspectRatio();
+      });
       window.removeEventListener('scroll', handleScroll);
     };
   }, [projects.length]);
@@ -120,98 +135,230 @@ const UndergradProjectsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Page Title */}
+
+      {/* Main Hero Tile */}
       <motion.div
-        className="fixed top-24 left-8 z-[60] text-white"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
+        className={`relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
       >
-        <h1 className="text-4xl md:text-6xl font-title mb-4 tracking-wider uppercase">
-          Undergrad Projects
-        </h1>
-        <p className="text-lg md:text-xl font-body text-white/70 max-w-md">
-          Early architectural explorations and foundational design projects from undergraduate studies.
-        </p>
+        {/* Left Side - White Background with Text (only on widescreen) */}
+        {isWidescreen && (
+          <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
+            <motion.div
+              className="max-w-md"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-title text-gray-800 mb-6 tracking-wider uppercase">
+                Undergrad Projects
+              </h1>
+              <p className="text-xl md:text-2xl font-body text-gray-600 max-w-2xl leading-relaxed">
+                Early architectural explorations and foundational design projects from undergraduate studies.
+              </p>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Right Side - Background Image */}
+        <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
+          <img
+            src="/undergrad-projects/main-tile.jpg"
+            alt="Undergraduate Projects"
+            className="w-full h-screen object-cover object-bottom"
+            onError={(e) => {/* Image load error */}}
+            onLoad={() => {/* Image loaded successfully */}}
+          />
+          {!isWidescreen && <div className="absolute inset-0 bg-black/40" />}
+        </div>
+
+        {/* Overlay Content (only on 4:3/square) */}
+        {!isWidescreen && (
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
+            <motion.div
+              className="max-w-4xl"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-title text-white mb-6 tracking-wider uppercase">
+                Undergrad Projects
+              </h1>
+              <p className="text-xl md:text-2xl font-body text-white/90 max-w-2xl leading-relaxed">
+                Early architectural explorations and foundational design projects from undergraduate studies.
+              </p>
+            </motion.div>
+          </div>
+        )}
       </motion.div>
 
-      {/* Projects Container */}
-      <div className="pt-48 pb-24 projects-container">
-        {projects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            className="min-h-screen flex items-center justify-center px-8 relative project-card"
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 + (index * 0.2) }}
-          >
-            {/* Project Card */}
-            <div className="w-full max-w-6xl mx-auto">
+      {/* Individual Project Tiles */}
+      {projects.map((project, index) => (
+        <motion.div
+          key={project.id}
+          className={`relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 + (index * 0.2) }}
+          onClick={() => handleProjectClick(project.id)}
+        >
+          {/* Left Side - White Background with Text (only on widescreen) */}
+          {isWidescreen && (
+            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
               <motion.div
-                className="relative w-full aspect-[4/3] cursor-pointer group overflow-hidden rounded-lg"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => handleProjectClick(project.id)}
+                className="max-w-md mb-16"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 + (index * 0.2) }}
               >
-                {/* Background Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.color} group-hover:scale-105 transition-transform duration-500`}>
-                  {/* Placeholder for project image */}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                </div>
-
-                {/* Project Content */}
-                <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 + (index * 0.2) }}
-                  >
-                    <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
-                      {project.title}
-                    </h2>
-                    <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
-                      {project.subtitle}
-                    </h3>
-                    <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
-                      {project.description}
-                    </p>
-                  </motion.div>
-
-                  {/* Arrow indicator */}
-                  <motion.div
-                    className="absolute top-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileHover={{ x: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </motion.div>
-                </div>
+                <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
+                  {project.title}
+                </h2>
+                <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
+                  {project.subtitle}
+                </h3>
+                <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
+                  {project.description}
+                </p>
               </motion.div>
+
+              {/* READ MORE Button */}
+              <div
+                className="absolute bottom-8 right-8 cursor-pointer group/button"
+                style={{
+                  backgroundColor: isWidescreen ? '#1f2937' : 'rgba(0, 0, 0, 0.8)',
+                  borderColor: isWidescreen ? '#4b5563' : 'rgba(255, 255, 255, 1)',
+                  color: isWidescreen ? '#ffffff' : '#ffffff',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  padding: '12px 24px',
+                  borderRadius: '0px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  zIndex: '10',
+                  position: 'absolute',
+                  bottom: '32px',
+                  right: '32px',
+                  overflow: 'hidden'
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleProjectClick(project.id);
+                }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white origin-left z-0"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+                
+                {/* Text with CSS transition */}
+                <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
+                  READ MORE
+                </span>
+              </div>
             </div>
-          </motion.div>
-        ))}
-      </div>
+          )}
+
+          {/* Right Side - Background Image */}
+          <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
+            <img
+              src={project.image}
+              alt={project.title}
+              className="w-full h-screen object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
+              onError={(e) => {/* Image load error */}}
+              onLoad={() => {/* Image loaded successfully */}}
+            />
+            {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
+          </div>
+
+          {/* Overlay Content (only on 4:3/square) */}
+          {!isWidescreen && (
+            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
+              <motion.div
+                className="max-w-4xl mb-16"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 + (index * 0.2) }}
+              >
+                <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
+                  {project.title}
+                </h2>
+                <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
+                  {project.subtitle}
+                </h3>
+                <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
+                  {project.description}
+                </p>
+              </motion.div>
+
+              {/* READ MORE Button */}
+              <div
+                className="absolute bottom-8 right-8 cursor-pointer group/button"
+                style={{
+                  backgroundColor: isWidescreen ? '#1f2937' : 'rgba(0, 0, 0, 0.8)',
+                  borderColor: isWidescreen ? '#4b5563' : 'rgba(255, 255, 255, 1)',
+                  color: isWidescreen ? '#ffffff' : '#ffffff',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  padding: '12px 24px',
+                  borderRadius: '0px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  zIndex: '10',
+                  position: 'absolute',
+                  bottom: '32px',
+                  right: '32px',
+                  overflow: 'hidden'
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleProjectClick(project.id);
+                }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white origin-left z-0"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+                
+                {/* Text with CSS transition */}
+                <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
+                  READ MORE
+                </span>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      ))}
 
       {/* Progress Indicator */}
       <motion.div
-        className="fixed bottom-8 left-8 z-[60] text-white"
+        className={`fixed bottom-8 left-8 z-[60] ${isWidescreen ? 'text-gray-800' : 'text-white'}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.2 }}
       >
         <div className="flex items-center space-x-4">
           <span className="text-sm font-subtitle tracking-wider uppercase">
-            {projects[currentProject].title}
+            {currentProject === 0 ? 'Overview' : projects[currentProject - 1].title}
           </span>
           <div className="flex space-x-2">
-            {projects.map((_, index) => (
+            {Array.from({ length: projects.length + 1 }, (_, index) => (
               <div
                 key={index}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  index === currentProject ? 'bg-white' : 'bg-white/30'
+                  index === currentProject 
+                    ? (isWidescreen ? 'bg-gray-800' : 'bg-white')
+                    : (isWidescreen ? 'bg-gray-400' : 'bg-white/30')
                 }`}
               />
             ))}
