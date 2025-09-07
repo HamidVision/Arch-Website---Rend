@@ -74,6 +74,307 @@
 
 ---
 
+## Version v0.1.14 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Root Cause Analysis & Solution
+- ✅ **Stacking Context Issue Identified**: Analysis container with `overflow-x-auto` + framer-motion transforms created isolated stacking context
+- ✅ **Global Header Layer**: Moved header elements to separate fixed overlay outside main container
+- ✅ **Architecture Restructure**: Headers now render in completely independent layer
+- ✅ **Motion Optimization**: Removed framer-motion from analysis container to prevent stacking context conflicts
+- ✅ **Pointer Events Management**: Proper event handling with `pointer-events-none` overlay + `pointer-events-auto` on interactive elements
+
+### Technical Achievements
+- **Stacking Context Isolation**: Headers render outside content containers to avoid z-index conflicts
+- **Clean DOM Structure**: `<> Global Header Layer + Main Content Container </>`
+- **Event Management**: Selective pointer events ensure headers remain interactive
+- **Performance**: Removed unnecessary motion wrapper from analysis view
+- **CSS Solutions**: Fixed positioning with proper layer separation
+
+### Files Modified in v0.1.14
+- `src/components/projects/HorizontalProjectLayout.tsx` - Complete restructure with global header layer
+
+### Key Improvements
+- **Guaranteed Header Visibility**: Headers isolated from content stacking contexts
+- **Robust Architecture**: Header layer independent of content mode switching
+- **Clean Event Handling**: Proper pointer event management across layers
+- **Performance Optimization**: Simplified analysis container without unnecessary transforms
+- **Professional Interface**: Consistent header behavior across all project views
+
+---
+
+## Version v0.1.13 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Enhanced Z-Index Management**: Increased header elements to z-[80] for guaranteed visibility
+- ✅ **Layering Hierarchy Fix**: Proper stacking order for all UI elements across modes
+- ✅ **Header Persistence**: Ensured header buttons remain visible in both hero and analysis modes
+- ✅ **UI Element Organization**: Clear z-index hierarchy for consistent interface behavior
+
+### Technical Achievements
+- **Z-Index Optimization**: Header elements elevated to z-[80], other UI to z-[70]
+- **Layering Strategy**: Hierarchical z-index system prevents element overlap issues
+- **Cross-Mode Reliability**: Header visibility guaranteed regardless of current view mode
+- **Interface Stability**: Consistent UI element positioning and visibility
+
+### Files Modified in v0.1.13
+- `src/components/projects/HorizontalProjectLayout.tsx` - Enhanced z-index management for header visibility
+
+### Key Improvements
+- **Guaranteed Header Visibility**: Header buttons now visible in all project views
+- **Proper UI Layering**: Clear hierarchy prevents interface elements from hiding
+- **Consistent Navigation**: Reliable access to Portfolio and Menu buttons
+- **Professional Interface**: Stable header behavior across all modes
+
+---
+
+## Version v0.1.12 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Header Button Visibility Fix**: Restored Portfolio and Menu buttons in analysis mode
+- ✅ **Consistent Navigation**: Header buttons now visible across both hero and analysis modes
+- ✅ **Improved Button Styling**: Fixed hamburger menu lines for better visibility
+- ✅ **Cross-Mode Consistency**: Unified header appearance regardless of current view
+
+### Technical Achievements
+- **Button Styling Fix**: Changed from `bg-current text-white` to direct `bg-white` for hamburger lines
+- **Z-Index Maintenance**: Ensured header elements maintain proper stacking order
+- **Visibility Assurance**: White buttons visible against both light hero and dark analysis backgrounds
+- **Code Organization**: Added clear comments for header button sections
+
+### Files Modified in v0.1.12
+- `src/components/projects/HorizontalProjectLayout.tsx` - Fixed header button visibility in analysis mode
+
+### Key Improvements
+- **Complete Navigation Access**: Users can access Portfolio and Menu from any project view
+- **Visual Consistency**: Header buttons maintain same appearance across all modes
+- **Better UX**: No navigation dead ends or missing interface elements
+- **Professional Polish**: Consistent header presence maintains site navigation standards
+
+---
+
+## Version v0.1.11 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Seamless Scroll Navigation**: Added scroll-back functionality from analysis to hero mode
+- ✅ **Clean Interface**: Removed bottom text panel for minimal distraction
+- ✅ **Edge Detection**: Smart scroll behavior at leftmost boundary
+- ✅ **Bidirectional Navigation**: Complete wheel scroll flow (hero → analysis → hero)
+- ✅ **Streamlined UI**: Focus on visual content without text overlays
+
+### Technical Achievements
+- **Boundary Detection**: `scrollLeft <= 0` check for edge-based mode switching
+- **Scroll Direction Logic**: Negative scroll amount detection for backward navigation
+- **UI Simplification**: Removed panel info overlay for cleaner presentation
+- **Continuous Navigation**: Uninterrupted scroll flow between modes
+- **State Management**: Smooth transitions without navigation interruption
+
+### Files Modified in v0.1.11
+- `src/components/projects/HorizontalProjectLayout.tsx` - Added scroll-back + removed bottom text
+
+### Key Improvements
+- **Intuitive Navigation**: Natural scroll behavior - no dead ends or stuck positions
+- **Clean Visual Experience**: Analysis board displays without text distractions
+- **Complete Scroll Loop**: Hero → Analysis → Hero via wheel scroll alone
+- **Edge-Aware UX**: Smart behavior at scroll boundaries
+- **Minimal Interface**: Focus on architectural content
+
+---
+
+## Version v0.1.10 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Mouse Wheel Horizontal Scrolling**: Added wheel scroll support for analysis mode
+- ✅ **Vertical to Horizontal Conversion**: Mouse wheel now controls horizontal scrolling in analysis view
+- ✅ **Scroll Speed Control**: Adjustable scroll sensitivity for smooth navigation
+- ✅ **Mode-Aware Scrolling**: Different scroll behavior for hero vs analysis modes
+- ✅ **Full Navigation Suite**: Wheel scroll + drag scroll + keyboard navigation
+
+### Technical Achievements
+- **Event Handling Enhancement**: Extended wheel event handler for analysis mode
+- **Scroll Conversion**: `e.deltaY` converted to horizontal `scrollLeft` movement
+- **Speed Optimization**: `scrollSpeed = 2` for responsive but controlled scrolling
+- **State-Aware Logic**: Different scroll behaviors based on current `viewMode`
+- **Cross-Platform Support**: Works with mouse wheels, trackpads, and scroll gestures
+
+### Files Modified in v0.1.10
+- `src/components/projects/HorizontalProjectLayout.tsx` - Added mouse wheel scroll for analysis mode
+
+### Key Improvements
+- **Intuitive Navigation**: Mouse wheel now scrolls horizontally through analysis board
+- **Consistent UX**: Standard wheel scroll behavior across both hero and analysis modes
+- **Better Accessibility**: Multiple input methods for horizontal navigation
+- **Smooth Experience**: Controlled scroll speed prevents jarring movements
+
+---
+
+## Version v0.1.9 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Complete Architecture Overhaul**: Abandoned panel-based system entirely
+- ✅ **Two-Mode System**: Distinct 'hero' and 'analysis' view modes
+- ✅ **Native Horizontal Scrolling**: Pure browser-native scroll for analysis board
+- ✅ **No Width Constraints**: Analysis view uses full-screen horizontal scroll container
+- ✅ **Smooth Mode Transitions**: Clean switching between hero and analysis views
+- ✅ **Multiple Navigation Options**: Wheel scroll, keyboard, and button navigation
+
+### Technical Achievements
+- **Architecture Change**: `viewMode` state instead of panel-based navigation
+- **Unconstrained Scrolling**: Full-screen `overflow-x-auto` container for analysis
+- **Image Optimization**: `width: 'max-content'` allows natural image dimensions
+- **Event Handling**: Mode-aware wheel event routing
+- **Performance**: Eliminated panel constraints and scroll conflicts
+- **User Experience**: Intuitive hero → analysis transition
+
+### Files Modified in v0.1.9
+- `src/components/projects/HorizontalProjectLayout.tsx` - Complete rewrite with mode-based system
+
+### Key Improvements
+- **Unlimited Horizontal Scroll**: Analysis board displays full width without constraints
+- **Clean Architecture**: Two distinct modes instead of complex panel management
+- **Native Browser Behavior**: Uses standard horizontal scrolling mechanisms
+- **Better Performance**: Eliminated scroll conflicts and constraint calculations
+- **Intuitive UX**: Clear separation between navigation and content exploration
+
+---
+
+## Version v0.1.8 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Hybrid Navigation System**: Hero panel navigation + pure analysis board scrolling
+- ✅ **Unrestricted Image Scrolling**: Analysis board displays full width with native horizontal scroll
+- ✅ **Smart Scroll Routing**: Wheel events route appropriately (panel nav vs content scroll)
+- ✅ **Width Optimization**: `width: 'max-content'` allows analysis board to maintain natural dimensions
+- ✅ **Visual Scroll Indicators**: Added scroll guidance for analysis panel exploration
+
+### Technical Achievements
+- **Scroll Behavior Split**: Hero (panel navigation) vs Analysis (content scrolling)
+- **Container Structure**: Direct `.analysis-scroll-container` with `overflow-x-auto`
+- **Image Sizing**: `height: '100vh'` + `width: 'auto'` for perfect aspect ratio
+- **Event Management**: Targeted wheel event handling based on current panel
+- **Performance**: `scrollbarWidth: 'thin'` for better visual experience
+
+### Files Modified in v0.1.8
+- `src/components/projects/HorizontalProjectLayout.tsx` - Hybrid navigation system implementation
+
+### Key Improvements
+- **Full Image Access**: Complete analysis board visible through natural horizontal scrolling
+- **Intuitive UX**: Hero panel navigation, then pure content exploration
+- **No Panel Constraints**: Analysis board free from panel width limitations
+- **Clear Visual Cues**: Scroll indicators guide user interaction
+
+---
+
+## Version v0.1.7 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Full Image Horizontal Scrolling**: Analysis board now displays full width with native scrolling
+- ✅ **Dual Scroll Behavior**: Panel navigation + content scrolling within analysis board
+- ✅ **Container Optimization**: `overflow-x-auto` with `minWidth: max-content` for proper image display
+- ✅ **Smart Scroll Detection**: Wheel events route to content scrolling when on analysis panel
+- ✅ **Maintained Image Quality**: Full resolution preserved while enabling complete viewing
+
+### Technical Achievements
+- **Content Scrolling**: Added `overflow-x-auto overflow-y-hidden` to content panel container
+- **Width Management**: `minWidth: 'max-content'` allows image to maintain natural width
+- **Event Routing**: Smart wheel event handling - panel navigation vs content scrolling
+- **Image Sizing**: `height: '100vh'` with `width: 'auto'` for perfect aspect ratio
+- **Scroll Context**: Detection of current panel to enable appropriate scroll behavior
+
+### Files Modified in v0.1.7
+- `src/components/projects/HorizontalProjectLayout.tsx` - Added full-width scrolling capability
+
+### Key Improvements
+- **Complete Image Viewing**: Full analysis board visible through horizontal scrolling
+- **Intuitive Navigation**: Panel-to-panel movement + content exploration within panels
+- **Responsive Display**: Image fits screen height while maintaining readable detail level
+- **Smooth Experience**: Seamless transition between navigation modes
+
+---
+
+## Version v0.1.6 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Image Height Fix**: Analysis board now properly fits screen height with correct aspect ratio
+- ✅ **Scroll Navigation Fix**: Eliminated looping behavior, smooth back-and-forth panel navigation
+- ✅ **High-Resolution Images**: Preserved image quality with `unoptimized={true}` and `quality={100}`
+- ✅ **Controlled Scroll Events**: Panel-based navigation instead of continuous scrolling
+- ✅ **Boundary Protection**: Proper clamping to prevent out-of-bounds navigation
+- ✅ **Scroll Debouncing**: Timeout mechanism to prevent rapid successive scrolls
+
+### Technical Achievements
+- **Image Optimization**: `maxHeight: '100vh'` with `unoptimized={true}` for sharp details
+- **Navigation Logic**: Discrete panel jumping instead of continuous scroll
+- **Boundary Handling**: `Math.max(0, Math.min(panelIndex, panels.length - 1))` clamping
+- **Event Management**: Improved wheel event handling with timeout debouncing
+- **Resolution Preservation**: `quality={100}` maintains high-resolution analysis board details
+- **Smooth Transitions**: Panel-to-panel navigation with proper scroll behavior
+
+### Files Modified in v0.1.6
+- `src/components/projects/HorizontalProjectLayout.tsx` - Fixed image sizing, scroll navigation, and resolution
+
+### Key Improvements
+- **Perfect Image Fit**: Analysis board fits screen height while maintaining aspect ratio
+- **Non-Looping Navigation**: Clean back-and-forth movement between hero and analysis panels
+- **Sharp Image Quality**: High-resolution analysis board with readable details
+- **Responsive Scrolling**: Controlled wheel events with proper debouncing
+- **Better UX**: Predictable navigation behavior without infinite loops
+
+---
+
+## Version v0.1.5 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Header Consistency Fix**: Restored original header design across all project pages
+- ✅ **Enhanced Mouse Scroll**: Improved horizontal scrolling with mouse wheel (vertical → horizontal)
+- ✅ **Image Sizing Fix**: Analysis board now fits to screen height with horizontal scroll
+- ✅ **Reusable Project Layout**: Created `HorizontalProjectLayout` component for all projects
+- ✅ **Global Scroll Handling**: Mouse wheel scroll works anywhere on the page
+- ✅ **Improved Navigation**: Better keyboard and mouse navigation support
+
+### Technical Achievements
+- **Header Unification**: Restored HE logo + Portfolio/Menu buttons design consistency
+- **Scroll Enhancement**: Global wheel event listener for seamless horizontal navigation
+- **Image Optimization**: Analysis board fits screen height (`h-screen w-auto`) with horizontal overflow
+- **Component Architecture**: Reusable `HorizontalProjectLayout` for scalable project pages
+- **Event Handling**: Improved wheel scroll with `preventDefault()` and speed control
+- **Responsive Design**: Better image sizing and container handling
+
+### Files Modified in v0.1.5
+- `src/components/projects/HorizontalProjectLayout.tsx` - Enhanced reusable project layout component
+- `src/app/undergrad-projects/site-analysis/page.tsx` - Updated to use new layout component
+- `src/app/undergrad-projects/border-crossing/page.tsx` - Updated to use new layout component
+- `src/app/undergrad-projects/congregation-center/page.tsx` - Updated to use new layout component
+- `src/components/projects/index.ts` - Export configuration for project components
+
+### Key Improvements
+- **Consistent Header**: HE logo (top-left) + Portfolio/Menu buttons (top-right)
+- **Better Scroll**: Mouse wheel scroll converts vertical to horizontal movement globally
+- **Proper Image Display**: Analysis board maintains aspect ratio while fitting screen height
+- **Scalable Architecture**: Easy to add new projects with consistent behavior
+- **Enhanced UX**: Smooth scrolling with improved navigation feedback
+
+---
+
 ## Version v0.1.4 (Next)
 **Date**: December 2024
 **Status**: Planning Phase

@@ -182,27 +182,6 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Close button - Only show when not zoomed */}
-          {!isZoomed && (
-            <button
-              onClick={handleClose}
-              className="absolute top-8 right-8 text-black text-2xl hover:text-gray-600 transition-colors z-10"
-              aria-label="Close projects overlay"
-            >
-              ×
-            </button>
-          )}
-
-          {/* Logo - Always show, positioned top-left */}
-          <button 
-            onClick={() => router.push('/')} 
-            className="absolute top-8 left-8 text-black text-2xl font-semibold tracking-wide hover:text-gray-600 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
-            aria-label="Go to homepage"
-            style={{ fontFamily: 'inherit', textRendering: 'optimizeLegibility' }}
-          >
-            HE
-          </button>
-
           {/* Horizontal Scrolling Container */}
           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
             <div
@@ -221,7 +200,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                 </>
               )}
               
-                             {isZoomed ? (
+              {isZoomed ? (
                  // Show only the current tile when zoomed
                  <div className="w-full h-full relative">
                    {/* Project Icons Floating Above Tile */}
