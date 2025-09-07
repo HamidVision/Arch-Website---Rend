@@ -16,7 +16,7 @@ export default function SiteAnalysisPage() {
     {
       id: 'analysis',
       type: 'content' as const,
-      image: '/undergrad-projects/site-analysis/site-analysis.png',
+      image: '/undergrad-projects/site-analysis/site-analysis.jpg',
       title: 'Comprehensive Site Analysis',
       description: 'Detailed analysis board showing site conditions, environmental factors, and design considerations.',
       alt: 'Site Analysis Detailed Board'

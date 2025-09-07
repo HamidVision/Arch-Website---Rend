@@ -14,6 +14,7 @@ const UndergradProjectsPage: React.FC = () => {
   const [isHorizontalScrollMode, setIsHorizontalScrollMode] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showGrid, setShowGrid] = useState(false); // Grid starts hidden
 
   const projects = [
     {
@@ -23,7 +24,7 @@ const UndergradProjectsPage: React.FC = () => {
       description: 'Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.',
       color: 'from-emerald-600 to-teal-600',
       image: '/undergrad-projects/site-analysis/site-tile.jpg',
-      detailImage: '/undergrad-projects/site-analysis/site-analysis.png'
+      detailImage: '/undergrad-projects/site-analysis/site-analysis.jpg'
     },
     {
       id: 'border-crossing',
@@ -56,7 +57,7 @@ const UndergradProjectsPage: React.FC = () => {
     } else {
       setIsHorizontalScrollMode(false);
     }
-  }, [pathname, projects]);
+  }, [pathname]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -119,11 +120,24 @@ const UndergradProjectsPage: React.FC = () => {
     setTimeout(() => setIsScrolling(false), 300);
   };
 
-  // Handle keyboard navigation for horizontal scroll
+  // Handle keyboard navigation for horizontal scroll and grid toggle
   useEffect(() => {
-    if (!isHorizontalScrollMode) return;
-    
     const handleKeyPress = (e: KeyboardEvent) => {
+      console.log('Key pressed:', e.key); // Debug log
+      
+      // Grid toggle (works in both modes)
+      if (e.key.toLowerCase() === 'g') {
+        e.preventDefault();
+        console.log('Toggling grid'); // Debug log
+        setShowGrid(prev => {
+          console.log('Grid toggle from', prev, 'to', !prev);
+          return !prev;
+        });
+        return;
+      }
+      
+      if (!isHorizontalScrollMode) return;
+      
       if (e.key === 'ArrowLeft') handleHorizontalScroll('left');
       if (e.key === 'ArrowRight') handleHorizontalScroll('right');
       if (e.key === 'Escape') router.push('/undergrad-projects');
@@ -131,50 +145,128 @@ const UndergradProjectsPage: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isHorizontalScrollMode, router]);
+  }, [isHorizontalScrollMode, router]); // Removed showGrid from dependencies
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black">
+    <div className={`min-h-screen relative overflow-hidden ${isHorizontalScrollMode ? 'bg-white' : 'bg-black'}`}>
+      {/* Architectural Grid System - Only show when showGrid is true */}
+      {showGrid && (
+        <div 
+          className="fixed inset-0 pointer-events-none"
+          style={{ zIndex: 9999 }}
+        >
+          {/* Vertical Grid Lines with Numbers */}
+          {Array.from({ length: 25 }, (_, i) => (
+            <div key={`v-${i}`}>
+              <div
+                className="absolute top-0 bottom-0 border-l border-red-500/30"
+                style={{
+                  left: `${(i * 4)}%`,
+                  width: '1px'
+                }}
+              />
+              {/* Vertical Line Numbers */}
+              <div
+                className="absolute top-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
+                style={{
+                  left: `${(i * 4)}%`,
+                  transform: 'translateX(-50%)'
+                }}
+              >
+                {i + 1}
+              </div>
+            </div>
+          ))}
+          
+          {/* Horizontal Grid Lines with Letters */}
+          {Array.from({ length: 19 }, (_, i) => (
+            <div key={`h-${i}`}>
+              <div
+                className="absolute left-0 right-0 border-t border-red-500/30"
+                style={{
+                  top: `${(i * 5.55)}%`,
+                  height: '1px'
+                }}
+              />
+              {/* Horizontal Line Letters */}
+              <div
+                className="absolute left-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
+                style={{
+                  top: `${(i * 5.55)}%`,
+                  transform: 'translateY(-50%)'
+                }}
+              >
+                {String.fromCharCode(65 + i)}
+              </div>
+            </div>
+          ))}
+          
+          {/* Center Cross Lines */}
+          <div className="absolute top-0 bottom-0 left-1/2 border-l border-red-500/50 w-px" />
+          <div className="absolute left-0 right-0 top-1/2 border-t border-red-500/50 h-px" />
+          
+          {/* Grid Info */}
+          <div 
+            className="absolute top-2 left-2 text-red-500 text-xs font-mono bg-white/90 px-2 py-1 rounded border border-red-500/50"
+            style={{ zIndex: 10000 }}
+          >
+            GRID: ON (Press G to toggle) | Format: Letter-Number (e.g., C-7)
+          </div>
+        </div>
+      )}
+
       {/* Navigation - Always visible */}
-      <motion.button
+      <button
         onClick={handleBackClick}
-        className="fixed top-8 left-8 text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
+        className={`fixed top-8 left-8 text-2xl font-semibold tracking-wide transition-colors z-[100] bg-transparent border-none outline-none cursor-pointer ${isHorizontalScrollMode ? 'text-gray-800 hover:text-gray-600' : 'text-white hover:text-gray-300'}`}
         aria-label="Go to homepage"
-        style={{ fontFamily: 'inherit', textRendering: 'optimizeLegibility' }}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        style={{ zIndex: 100 }}
       >
         HE
-      </motion.button>
+      </button>
+
+      {/* Grid Toggle Button - Temporary for testing */}
+      <button
+        onClick={() => {
+          console.log('Button clicked, current showGrid:', showGrid);
+          setShowGrid(!showGrid);
+          console.log('Button clicked, new showGrid:', !showGrid);
+        }}
+        className="fixed top-8 right-8 bg-red-500 text-white px-3 py-1 text-xs rounded z-[100]"
+        style={{ zIndex: 100 }}
+      >
+        Grid: {showGrid ? 'ON' : 'OFF'}
+      </button>
 
       {/* Portfolio and Menu Buttons - Always visible */}
-      <div className="fixed top-0 right-0 z-[70] p-6">
+      <div className="fixed top-0 right-0 z-[100] p-6" style={{ zIndex: 100 }}>
         <div className="flex items-center space-x-6">
           {/* Portfolio Button */}
           <motion.button
             onClick={() => router.push('/')}
-            className="focus:outline-none"
+            className="focus:outline-none relative z-[100]"
             aria-label="Go to portfolio"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ zIndex: 100 }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
+              <rect x="4" y="4" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
+              <rect x="14" y="4" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
+              <rect x="4" y="14" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
+              <rect x="14" y="14" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
             </svg>
           </motion.button>
 
           {/* Menu Button */}
           <motion.button
-            className="relative z-[70] h-6 w-8 focus:outline-none"
+            className={`relative z-[100] h-6 w-8 focus:outline-none ${isHorizontalScrollMode ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ zIndex: 100 }}
           >
             <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
               <span aria-hidden="true" className="absolute block h-0.5 w-6 transform bg-current transition duration-300 ease-in-out -translate-y-1"></span>
@@ -187,17 +279,17 @@ const UndergradProjectsPage: React.FC = () => {
 
       {/* Main Content - Show horizontal scroll if in horizontal scroll mode */}
       {isHorizontalScrollMode ? (
-        <div className="h-screen bg-gray-900 relative overflow-hidden">
+        <div className="h-screen bg-white relative overflow-hidden" style={{ zIndex: 1 }}>
           {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="w-full h-full bg-gradient-to-r from-gray-800 to-gray-900"></div>
+          <div className="absolute inset-0 opacity-5">
+            <div className="w-full h-full bg-gradient-to-r from-gray-100 to-gray-200"></div>
           </div>
 
           {/* Navigation Arrows */}
           <button
             onClick={() => handleHorizontalScroll('left')}
             disabled={isScrolling || currentImageIndex === 0}
-            className="absolute left-8 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 disabled:opacity-50"
+            className="absolute left-8 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800/20 hover:bg-gray-800/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 disabled:opacity-50"
             aria-label="Previous image"
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,7 +300,7 @@ const UndergradProjectsPage: React.FC = () => {
           <button
             onClick={() => handleHorizontalScroll('right')}
             disabled={isScrolling}
-            className="absolute right-8 top-1/2 transform -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 disabled:opacity-50"
+            className="absolute right-8 top-1/2 transform -translate-y-1/2 z-10 bg-gray-800/20 hover:bg-gray-800/30 backdrop-blur-sm rounded-full p-4 transition-all duration-300 disabled:opacity-50"
             aria-label="Next image"
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,8 +308,8 @@ const UndergradProjectsPage: React.FC = () => {
             </svg>
           </button>
 
-          {/* Image Container */}
-          <div className="h-full flex items-center justify-center px-20">
+          {/* Image Container - Positioned so bottom sits on M grid line (66.6%) */}
+          <div className="h-full flex items-end justify-center px-20" style={{ paddingBottom: '33.4%' }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentImageIndex}
@@ -238,7 +330,7 @@ const UndergradProjectsPage: React.FC = () => {
                   />
                   
                   {/* Image Caption */}
-                  <div className="absolute bottom-4 left-4 bg-black/70 text-white px-4 py-2 rounded backdrop-blur-sm">
+                  <div className="absolute bottom-4 left-4 bg-gray-800/70 text-white px-4 py-2 rounded backdrop-blur-sm">
                     <p className="text-sm">{projects[currentProject].title} - Detail View</p>
                   </div>
                 </div>
@@ -246,28 +338,29 @@ const UndergradProjectsPage: React.FC = () => {
             </AnimatePresence>
           </div>
 
+
           {/* Progress Indicators */}
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
             <button
               onClick={() => setCurrentImageIndex(0)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 currentImageIndex === 0 
-                  ? 'bg-white' 
-                  : 'bg-white/40 hover:bg-white/60'
+                  ? 'bg-gray-800' 
+                  : 'bg-gray-400 hover:bg-gray-600'
               }`}
               aria-label="Go to first image"
             />
           </div>
 
           {/* Image Counter */}
-          <div className="absolute bottom-8 right-8 text-white/70 text-sm">
+          <div className="absolute bottom-8 right-8 text-gray-600 text-sm">
             {currentImageIndex + 1} / 1
           </div>
 
           {/* Back Button */}
           <button
             onClick={() => router.push('/undergrad-projects')}
-            className="absolute top-8 left-8 text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
+            className="absolute top-8 left-8 text-gray-800 text-2xl font-semibold tracking-wide hover:text-gray-600 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
             aria-label="Back to projects"
           >
             ← Back to Projects

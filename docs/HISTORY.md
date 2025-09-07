@@ -74,6 +74,129 @@
 
 ---
 
+## Version v0.1.18 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Image Format Optimization
+- ✅ **PNG to JPG Conversion**: Replaced site-analysis.png with site-analysis.jpg to resolve background transparency issues
+- ✅ **Background Fix**: Eliminated navy blue background problem caused by PNG transparency
+- ✅ **Maintained Functionality**: All scrolling and navigation features preserved
+- ✅ **Image Quality**: Retained high-resolution detail while fixing display issues
+- ✅ **File Path Update**: Updated image reference in site-analysis page configuration
+
+### Technical Achievements
+- **Format Conversion**: Changed from PNG with transparency to JPG with solid background
+- **Path Resolution**: Updated `/undergrad-projects/site-analysis/site-analysis.png` to `.jpg`
+- **Background Elimination**: Removed translucent bottom section causing display issues
+- **Performance**: JPG format provides better performance for large analysis boards
+- **Visual Consistency**: Clean background without unwanted transparency artifacts
+
+### Files Modified in v0.1.18
+- `src/app/undergrad-projects/site-analysis/page.tsx` - Updated image path from PNG to JPG
+
+### Key Improvements
+- **Clean Background**: Eliminated navy blue background transparency artifacts
+- **Better Display**: Solid background provides cleaner visual presentation
+- **Maintained Quality**: High-resolution analysis board detail preserved
+- **Performance**: JPG format optimized for web display
+- **Visual Polish**: Professional appearance without background color issues
+
+---
+
+## Version v0.1.17 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Grid System Annotations Added
+- ✅ **Vertical Line Numbers**: Added numbered annotations (1-25) for vertical grid lines
+- ✅ **Horizontal Line Letters**: Added lettered annotations (A-S) for horizontal grid lines
+- ✅ **Grid Reference System**: Complete coordinate system for precise positioning (e.g., C-7)
+- ✅ **Visual Annotations**: Small labeled boxes at line intersections for clear reference
+- ✅ **Consistent Implementation**: Applied to both main projects page and individual project pages
+- ✅ **Enhanced Grid Info**: Updated status indicator with format explanation
+
+### Technical Achievements
+- **Coordinate System**: 25 vertical (numbered) × 19 horizontal (lettered) reference grid
+- **Positioning Logic**: `String.fromCharCode(65 + i)` for A-S letters, `i + 1` for 1-25 numbers
+- **Visual Design**: Semi-transparent white background with red text for clear visibility
+- **Transform Positioning**: Centered annotations using `translateX(-50%)` and `translateY(-50%)`
+- **Cross-Component Consistency**: Same annotation system across all project views
+
+### Files Modified in v0.1.17
+- `src/components/projects/HorizontalProjectLayout.tsx` - Added grid line annotations
+- `src/app/undergrad-projects/page.tsx` - Added matching grid line annotations
+
+### Key Improvements
+- **Professional Grid Reference**: Full coordinate system for architectural design work
+- **Easy Communication**: Clear reference points for discussing placement with Cursor
+- **Visual Clarity**: Well-positioned annotations that don't interfere with content
+- **Comprehensive Coverage**: 475 grid intersection points for precise positioning
+- **Standardized Format**: Letter-Number convention (e.g., C-7, M-15) for consistent referencing
+
+---
+
+## Version v0.1.16 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Grid System Extension to Project Pages
+- ✅ **Grid System Added to HorizontalProjectLayout**: Extended architectural grid to individual project pages
+- ✅ **Consistent Grid Functionality**: G key toggle now works on both main projects page and individual project pages
+- ✅ **Grid State Management**: Added showGrid state to HorizontalProjectLayout component
+- ✅ **Keyboard Event Handler**: Integrated G key toggle with existing keyboard navigation
+- ✅ **Test Button Added**: Temporary grid test button for debugging keyboard issues
+- ✅ **Cross-Component Grid**: Same architectural grid system across all project views
+
+### Technical Achievements
+- **Component Extension**: Added grid functionality to HorizontalProjectLayout without breaking existing features
+- **Event Handler Integration**: Combined grid toggle with existing keyboard navigation (Escape, Arrow keys)
+- **State Isolation**: Independent grid state management per component
+- **Visual Consistency**: Same grid design (25v × 19h lines) across all project pages
+- **Debug Support**: Added logging and test button for troubleshooting
+
+### Files Modified in v0.1.16
+- `src/components/projects/HorizontalProjectLayout.tsx` - Added complete grid system functionality
+
+### Key Improvements
+- **Universal Grid Access**: Grid now available on both main projects page and individual project pages
+- **Consistent UX**: Same G key functionality across all project views
+- **Enhanced Debugging**: Test button and console logs for troubleshooting
+- **Architectural Tool**: Full grid system available for design alignment in all project contexts
+
+---
+
+## Version v0.1.15 (Completed)
+**Date**: December 2024
+**Status**: ✅ Complete
+
+### Grid System Implementation & Fixes
+- ✅ **Grid Toggle Functionality**: Fixed G key activation for architectural grid overlay
+- ✅ **Conditional Grid Rendering**: Grid now properly shows/hides based on showGrid state
+- ✅ **Event Handler Optimization**: Fixed dependency array issue preventing keyboard events
+- ✅ **Proper Grid System**: Replaced test overlay with architectural grid (25 vertical, 19 horizontal lines)
+- ✅ **Visual Design**: Semi-transparent red grid lines with center cross markers
+- ✅ **User Feedback**: Clear grid status indicator with toggle instructions
+
+### Technical Achievements
+- **Keyboard Event Fix**: Removed showGrid from useEffect dependencies to prevent listener recreation
+- **Conditional Rendering**: `{showGrid && (...)}` properly toggles grid visibility
+- **Grid Mathematics**: 4% vertical spacing, 5.55% horizontal spacing for architectural proportions
+- **Z-Index Management**: Grid renders at z-9999 to appear above all content
+- **State Management**: Clean toggle functionality with proper state updates
+
+### Files Modified in v0.1.15
+- `src/app/undergrad-projects/page.tsx` - Fixed grid toggle functionality and implemented proper grid system
+
+### Key Improvements
+- **Working G Key Toggle**: Grid now properly activates/deactivates with G key press
+- **Architectural Grid**: Professional grid system useful for design alignment
+- **Clean Interface**: Grid shows only when needed, hidden by default
+- **Performance**: Fixed event handler recreation issue
+- **User Experience**: Clear visual feedback for grid state
+
+---
+
 ## Version v0.1.14 (Completed)
 **Date**: December 2024
 **Status**: ✅ Complete
