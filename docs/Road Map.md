@@ -1,38 +1,69 @@
 # Arch Website Development Road Map
 
-## Current Status: v0.1.3 Development Phase
+## Current Status: v0.1.4 Development Phase
 
-### Version v0.1.2 (Completed) ✅
+### Version v0.1.3 (Completed) ✅
 **Date**: December 2024
 **Status**: Successfully Completed
 
 #### Major Achievements
-- ✅ **Undergrad Projects Page**: Complete responsive layout with fullscreen/split-screen modes
-- ✅ **Project Icons Integration**: 6 project icons with floating positioning system
-- ✅ **Responsive Layout System**: Aspect ratio detection for optimal display
-- ✅ **READ MORE Button**: Interactive buttons with hover animations
-- ✅ **Image Optimization**: Resolved black strip issues with proper sizing
-- ✅ **Portfolio Overlay Enhancement**: White background with improved icon visibility
-- ✅ **Animation Coordination**: Icons positioned to avoid hover collision
+- ✅ **Horizontal Scroll System**: Seamless transition from READ MORE to horizontal scroll mode
+- ✅ **Individual Project Pages**: Site Analysis project with horizontal image navigation
+- ✅ **Seamless Navigation**: URL-based mode detection without page reload
+- ✅ **Image Display System**: Proper image sizing with aspect ratio preservation
+- ✅ **Navigation Controls**: Arrow buttons, keyboard support, and progress indicators
+- ✅ **Responsive Design**: Works across all screen sizes and aspect ratios
+- ✅ **State Management**: Proper URL synchronization and mode switching
 
 #### Technical Milestones
-- **Aspect Ratio Detection**: JavaScript-based responsive switching (`aspectRatio > 1.5`)
-- **Image Sizing Fixes**: `h-screen` and `object-cover object-bottom` implementation
-- **Button Styling**: Conditional styling with inline CSS overrides
-- **Icon Management**: Floating positioning (`absolute -top-20 left-8`)
-- **Overlay Optimization**: White background (`bg-white/70`) for contrast
+- **Seamless Transition**: Same-page experience with URL change (`/undergrad-projects/site-analysis`)
+- **Mode Detection**: Automatic switching between normal view and horizontal scroll mode
+- **Image Optimization**: `h-screen object-contain` for proper sizing while preserving aspect ratio
+- **Navigation System**: Arrow keys, mouse clicks, and keyboard shortcuts
+- **Animation Integration**: Framer Motion transitions for smooth image changes
+- **Accessibility**: Proper aria-labels and keyboard navigation support
 
 ---
 
-## Version v0.1.3 (Current Development)
+## Version v0.1.4 (Current Development)
 **Date**: December 2024
 **Status**: Planning Phase
 
-### Planned Features for v0.1.3
+### Planned Features for v0.1.4
 
-#### 1. Graduate Projects Page Development
+#### 1. Additional Site Analysis Materials
+**Priority**: High
+**Estimated Time**: 1-2 days
+
+**Objectives**:
+- Add more images to Site Analysis horizontal scroll
+- Implement multiple image navigation
+- Add detailed project descriptions and captions
+- Test horizontal scroll with multiple images
+
+#### 2. Border Crossing Project Implementation
 **Priority**: High
 **Estimated Time**: 2-3 days
+
+**Objectives**:
+- Create Border Crossing project page
+- Implement horizontal scroll for Border Crossing
+- Add project-specific images and content
+- Ensure consistent navigation and styling
+
+#### 3. Congregation Center Project Implementation
+**Priority**: High
+**Estimated Time**: 2-3 days
+
+**Objectives**:
+- Create Congregation Center project page
+- Implement horizontal scroll for Congregation Center
+- Add project-specific images and content
+- Maintain design consistency across all projects
+
+#### 4. Graduate Projects Page Development
+**Priority**: Medium
+**Estimated Time**: 3-4 days
 
 **Objectives**:
 - Create `/graduate-projects` page similar to undergrad projects
@@ -41,31 +72,7 @@
 - Integrate existing graduate project icons
 - Implement READ MORE buttons with hover animations
 
-**Technical Requirements**:
-- Reuse responsive layout logic from undergrad projects
-- Maintain consistent styling and animations
-- Ensure proper image handling and optimization
-
-#### 2. Individual Project Detail Pages
-**Priority**: High
-**Estimated Time**: 3-4 days
-
-**Objectives**:
-- Create individual pages for each project (6 total)
-- Develop consistent page structure and navigation
-- Implement project-specific content and images
-- Add back navigation and breadcrumbs
-- Ensure mobile responsiveness
-
-**Pages to Create**:
-- `/undergrad-projects/site-analysis/page.tsx`
-- `/undergrad-projects/border-crossing/page.tsx`
-- `/undergrad-projects/congregation-center/page.tsx`
-- `/graduate-projects/momentum-hub/page.tsx`
-- `/graduate-projects/the-nook/page.tsx`
-- `/graduate-projects/wellness-bazaar/page.tsx`
-
-#### 3. Enhanced Animations and Interactions
+#### 5. Enhanced Animations and Interactions
 **Priority**: Medium
 **Estimated Time**: 2-3 days
 
@@ -75,28 +82,6 @@
 - Enhance hover effects and micro-interactions
 - Implement loading states and transitions
 - Optimize animation performance
-
-#### 4. Performance Optimizations
-**Priority**: Medium
-**Estimated Time**: 1-2 days
-
-**Objectives**:
-- Optimize image loading and compression
-- Implement lazy loading for project images
-- Reduce bundle size and improve Core Web Vitals
-- Add proper caching strategies
-- Optimize for mobile performance
-
-#### 5. Content Management System Integration
-**Priority**: Low
-**Estimated Time**: 2-3 days
-
-**Objectives**:
-- Create content management structure
-- Implement dynamic content loading
-- Add content editing capabilities
-- Create admin interface for content updates
-- Implement content versioning
 
 ---
 
