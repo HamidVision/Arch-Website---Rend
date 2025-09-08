@@ -1,6 +1,50 @@
 # Design Decisions
 
-## Version v0.2.2 (Current)
+## Version v0.2.3 (Current)
+**Date**: January 2025
+**Status**: 🚧 In Development
+
+### Smooth Snap-Assist System Decisions
+
+#### **Throttled Scroll Handler Approach**
+- **Decision**: Replace IntersectionObserver with debounced scroll event handler
+- **Rationale**: IntersectionObserver fires constantly during scroll, causing performance issues
+- **Implementation**: 200ms delay after scroll stops before checking visibility ratios
+- **Result**: Eliminates layout thrash and provides smooth, responsive performance
+
+#### **Dual Animation Mode System**
+- **Decision**: Support both native smooth and custom eased animations
+- **Rationale**: Different use cases require different animation approaches
+- **Implementation**: `useCustomEasing` boolean flag with `scrollIntoView` vs. `requestAnimationFrame`
+- **Result**: Flexible system that can adapt to different performance and aesthetic requirements
+
+#### **Custom Easing with easeOutCubic**
+- **Decision**: Implement `easeOutCubic` curve for cinematic settle animations
+- **Rationale**: Provides professional, polished feel that matches architectural design quality
+- **Implementation**: `1 - Math.pow(1 - t, 3)` easing function with `requestAnimationFrame`
+- **Result**: Smooth, natural animations that feel premium and intentional
+
+#### **5% Tolerance Threshold**
+- **Decision**: Only snap when tile is ≥95% visible (5% tolerance)
+- **Rationale**: Prevents aggressive snapping when user is actively scrolling
+- **Implementation**: `minVisibleRatio: 0.95` with precise visibility calculations
+- **Result**: Natural interaction that only assists when user is almost at target position
+
+#### **Proximity Snap Integration**
+- **Decision**: Use `scroll-snap-type: y proximity` instead of `mandatory`
+- **Rationale**: Gentler snapping that works harmoniously with custom animations
+- **Implementation**: CSS `scroll-snap-type: y proximity` with `scroll-behavior: smooth`
+- **Result**: Browser and JS animations work together without fighting
+
+#### **Mobile-Optimized Heights**
+- **Decision**: Use `100dvh` for mobile-safe viewport heights
+- **Rationale**: Ensures proper behavior on mobile devices with dynamic viewports
+- **Implementation**: CSS `height: 100vh; height: 100dvh;` fallback pattern
+- **Result**: Consistent behavior across all device types and orientations
+
+---
+
+## Version v0.2.2 (Completed)
 **Date**: January 2025
 **Status**: ✅ All decisions implemented
 

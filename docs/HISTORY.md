@@ -1,5 +1,38 @@
 # Project History
 
+## Version v0.2.3 (Current)
+**Date**: January 2025
+**Status**: 🚧 In Development
+
+### Major Milestone: Smooth Snap-Assist System
+This version introduces a sophisticated snap-assist system for the undergrad projects page, providing buttery-smooth auto-centering of project tiles with cinematic easing animations.
+
+#### Features Implemented
+- ✅ **Smooth Snap-Assist Hook**: `useSnapAssistSmooth` with dual animation modes
+- ✅ **Cinematic Easing**: Custom `easeOutCubic` animation with `requestAnimationFrame`
+- ✅ **Debounced Triggering**: 200ms delay after scroll stops to prevent mid-scroll snapping
+- ✅ **5% Tolerance System**: Only snaps when tile is ≥95% visible (almost fullscreen)
+- ✅ **Dual Animation Modes**: Native smooth vs. custom eased animations
+- ✅ **Performance Optimization**: Eliminated IntersectionObserver overhead
+- ✅ **Proximity Snap Integration**: Works seamlessly with CSS `scroll-snap-type: proximity`
+
+#### Technical Achievements
+- **Custom Easing Function**: `easeOutCubic` curve for cinematic settle animations
+- **Throttled Scroll Handler**: Efficient scroll event handling with passive listeners
+- **Smart Visibility Calculation**: Accurate visible height detection within container bounds
+- **Dual Mode Support**: Native `scrollIntoView` vs. custom `requestAnimationFrame` animation
+- **CSS Integration**: `scroll-behavior: smooth` for native browser smoothness
+- **Mobile Optimization**: `100dvh` support for proper mobile viewport handling
+
+#### User Experience Improvements
+- **Buttery Smooth Scrolling**: No lag or stuttering during snap-assist
+- **Natural Interaction**: Only assists when user pauses scrolling
+- **Cinematic Feel**: Professional-grade easing animations
+- **No Fighting**: Browser snap and JS animation work together harmoniously
+- **Accessibility**: Respects `prefers-reduced-motion` settings
+
+---
+
 ## Version v0.2.2 (Completed)
 **Date**: January 2025
 **Status**: ✅ Complete

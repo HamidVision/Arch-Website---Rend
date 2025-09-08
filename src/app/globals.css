@@ -390,6 +390,10 @@
 
 
 /* Aspect Ratio Hero Split Styles */
+:root {
+  --hero-height: 100%;
+  --second-height: 0%;
+}
 
 body {
   margin: 0;
@@ -397,24 +401,28 @@ body {
   overflow-x: hidden;
 }
 
+/* Horizontal scroll container */
 .horizontal-section {
   display: flex;
   flex-direction: row;
   height: 100vh;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: hidden;          /* no vertical scroll */
   scroll-snap-type: x mandatory;
 }
 
+/* Panel width equals content width (no forced 300vw) */
 .panel {
   position: relative;
   flex: 0 0 auto;
-  width: max-content; /* width matches image width */
+  width: max-content;          /* key: content defines width */
   height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: height 0.5s ease;
 }
 
+/* Sections inside panel */
 .hero,
 .second-render {
   flex: 0 0 auto;
@@ -422,36 +430,38 @@ body {
   transition: height 0.5s ease, opacity 0.5s ease;
 }
 
+/* Height-driven scaling; no black fill; left anchoring */
 .hero img,
 .second-render img {
   height: 100%;
-  width: auto;
-  object-fit: contain;
+  width: auto;                 /* key: width derives from height */
+  object-fit: contain;         /* no cropping */
   object-position: left center;
   display: block;
   background: transparent;
 }
 
-.initial .hero {
-  height: 100%;
+.initial .hero { height: 100%; }
+.initial .second-render { height: 0; opacity: 0; }
+
+.activated .hero { height: var(--hero-height); }
+.activated .second-render { height: var(--second-height); opacity: 1; }
+
+/* Remove any old trigger button footprint */
+.activation-trigger { display: none !important; }
+
+/* Projects Container with Snap-Assist */
+.projects-container {
+  scroll-snap-type: y proximity; /* gentler than mandatory */
+  scroll-behavior: smooth;       /* native smoothness */
+  height: 100vh;
+  overflow-y: auto;
 }
 
-.initial .second-render {
-  height: 0;
-  opacity: 0;
-}
-
-.activated .hero {
-  height: var(--hero-height);
-}
-
-.activated .second-render {
-  height: var(--second-height);
-  opacity: 1;
-}
-
-.siteplan-toggle {
-  transition: opacity 0.3s ease;
+.project-card {
+  height: 100vh;
+  height: 100dvh; /* mobile safe */
+  scroll-snap-align: start;
 }
 
 /* Subtle pulsing glow animation */

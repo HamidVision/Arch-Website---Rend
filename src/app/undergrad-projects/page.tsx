@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 
 const UndergradProjectsPage: React.FC = () => {
   const router = useRouter();
@@ -14,7 +15,17 @@ const UndergradProjectsPage: React.FC = () => {
   const [isHorizontalScrollMode, setIsHorizontalScrollMode] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [showGrid, setShowGrid] = useState(false); // Grid starts hidden
+
+  // Snap-assist hook for auto-centering project tiles
+  useSnapAssistSmooth({
+    containerSelector: '.projects-container',
+    itemSelector: '.project-card',
+    minVisibleRatio: 0.95, // 5% tolerance
+    delayMs: 2000,         // 2s pause before snapping
+    align: 'start',        // or 'center'
+    useCustomEasing: true, // enable cinematic ease
+    easingDuration: 600    // slightly slower settle
+  });
 
   const projects = [
     {
@@ -120,21 +131,11 @@ const UndergradProjectsPage: React.FC = () => {
     setTimeout(() => setIsScrolling(false), 300);
   };
 
-  // Handle keyboard navigation for horizontal scroll and grid toggle
+  // Handle keyboard navigation for horizontal scroll
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       console.log('Key pressed:', e.key); // Debug log
       
-      // Grid toggle (works in both modes)
-      if (e.key.toLowerCase() === 'g') {
-        e.preventDefault();
-        console.log('Toggling grid'); // Debug log
-        setShowGrid(prev => {
-          console.log('Grid toggle from', prev, 'to', !prev);
-          return !prev;
-        });
-        return;
-      }
       
       if (!isHorizontalScrollMode) return;
       
@@ -145,75 +146,10 @@ const UndergradProjectsPage: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isHorizontalScrollMode, router]); // Removed showGrid from dependencies
+  }, [isHorizontalScrollMode, router]);
 
   return (
     <div className={`min-h-screen relative overflow-hidden ${isHorizontalScrollMode ? 'bg-white' : 'bg-black'}`}>
-      {/* Architectural Grid System - Only show when showGrid is true */}
-      {showGrid && (
-        <div 
-          className="fixed inset-0 pointer-events-none"
-          style={{ zIndex: 9999 }}
-        >
-          {/* Vertical Grid Lines with Numbers */}
-          {Array.from({ length: 25 }, (_, i) => (
-            <div key={`v-${i}`}>
-              <div
-                className="absolute top-0 bottom-0 border-l border-red-500/30"
-                style={{
-                  left: `${(i * 4)}%`,
-                  width: '1px'
-                }}
-              />
-              {/* Vertical Line Numbers */}
-              <div
-                className="absolute top-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
-                style={{
-                  left: `${(i * 4)}%`,
-                  transform: 'translateX(-50%)'
-                }}
-              >
-                {i + 1}
-              </div>
-            </div>
-          ))}
-          
-          {/* Horizontal Grid Lines with Letters */}
-          {Array.from({ length: 19 }, (_, i) => (
-            <div key={`h-${i}`}>
-              <div
-                className="absolute left-0 right-0 border-t border-red-500/30"
-                style={{
-                  top: `${(i * 5.55)}%`,
-                  height: '1px'
-                }}
-              />
-              {/* Horizontal Line Letters */}
-              <div
-                className="absolute left-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
-                style={{
-                  top: `${(i * 5.55)}%`,
-                  transform: 'translateY(-50%)'
-                }}
-              >
-                {String.fromCharCode(65 + i)}
-              </div>
-            </div>
-          ))}
-          
-          {/* Center Cross Lines */}
-          <div className="absolute top-0 bottom-0 left-1/2 border-l border-red-500/50 w-px" />
-          <div className="absolute left-0 right-0 top-1/2 border-t border-red-500/50 h-px" />
-          
-          {/* Grid Info */}
-          <div 
-            className="absolute top-2 left-2 text-red-500 text-xs font-mono bg-white/90 px-2 py-1 rounded border border-red-500/50"
-            style={{ zIndex: 10000 }}
-          >
-            GRID: ON (Press G to toggle) | Format: Letter-Number (e.g., C-7)
-          </div>
-        </div>
-      )}
 
       {/* Navigation - Always visible */}
       <button
@@ -225,18 +161,6 @@ const UndergradProjectsPage: React.FC = () => {
         HE
       </button>
 
-      {/* Grid Toggle Button - Temporary for testing */}
-      <button
-        onClick={() => {
-          console.log('Button clicked, current showGrid:', showGrid);
-          setShowGrid(!showGrid);
-          console.log('Button clicked, new showGrid:', !showGrid);
-        }}
-        className="fixed top-8 right-8 bg-red-500 text-white px-3 py-1 text-xs rounded z-[100]"
-        style={{ zIndex: 100 }}
-      >
-        Grid: {showGrid ? 'ON' : 'OFF'}
-      </button>
 
       {/* Portfolio and Menu Buttons - Always visible */}
       <div className="fixed top-0 right-0 z-[100] p-6" style={{ zIndex: 100 }}>
@@ -276,6 +200,9 @@ const UndergradProjectsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Main Content Container with Snap-Assist */}
+      <main className="projects-container">
+
 
       {/* Main Content - Show horizontal scroll if in horizontal scroll mode */}
       {isHorizontalScrollMode ? (
@@ -308,7 +235,7 @@ const UndergradProjectsPage: React.FC = () => {
             </svg>
           </button>
 
-          {/* Image Container - Positioned so bottom sits on M grid line (66.6%) */}
+          {/* Image Container - Positioned so bottom sits at 33.4% from bottom */}
           <div className="h-full flex items-end justify-center px-20" style={{ paddingBottom: '33.4%' }}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -429,7 +356,7 @@ const UndergradProjectsPage: React.FC = () => {
       {!isHorizontalScrollMode && projects.map((project, index) => (
         <motion.div
           key={project.id}
-          className={`relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
+          className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 + (index * 0.2) }}
@@ -598,6 +525,7 @@ const UndergradProjectsPage: React.FC = () => {
         </div>
       </motion.div>
       )}
+      </main>
     </div>
   );
 };
