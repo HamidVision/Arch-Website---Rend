@@ -1,8 +1,38 @@
 # Design Decisions
 
-## Version v0.2.3 (Current)
+## Version v0.3.1 (Current)
 **Date**: January 2025
-**Status**: 🚧 In Development
+**Status**: ✅ All decisions implemented
+
+### Timeline Synchronization Fix Decisions
+
+#### **Simplified Scroll Position Calculation**
+- **Decision**: Remove incorrect `leftPadding` adjustment from scroll position calculations
+- **Rationale**: The `leftPadding` calculation was causing timeline synchronization issues, especially in fullscreen mode
+- **Implementation**: Direct mapping `rawIndex = scrollPosition / tileWidth` without offset adjustments
+- **Result**: Timeline now works correctly across all screen sizes and aspect ratios
+
+#### **Direct Position Mapping**
+- **Decision**: Use direct scroll position to tile index mapping without complex adjustments
+- **Rationale**: Scroll position should directly correspond to tile position for accurate timeline tracking
+- **Implementation**: `const rawIndex = scrollPosition / tileWidth; const newIndex = Math.round(rawIndex);`
+- **Result**: Eliminates "one step behind" timeline synchronization issues
+
+#### **Consistent Behavior Across Screen Sizes**
+- **Decision**: Ensure timeline synchronization works identically regardless of screen size
+- **Rationale**: Users should have consistent experience whether in half-screen or fullscreen mode
+- **Implementation**: Removed screen-width-dependent calculations that caused different behavior
+- **Result**: Timeline dots always highlight the correct tile, regardless of viewport size
+
+#### **Event Handler Optimization**
+- **Decision**: Streamline scroll event handling for better performance
+- **Rationale**: Simplified logic reduces computational overhead and improves responsiveness
+- **Implementation**: Removed complex `leftPadding` calculations from both scroll handler and scrollToTile function
+- **Result**: More efficient scroll tracking with accurate timeline synchronization
+
+---
+
+## Version v0.3.0 (Completed)
 
 ### Smooth Snap-Assist System Decisions
 

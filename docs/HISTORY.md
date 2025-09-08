@@ -1,8 +1,93 @@
 # Project History
 
-## Version v0.2.3 (Current)
+## Version v0.3.1 (Current)
 **Date**: January 2025
-**Status**: 🚧 In Development
+**Status**: ✅ Complete
+
+### Major Milestone: Timeline Synchronization Fix
+This version resolves a critical synchronization issue in the portfolio overlay timeline, ensuring accurate position tracking across all screen sizes and aspect ratios.
+
+#### Features Implemented
+- ✅ **Timeline Synchronization Fix**: Resolved "one step behind" issue in portfolio overlay timeline
+- ✅ **Screen Size Independence**: Timeline now works correctly in both half-screen and fullscreen modes
+- ✅ **Accurate Position Tracking**: Timeline dots highlight the correct tile during scrolling
+- ✅ **Proper Navigation**: Clicking timeline dots scrolls to the exact corresponding tile
+- ✅ **Progress Bar Accuracy**: Shows correct position in the tile sequence
+
+#### Technical Achievements
+- **Scroll Position Calculation**: Simplified scroll-to-index mapping by removing incorrect `leftPadding` adjustment
+- **Direct Mapping**: Scroll position now directly corresponds to `tileIndex * tileWidth`
+- **Consistent Behavior**: Timeline synchronization works identically across all screen sizes
+- **Event Handler Optimization**: Streamlined scroll event handling for better performance
+- **Navigation Accuracy**: Timeline dots provide precise tile navigation
+
+#### User Experience Improvements
+- **Consistent Timeline**: Works correctly regardless of screen size or aspect ratio
+- **Accurate Navigation**: Timeline dots always highlight the correct tile
+- **Smooth Scrolling**: Proper synchronization between scroll position and timeline indicators
+- **Professional Polish**: Timeline provides reliable visual feedback during navigation
+
+#### Files Modified in v0.3.1
+- `src/components/ProjectsOverlay.tsx` - Fixed scroll position calculation in both scroll handler and scrollToTile function
+- `package.json` - Version bump to 0.3.1
+
+#### Key Improvements
+- **Eliminated Screen Size Dependency**: Timeline works correctly in both half-screen and fullscreen modes
+- **Simplified Logic**: Removed complex `leftPadding` calculations that caused synchronization issues
+- **Direct Position Mapping**: Scroll position directly maps to tile index without offset adjustments
+- **Reliable Navigation**: Timeline dots provide accurate tile navigation across all screen sizes
+
+---
+
+## Version v0.3.0 (Completed)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Major Milestone: Three-State Toggle System & Seamless Transitions
+This version introduces a sophisticated three-state toggle system for the site analysis page and implements seamless page transitions with shared-space animations.
+
+#### Features Implemented
+- ✅ **Three-State Toggle System**: Hero → Analysis Layer 1 → Analysis Layer 2 → Hero cycle
+- ✅ **Seamless Page Transitions**: Shared-space animations between project tiles and detail pages
+- ✅ **Dynamic Header Height Calculation**: Automatic header height detection for proper content positioning
+- ✅ **Enhanced Header Component**: Added `textColorClass` prop for dynamic button colors
+- ✅ **Route-Level Fade Transitions**: Global page transitions using Framer Motion's AnimatePresence
+- ✅ **Improved Animation Timing**: Optimized slide and fade durations for professional feel
+
+#### Technical Achievements
+- **Three-State State Management**: `toggleState` (0, 1, 2) with modulo cycling
+- **Dynamic Aspect Ratio Calculation**: `k` factor calculation based on active toggle state
+- **Header Height Detection**: `getHeaderHeight()` function for accurate content positioning
+- **Shared-Space Animation**: Tile slides left while transitioning to detail page
+- **CSS Variables**: Pixel-based height variables for precise control
+- **Route Transition Wrapper**: Global AnimatePresence for smooth page changes
+
+#### User Experience Improvements
+- **Intuitive Three-State Toggle**: Clear progression through analysis layers
+- **Seamless Navigation**: Smooth transitions between project overview and detail pages
+- **Professional Animations**: Cinematic slide and fade effects
+- **Consistent Interface**: Header adapts colors based on background
+- **No Visual Glitches**: Eliminated black strips and white gaps during transitions
+
+#### Files Modified in v0.3.0
+- `src/components/AspectRatioHeroSplit.tsx` - Three-state toggle system with dynamic aspect ratio calculation
+- `src/app/undergrad-projects/page.tsx` - Shared-space transition animations and snap-assist integration
+- `src/app/undergrad-projects/site-analysis/page.tsx` - Three-state toggle integration with third image
+- `src/components/Header.tsx` - Added textColorClass prop for dynamic button colors
+- `src/app/globals.css` - Added third-render styles and updated height variables
+- `src/app/layout.tsx` - Integrated RouteTransitionWrapper for global page transitions
+- `src/components/RouteTransitionWrapper.tsx` - Created global route transition component
+
+#### Key Improvements
+- **Three-State Analysis**: Complete analysis layer progression with proper aspect ratios
+- **Seamless Transitions**: Professional shared-space animations between pages
+- **Dynamic Header**: Automatic height calculation and color adaptation
+- **Global Transitions**: Smooth fade transitions for all route changes
+- **Enhanced UX**: Eliminated visual glitches and improved animation timing
+
+---
+
+## Version v0.2.3 (Completed)
 
 ### Major Milestone: Smooth Snap-Assist System
 This version introduces a sophisticated snap-assist system for the undergrad projects page, providing buttery-smooth auto-centering of project tiles with cinematic easing animations.
