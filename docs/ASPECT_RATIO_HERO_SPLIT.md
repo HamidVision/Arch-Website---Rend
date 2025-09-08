@@ -17,9 +17,11 @@ The `AspectRatioHeroSplit` component provides a dynamic, aspect-ratio-aware hero
 
 ```tsx
 <AspectRatioHeroSplit
+  heroSrc="/projects/hero.jpg"
+  heroAlt="Project Hero"
+  secondSrc="/projects/analysis.jpg"
+  secondAlt="Project Analysis"
   triggerText="Show Analysis"
-  heroContent={<img src="hero-image.jpg" />}
-  secondContent={<img src="analysis-image.jpg" />}
 />
 ```
 
@@ -27,8 +29,10 @@ The `AspectRatioHeroSplit` component provides a dynamic, aspect-ratio-aware hero
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `heroContent` | `React.ReactNode` | - | Content to display in the hero section |
-| `secondContent` | `React.ReactNode` | - | Content to display in the analysis section |
+| `heroSrc` | `string` | - | Source path for the hero image |
+| `heroAlt` | `string` | - | Alt text for the hero image |
+| `secondSrc` | `string` | - | Source path for the second image |
+| `secondAlt` | `string` | - | Alt text for the second image |
 | `triggerText` | `string` | `"Show Analysis"` | Text for the toggle button |
 | `className` | `string` | `""` | Additional CSS classes |
 
@@ -78,20 +82,10 @@ import AspectRatioHeroSplit from '@/components/AspectRatioHeroSplit';
 export default function ProjectPage() {
   return (
     <AspectRatioHeroSplit
-      heroContent={
-        <img
-          src="/projects/hero.jpg"
-          alt="Project Hero"
-          draggable={false}
-        />
-      }
-      secondContent={
-        <img
-          src="/projects/analysis.jpg"
-          alt="Project Analysis"
-          draggable={false}
-        />
-      }
+      heroSrc="/projects/hero.jpg"
+      heroAlt="Project Hero"
+      secondSrc="/projects/analysis.jpg"
+      secondAlt="Project Analysis"
     />
   );
 }
@@ -101,9 +95,11 @@ export default function ProjectPage() {
 
 ```tsx
 <AspectRatioHeroSplit
+  heroSrc="/projects/hero.jpg"
+  heroAlt="Project Hero"
+  secondSrc="/projects/analysis.jpg"
+  secondAlt="Project Analysis"
   triggerText="View Details"
-  heroContent={<HeroContent />}
-  secondContent={<AnalysisContent />}
 />
 ```
 
@@ -211,7 +207,46 @@ When modifying this component:
 4. Update documentation
 5. Add appropriate tests
 
+## Button Styling
+
+The toggle button features a professional, non-intrusive design:
+
+### CSS Properties
+```css
+.activation-trigger {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.activation-trigger:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px);
+}
+```
+
+### Features
+- **Fixed Positioning**: Stays in place during horizontal scrolling
+- **High Contrast**: Semi-transparent black background ensures visibility
+- **Smooth Animations**: Hover effects with subtle lift animation
+- **Professional Appearance**: Clean, modern styling
+- **Responsive**: Maintains position across all screen sizes
+
 ---
 
 *Last updated: January 2025*
-*Component version: 0.2.0*
+*Component version: 0.2.1*

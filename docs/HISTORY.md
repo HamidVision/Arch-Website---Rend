@@ -1,5 +1,47 @@
 # Project History
 
+## Version v0.2.1 (Completed)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Features Implemented
+- ✅ **Intrinsic Aspect Ratio Calculation**: Calculate proportional heights based on images' natural dimensions
+- ✅ **CSS Variables for Dynamic Heights**: Use `--hero-height` and `--second-height` for responsive control
+- ✅ **Improved Component Props**: Direct image paths instead of React nodes for better performance
+- ✅ **Enhanced Toggle Button Styling**: Fixed positioning with professional appearance
+- ✅ **Hover Effects**: Smooth animations and visual feedback
+- ✅ **Responsive Design**: Button maintains position across all screen sizes
+
+### Technical Achievements
+- **Aspect Ratio Mathematics**: `naturalHeight / naturalWidth` calculation for both images
+- **Proportional Height Calculation**: Heights that sum to 100vh based on intrinsic dimensions
+- **CSS Variables**: Dynamic height control using `var(--hero-height)` and `var(--second-height)`
+- **Button Positioning**: Fixed position in top-right corner with `z-index: 50`
+- **Professional Styling**: Semi-transparent background with hover effects
+- **Performance Optimization**: Direct image rendering without React node overhead
+
+### Files Modified in v0.2.1
+- `src/components/AspectRatioHeroSplit.tsx` - Intrinsic aspect ratio calculation and new props
+- `src/app/globals.css` - CSS variables and improved button styling
+- `src/app/site-analysis-enhanced/page.tsx` - Updated to use new component props
+- `package.json` - Version bump to 0.2.1
+
+### Key Improvements
+- **True Aspect Ratio Awareness**: Heights calculated from actual image dimensions
+- **Professional Button Design**: Fixed position with hover effects and smooth animations
+- **Better Performance**: Direct image rendering and optimized component structure
+- **Responsive Behavior**: Automatic recalculation on window resize
+- **Cleaner API**: Simpler component props with direct image paths
+
+### Button Styling Features
+- **Fixed Position**: `top: 20px`, `right: 20px` with `z-index: 50`
+- **Professional Appearance**: Semi-transparent black background with white text
+- **Hover Effects**: Darker background and subtle lift animation
+- **Responsive**: Maintains position and functionality across all screen sizes
+- **Non-Intrusive**: Small, floating button that doesn't interfere with content
+
+---
+
 ## Version v0.2.0 (Completed)
 **Date**: January 2025
 **Status**: ✅ Complete
