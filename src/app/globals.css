@@ -397,54 +397,83 @@ body {
   overflow-x: hidden;
 }
 
-/* Horizontal scroll container */
 .horizontal-section {
   display: flex;
   flex-direction: row;
   height: 100vh;
   overflow-x: auto;
-  overflow-y: hidden; /* no vertical scroll */
-  scroll-snap-type: x mandatory; /* optional */
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
 }
 
-/* Let the panel be only as wide as the image(s) need */
 .panel {
   position: relative;
   flex: 0 0 auto;
-  width: max-content;     /* key: width equals content width */
-  height: 100vh;          /* fixed viewport height */
+  width: max-content; /* width matches image width */
+  height: 100vh;
   display: flex;
-  flex-direction: column; /* we'll stack hero over second within the same 100vh */
-  transition: height 0.5s ease;
+  flex-direction: column;
 }
 
-/* Sections inside panel stack within the 100vh without adding vertical scroll */
 .hero,
 .second-render {
   flex: 0 0 auto;
-  height: var(--hero-height, 100%); /* overridden per-section below */
   overflow: hidden;
   transition: height 0.5s ease, opacity 0.5s ease;
 }
 
-/* Critical: scale by height; width auto ensures no side white bars */
 .hero img,
 .second-render img {
   height: 100%;
-  width: auto;            /* key: width adjusts from height to preserve aspect ratio */
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
   display: block;
-  object-fit: contain;    /* no cropping */
-  object-position: left center; /* anchor to left edge */
   background: transparent;
 }
 
-/* Initial state: hero fills 100vh; second hidden */
-.initial .hero { --hero-height: 100%; }
-.initial .second-render { --hero-height: 0%; height: 0; opacity: 0; }
+.initial .hero {
+  height: 100%;
+}
 
-/* Activated state: split the viewport (50/50 shown here) */
-.activated .hero { --hero-height: 50%; }
-.activated .second-render { height: 50%; opacity: 1; }
+.initial .second-render {
+  height: 0;
+  opacity: 0;
+}
+
+.activated .hero {
+  height: var(--hero-height);
+}
+
+.activated .second-render {
+  height: var(--second-height);
+  opacity: 1;
+}
+
+.activation-trigger {
+  position: fixed;       /* stays in place while scrolling */
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 8px 16px;     /* smaller padding */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;        /* prevents tall button */
+  width: auto;           /* don't stretch */
+  height: auto;          /* don't stretch */
+  display: inline-block; /* shrink to fit text */
+  transition: all 0.3s ease;
+}
+
+.activation-trigger:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px);
+}
 
 
 /* Hide unwanted extra text */
