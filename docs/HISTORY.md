@@ -1,5 +1,61 @@
 # Project History
 
+## Version v0.2.0 (Completed)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Major Features Implemented
+- ✅ **Aspect Ratio Hero Split Component**: Dynamic, aspect-ratio-aware hero split functionality
+- ✅ **Motion Animations**: Smooth transitions using Framer Motion for height and opacity changes
+- ✅ **Width Optimization**: Fixed panel width issues using `max-content` instead of fixed `300vw`
+- ✅ **Correct Image Handling**: Proper second image (`site-analysis-l1.jpg`) activation on toggle
+- ✅ **Horizontal Scrolling**: Mouse wheel support for horizontal navigation
+- ✅ **No Cropping**: Images scale proportionally using `object-fit: contain`
+- ✅ **Reversible Toggle**: Seamless switching between full hero and split view
+- ✅ **Enhanced Site Analysis Page**: Complete implementation with real project data
+
+### Technical Achievements
+- **CSS Architecture**: Absolute positioning replaced with flexbox column layout
+- **Image Scaling**: `height: 100%`, `width: auto` for proportional scaling without side gaps
+- **Animation System**: Framer Motion with 0.5s easeInOut transitions
+- **Width Management**: `width: max-content` eliminates white space on sides
+- **Event Handling**: Proper mouse wheel horizontal scroll with `useRef` container reference
+- **Component Simplification**: Removed complex CSS variables, using class-based toggle
+- **Performance**: Hardware-accelerated transforms and proper event cleanup
+
+### Files Created in v0.2.0
+- `src/components/AspectRatioHeroSplit.tsx` - Main aspect ratio split component
+- `src/app/site-analysis-enhanced/page.tsx` - Enhanced site analysis page
+- `src/app/aspect-ratio-demo/page.tsx` - Demo page for testing functionality
+- `src/components/projects/HorizontalProjectLayoutEnhanced.tsx` - Enhanced layout component
+- `src/components/projects/index.ts` - Component exports
+- `src/data/navigation.ts` - Navigation data structure
+- `src/data/projects.ts` - Project data structure
+- `src/data/site-config.ts` - Site configuration
+- `docs/ASPECT_RATIO_HERO_SPLIT.md` - Comprehensive component documentation
+
+### Files Modified in v0.2.0
+- `src/app/globals.css` - Updated CSS for aspect ratio split functionality
+- `package.json` - Version bump to 0.2.0
+
+### Key Improvements
+- **Eliminated White Space**: Panel width now matches image content exactly
+- **Correct Image Display**: Second image (`site-analysis-l1.jpg`) shows on toggle
+- **Smooth Animations**: Professional transitions between hero and analysis views
+- **Better Performance**: Simplified architecture with better event handling
+- **Responsive Design**: Works across all screen sizes and aspect ratios
+- **Professional Polish**: Clean interface with proper image scaling
+
+### Component Features
+- **Aspect Ratio Awareness**: Automatically calculates optimal heights
+- **Motion Animations**: Smooth height and opacity transitions
+- **Horizontal Scrolling**: Mouse wheel support for navigation
+- **No Cropping**: Images maintain aspect ratio without cropping
+- **Reversible Toggle**: Can switch between full hero and split view
+- **Responsive**: Adapts to different screen sizes
+
+---
+
 ## Version v0.1.2 (Completed)
 **Date**: December 2024
 **Status**: ✅ Complete
