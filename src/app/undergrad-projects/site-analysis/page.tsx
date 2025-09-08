@@ -1,33 +1,29 @@
 'use client';
 
-import HorizontalProjectLayout from '@/components/projects/HorizontalProjectLayout';
+import Header from '@/components/Header';
+import AspectRatioHeroSplit from '@/components/AspectRatioHeroSplit';
 
 export default function SiteAnalysisPage() {
-  const panels = [
-    {
-      id: 'hero',
-      type: 'hero' as const,
-      image: '/undergrad-projects/site-analysis/site-tile.jpg',
-      title: 'SITE ANALYSIS',
-      subtitle: 'Understanding Context & Place',
-      description: 'Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.',
-      alt: 'Site Analysis Project Hero Image'
-    },
-    {
-      id: 'analysis',
-      type: 'content' as const,
-      image: '/undergrad-projects/site-analysis/site-analysis.jpg',
-      title: 'Comprehensive Site Analysis',
-      description: 'Detailed analysis board showing site conditions, environmental factors, and design considerations.',
-      alt: 'Site Analysis Detailed Board'
-    }
-  ];
-
   return (
-    <HorizontalProjectLayout 
-      panels={panels}
-      backLink="/undergrad-projects"
-      backLinkText="Back to Projects"
-    />
+    <main className="relative h-screen bg-white">
+      <Header forceSolid backgroundClass="bg-[#f5f5f5] backdrop-blur-sm" />
+      <AspectRatioHeroSplit
+        heroSrc="/undergrad-projects/site-analysis/site-analysis.jpg"
+        heroAlt="SOS Children's Village — Site Context Board"
+        secondSrc="/undergrad-projects/site-analysis/site-analysis-l1.jpg"
+        secondAlt="SOS Children's Village — Detailed Site Analysis"
+        overlaySrc="/icons/ui/siteplan-toggle.png"
+        overlayPositionInitial={{
+          top: '69%',   // adjust after hero is correct
+          left: '0.5%',
+          width: '11.4%'
+        }}
+        overlayPositionActivated={{
+          top: '69%',
+          left: '0.5%',
+          width: '11.4%'
+        }}
+      />
+    </main>
   );
 }

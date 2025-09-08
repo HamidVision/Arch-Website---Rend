@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import HELoadingComponent from '@/components/HE_Loading_Component';
+import RouteTransitionWrapper from '@/components/RouteTransitionWrapper';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,7 +38,9 @@ export default function RootLayout({
           tagline="Creating spaces that inspire"
         />
 
-        {children}
+        <RouteTransitionWrapper>
+          {children}
+        </RouteTransitionWrapper>
       </body>
     </html>
   );

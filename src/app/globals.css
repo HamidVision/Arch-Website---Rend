@@ -405,21 +405,25 @@ body {
 .horizontal-section {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  height: 100vh; /* full viewport height */
   overflow-x: auto;
-  overflow-y: hidden;          /* no vertical scroll */
-  scroll-snap-type: x mandatory;
+  overflow-y: hidden;
+  width: 100%;
+  background: white; /* ensure white background during animations */
 }
 
-/* Panel width equals content width (no forced 300vw) */
+/* Panel width equals content width (no forced 300vw),
+   height is 100% of container (100vh), with top padding for header offset */
 .panel {
   position: relative;
   flex: 0 0 auto;
-  width: max-content;          /* key: content defines width */
-  height: 100vh;
+  width: max-content;      /* content defines width */
+  height: 100%;
   display: flex;
   flex-direction: column;
   transition: height 0.5s ease;
+  background: white; /* ensure white background during animations */
+  /* padding-top will be set inline from the component to match HEADER_HEIGHT */
 }
 
 /* Sections inside panel */
@@ -428,6 +432,10 @@ body {
   flex: 0 0 auto;
   overflow: hidden;
   transition: height 0.5s ease, opacity 0.5s ease;
+  /* Removed margin-top to avoid double offset */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Height-driven scaling; no black fill; left anchoring */
@@ -441,11 +449,13 @@ body {
   background: transparent;
 }
 
-.initial .hero { height: 100%; }
+/* State-based classes are kept, but heights are now set inline by Framer Motion
+   using px variables from the component. These lines remain for structure only. */
+.initial .hero { /* height set inline to var(--available-height) */ }
 .initial .second-render { height: 0; opacity: 0; }
 
-.activated .hero { height: var(--hero-height); }
-.activated .second-render { height: var(--second-height); opacity: 1; }
+.activated .hero { /* height set inline to var(--hero-height-px) */ }
+.activated .second-render { /* height set inline to var(--second-height-px) */ opacity: 1; }
 
 /* Remove any old trigger button footprint */
 .activation-trigger { display: none !important; }
@@ -462,6 +472,7 @@ body {
   height: 100vh;
   height: 100dvh; /* mobile safe */
   scroll-snap-align: start;
+  overflow: hidden; /* ensure slide animation doesn't bleed outside */
 }
 
 /* Subtle pulsing glow animation */

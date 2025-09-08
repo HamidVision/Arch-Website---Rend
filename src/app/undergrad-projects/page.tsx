@@ -6,6 +6,169 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 
+// Site Analysis Tile with transition animation
+const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ project, isWidescreen }) => {
+  const [transitioning, setTransitioning] = useState(false);
+  const router = useRouter();
+
+  const handleReadMore = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!transitioning) setTransitioning(true);
+  };
+
+  const onHeroSlideComplete = () => {
+    router.push('/undergrad-projects/site-analysis');
+  };
+
+  return (
+    <motion.div
+      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.5 + (1 * 0.2) }}
+    >
+      {/* Left Side - White Background with Text (only on widescreen) */}
+      {isWidescreen && (
+        <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
+          <motion.div
+            className="max-w-md mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
+              SITE ANALYSIS
+            </h2>
+            <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
+              Understanding Context & Place
+            </h3>
+            <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
+              Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.
+            </p>
+          </motion.div>
+
+          {/* READ MORE Button */}
+          <motion.div
+            className="absolute bottom-8 right-8 cursor-pointer group/button"
+            style={{
+              backgroundColor: '#1f2937',
+              borderColor: '#4b5563',
+              color: '#ffffff',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              padding: '12px 24px',
+              borderRadius: '0px',
+              fontSize: '14px',
+              fontWeight: '500',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              zIndex: '10',
+              position: 'absolute',
+              bottom: '32px',
+              right: '32px',
+              overflow: 'hidden'
+            }}
+            onClick={handleReadMore}
+            initial={{ opacity: 1 }}
+            animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white origin-left z-0"
+              initial={{ scaleX: 0 }}
+              whileHover={{ scaleX: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+            
+            {/* Text with CSS transition */}
+            <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
+              READ MORE
+            </span>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Right Side - Background Image */}
+      <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
+        <motion.img
+          src="/undergrad-projects/site-analysis/site-tile.jpg"
+          alt="Site Analysis"
+          className="absolute inset-0 w-full h-full object-cover object-bottom will-change-transform"
+          initial={false}
+          animate={transitioning ? { x: '-100vw' } : { x: '0vw' }}
+          transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
+          onAnimationComplete={() => transitioning && onHeroSlideComplete()}
+          onError={(e) => {/* Image load error */}}
+          onLoad={() => {/* Image loaded successfully */}}
+        />
+        {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
+      </div>
+
+      {/* Overlay Content (only on 4:3/square) */}
+      {!isWidescreen && (
+        <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
+          <motion.div
+            className="max-w-4xl mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
+              SITE ANALYSIS
+            </h2>
+            <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
+              Understanding Context & Place
+            </h3>
+            <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
+              Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.
+            </p>
+          </motion.div>
+
+          {/* READ MORE Button */}
+          <motion.div
+            className="absolute bottom-8 right-8 cursor-pointer group/button"
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              borderColor: 'rgba(255, 255, 255, 1)',
+              color: '#ffffff',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              padding: '12px 24px',
+              borderRadius: '0px',
+              fontSize: '14px',
+              fontWeight: '500',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              zIndex: '10',
+              position: 'absolute',
+              bottom: '32px',
+              right: '32px',
+              overflow: 'hidden'
+            }}
+            onClick={handleReadMore}
+            initial={{ opacity: 1 }}
+            animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              className="absolute inset-0 bg-white origin-left z-0"
+              initial={{ scaleX: 0 }}
+              whileHover={{ scaleX: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+            
+            {/* Text with CSS transition */}
+            <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
+              READ MORE
+            </span>
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
 const UndergradProjectsPage: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -353,7 +516,13 @@ const UndergradProjectsPage: React.FC = () => {
       )}
 
       {/* Individual Project Tiles - Only show when not in horizontal scroll mode */}
-      {!isHorizontalScrollMode && projects.map((project, index) => (
+      {!isHorizontalScrollMode && projects.map((project, index) => {
+        // Special handling for Site Analysis tile with transition animation
+        if (project.id === 'site-analysis') {
+          return <SiteAnalysisTile key={project.id} project={project} isWidescreen={isWidescreen} />;
+        }
+        
+        return (
         <motion.div
           key={project.id}
           className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
@@ -496,7 +665,8 @@ const UndergradProjectsPage: React.FC = () => {
             </div>
           )}
         </motion.div>
-      ))}
+        );
+      })}
 
       {/* Progress Indicator - Only show when not in horizontal scroll mode */}
       {!isHorizontalScrollMode && (

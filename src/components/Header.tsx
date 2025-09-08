@@ -8,7 +8,12 @@ import Image from 'next/image';
 
 const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false });
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  forceSolid?: boolean;
+  backgroundClass?: string; // NEW
+}
+
+const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -71,9 +76,15 @@ const Header: React.FC = () => {
     </button>
   );
 
+  const base = 'fixed top-0 left-0 w-full z-[70] transition-colors duration-300';
+  const solidBg = backgroundClass || 'bg-black/60 backdrop-blur-sm';
+  const transparentBg = 'bg-black/30';
+
+  const klass = forceSolid ? `${base} ${solidBg}` : `${base} ${transparentBg}`;
+
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-[70] transition-colors duration-300 bg-black/30">
+      <header className={klass}>
         <nav className="w-full px-6 py-5 flex justify-between items-center">
           <button onClick={() => router.push('/')} className="focus:outline-none" aria-label="Go to homepage">
             <div className="relative h-8 w-8 overflow-visible flex items-center justify-center">
