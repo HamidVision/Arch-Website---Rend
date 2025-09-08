@@ -1,5 +1,35 @@
 # Project History
 
+## Version v0.2.2 (Completed)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Major Milestone: Interactive Overlay System
+This version represents a significant milestone in user interaction design, implementing a sophisticated overlay system with advanced animations and intuitive toggle functionality.
+
+#### Features Implemented
+- ✅ **Two-Way Toggle Functionality**: Overlay now toggles between hero-only and split view in both directions
+- ✅ **Radar Ping Animation**: Subtle, repeating ping ring effect using Tailwind's `animate-ping` class
+- ✅ **Invisible-by-Default Design**: PNG overlay is completely invisible until hover for clean UI
+- ✅ **Framer Motion Integration**: Professional-grade animations for entry, hover, and state transitions
+- ✅ **Smart Position Management**: Overlay automatically adjusts position between initial and activated states
+- ✅ **Hover Feedback System**: Smooth fade-in and scale animations on hover for clear interaction feedback
+
+#### Technical Achievements
+- **Animation Framework**: Combined Framer Motion, Tailwind CSS Animate, and custom CSS for optimal performance
+- **State Management**: Implemented `setIsActivated(prev => !prev)` for seamless bidirectional toggling
+- **Visual Hierarchy**: Ping ring provides subtle attention-drawing without visual clutter
+- **Responsive Design**: Overlay maintains correct positioning across all screen sizes and states
+- **Performance Optimization**: Efficient animation handling with proper cleanup and transitions
+
+#### User Experience Improvements
+- **Intuitive Interaction**: Users can easily discover and use the toggle functionality
+- **Visual Clarity**: Clean interface that doesn't overwhelm the architectural content
+- **Professional Polish**: Smooth, sophisticated animations that enhance the overall experience
+- **Accessibility**: Clear visual feedback and proper cursor states for all interactions
+
+---
+
 ## Version v0.2.1 (Completed)
 **Date**: January 2025
 **Status**: ✅ Complete

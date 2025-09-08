@@ -8,7 +8,9 @@ interface AspectRatioHeroSplitProps {
   heroAlt: string;
   secondSrc: string;
   secondAlt: string;
-  triggerText?: string;
+  overlaySrc: string;
+  overlayPositionInitial: { top: string; left: string; width: string; height?: string };
+  overlayPositionActivated: { top: string; left: string; width: string; height?: string };
   className?: string;
 }
 
@@ -17,14 +19,15 @@ export default function AspectRatioHeroSplit({
   heroAlt,
   secondSrc,
   secondAlt,
-  triggerText = 'Show Analysis',
+  overlaySrc,
+  overlayPositionInitial,
+  overlayPositionActivated,
   className = ''
 }: AspectRatioHeroSplitProps) {
   const [isActivated, setIsActivated] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Calculate proportional heights when toggled
   const setAspectSplit = () => {
     const heroImg = panelRef.current?.querySelector<HTMLImageElement>('.hero img');
     const secondImg = panelRef.current?.querySelector<HTMLImageElement>('.second-render img');
@@ -68,6 +71,8 @@ export default function AspectRatioHeroSplit({
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
+  const overlayPos = isActivated ? overlayPositionActivated : overlayPositionInitial;
+
   return (
     <div ref={containerRef} className={`horizontal-section ${className}`}>
       <div ref={panelRef} className={`panel ${isActivated ? 'activated' : 'initial'}`}>
@@ -75,8 +80,39 @@ export default function AspectRatioHeroSplit({
           className="hero"
           animate={{ height: isActivated ? 'var(--hero-height)' : '100%' }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
+          style={{ position: 'relative' }}
         >
           <img src={heroSrc} alt={heroAlt} draggable={false} />
+
+          {/* Overlay clickable area with ping effect */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              top: overlayPos.top,
+              left: overlayPos.left,
+              width: overlayPos.width,
+              height: overlayPos.height || 'auto',
+              cursor: 'pointer'
+            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsActivated(prev => !prev)}
+          >
+            {/* Ping ring */}
+            <span className="absolute inset-0 rounded-full bg-white opacity-50 animate-ping"></span>
+
+            {/* Overlay image is invisible until hover */}
+            <motion.img
+              src={overlaySrc}
+              alt="Toggle Analysis"
+              className="relative z-10 siteplan-toggle"
+              style={{ width: '100%', height: 'auto', opacity: 0 }}
+              whileHover={{ opacity: 0.85 }}
+              transition={{ duration: 0.3 }}
+            />
+          </motion.div>
         </motion.section>
 
         <motion.section
@@ -90,13 +126,6 @@ export default function AspectRatioHeroSplit({
           <img src={secondSrc} alt={secondAlt} draggable={false} />
         </motion.section>
       </div>
-
-      <button
-        className="activation-trigger"
-        onClick={() => setIsActivated(prev => !prev)}
-      >
-        {isActivated ? 'Hide Analysis' : triggerText}
-      </button>
     </div>
   );
 }

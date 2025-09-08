@@ -1,16 +1,50 @@
 # Design Decisions
 
-## Version v0.1.2 (Current)
-**Date**: December 2024
-**Status**: Planning Phase
+## Version v0.2.2 (Current)
+**Date**: January 2025
+**Status**: ✅ All decisions implemented
 
-### Upcoming Decisions
-- Content integration strategy for individual project pages
-- Asset organization and optimization approach
-- Performance enhancement techniques
-- Mobile responsiveness improvements
+### Interactive Overlay System Decisions
+
+#### **Two-Way Toggle Functionality**
+- **Decision**: Implement bidirectional toggle using `setIsActivated(prev => !prev)`
+- **Rationale**: Users should be able to return to hero-only view after activating analysis mode
+- **Implementation**: onClick handler toggles between true/false states seamlessly
+- **Result**: Intuitive interaction that works in both directions without confusion
+
+#### **Radar Ping Animation Design**
+- **Decision**: Use Tailwind's `animate-ping` class for subtle attention-drawing effect
+- **Rationale**: Provides visual cue for interactive area without overwhelming the design
+- **Implementation**: `<span>` element with `animate-ping` positioned behind overlay image
+- **Result**: Professional, subtle animation that guides user attention effectively
+
+#### **Invisible-by-Default Overlay**
+- **Decision**: Make PNG overlay completely transparent (opacity: 0) until hover
+- **Rationale**: Maintains clean visual design while preserving functionality
+- **Implementation**: Framer Motion `whileHover={{ opacity: 0.85 }}` for smooth fade-in
+- **Result**: Clean interface that reveals interactive elements only when needed
+
+#### **Framer Motion Animation Framework**
+- **Decision**: Combine Framer Motion with Tailwind CSS Animate for optimal performance
+- **Rationale**: Framer Motion excels at component-level animations, Tailwind provides utility classes
+- **Implementation**: Motion components for entry/exit, hover states, and state transitions
+- **Result**: Smooth, performant animations with professional polish
+
+#### **Smart Position Management**
+- **Decision**: Dynamic position calculation based on activation state
+- **Rationale**: Overlay must be positioned correctly in both hero-only and split view modes
+- **Implementation**: `overlayPos` variable switches between initial and activated coordinates
+- **Result**: Seamless positioning that adapts to current view state
+
+#### **Hover Feedback System**
+- **Decision**: Implement scale and opacity changes on hover for clear interaction feedback
+- **Rationale**: Users need immediate visual confirmation that an area is interactive
+- **Implementation**: `whileHover={{ scale: 1.05 }}` combined with opacity fade-in
+- **Result**: Clear, responsive feedback that enhances user experience
 
 ---
+
+## Version v0.1.2 (Completed)
 
 ## Version v0.1.1 (Completed)
 **Date**: December 2024

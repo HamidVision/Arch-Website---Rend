@@ -450,29 +450,15 @@ body {
   opacity: 1;
 }
 
-.activation-trigger {
-  position: fixed;       /* stays in place while scrolling */
-  top: 20px;
-  right: 20px;
-  z-index: 50;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  border: none;
-  padding: 8px 16px;     /* smaller padding */
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;        /* prevents tall button */
-  width: auto;           /* don't stretch */
-  height: auto;          /* don't stretch */
-  display: inline-block; /* shrink to fit text */
-  transition: all 0.3s ease;
+.siteplan-toggle {
+  transition: opacity 0.3s ease;
 }
 
-.activation-trigger:hover {
-  background: rgba(0, 0, 0, 0.9);
-  transform: translateY(-2px);
+/* Subtle pulsing glow animation */
+@keyframes pulseGlow {
+  0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0.5)); }
+  50%  { filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
+  100% { filter: drop-shadow(0 0 0px rgba(255,255,255,0.5)); }
 }
 
 
