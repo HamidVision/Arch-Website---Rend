@@ -9,6 +9,7 @@ import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 // Site Analysis Tile with transition animation
 const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ project, isWidescreen }) => {
   const [transitioning, setTransitioning] = useState(false);
+  const [fadingOut, setFadingOut] = useState(false);
   const router = useRouter();
 
   const handleReadMore = (e: React.MouseEvent) => {
@@ -18,15 +19,31 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
   };
 
   const onHeroSlideComplete = () => {
-    router.push('/undergrad-projects/site-analysis');
+    // Start fade-out of entire tile content
+    setFadingOut(true);
+    
+    // Navigate after fade-out completes
+    setTimeout(() => {
+      router.push('/undergrad-projects/site-analysis');
+    }, 400); // 300ms fade + 100ms buffer
+  };
+
+  const onTextFadeComplete = () => {
+    // After text fades, start the hero slide
+    if (transitioning) {
+      // Small delay to ensure text fade is complete
+      setTimeout(() => {
+        // The hero slide will trigger onAnimationComplete
+      }, 100);
+    }
   };
 
   return (
     <motion.div
-      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
+      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group bg-black`}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.5 + (1 * 0.2) }}
+      animate={{ opacity: fadingOut ? 0 : 1 }}
+      transition={{ duration: fadingOut ? 0.2 : 0.3, delay: fadingOut ? 0 : 0.1 }}
     >
       {/* Left Side - White Background with Text (only on widescreen) */}
       {isWidescreen && (
@@ -35,7 +52,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
             className="max-w-md mb-16"
             initial={{ opacity: 0, y: 50 }}
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
               SITE ANALYSIS
@@ -72,7 +89,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
             onClick={handleReadMore}
             initial={{ opacity: 1 }}
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
           >
             <motion.div
               className="absolute inset-0 bg-white origin-left z-0"
@@ -90,14 +107,14 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
       )}
 
       {/* Right Side - Background Image */}
-      <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
+      <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-visible bg-transparent h-screen`}>
         <motion.img
           src="/undergrad-projects/site-analysis/site-tile.jpg"
           alt="Site Analysis"
           className="absolute inset-0 w-full h-full object-cover object-bottom will-change-transform"
           initial={false}
           animate={transitioning ? { x: '-100vw' } : { x: '0vw' }}
-          transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
           onAnimationComplete={() => transitioning && onHeroSlideComplete()}
           onError={(e) => {/* Image load error */}}
           onLoad={() => {/* Image loaded successfully */}}
@@ -112,7 +129,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
             className="max-w-4xl mb-16"
             initial={{ opacity: 0, y: 50 }}
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
               SITE ANALYSIS
@@ -149,7 +166,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
             onClick={handleReadMore}
             initial={{ opacity: 1 }}
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.6 }}
           >
             <motion.div
               className="absolute inset-0 bg-white origin-left z-0"
@@ -333,9 +350,9 @@ const UndergradProjectsPage: React.FC = () => {
             onClick={() => router.push('/')}
             className="focus:outline-none relative z-[100]"
             aria-label="Go to portfolio"
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.3, delay: 0 }}
             style={{ zIndex: 100 }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -350,9 +367,9 @@ const UndergradProjectsPage: React.FC = () => {
           <motion.button
             className={`relative z-[100] h-6 w-8 focus:outline-none ${isHorizontalScrollMode ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
             style={{ zIndex: 100 }}
           >
             <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
@@ -461,16 +478,16 @@ const UndergradProjectsPage: React.FC = () => {
           className={`relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
         >
           {/* Left Side - White Background with Text (only on widescreen) */}
           {isWidescreen && (
             <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
               <motion.div
                 className="max-w-md"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
               >
                 <h1 className="text-5xl md:text-7xl font-title text-gray-800 mb-6 tracking-wider uppercase">
                   Undergrad Projects
@@ -499,9 +516,9 @@ const UndergradProjectsPage: React.FC = () => {
             <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
               <motion.div
                 className="max-w-4xl"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
               >
                 <h1 className="text-5xl md:text-7xl font-title text-white mb-6 tracking-wider uppercase">
                   Undergrad Projects
@@ -528,7 +545,7 @@ const UndergradProjectsPage: React.FC = () => {
           className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 + (index * 0.2) }}
+          transition={{ duration: 0.3, delay: 0.1 + (index * 0.05) }}
           onClick={() => handleProjectClick(project.id)}
         >
           {/* Left Side - White Background with Text (only on widescreen) */}
@@ -536,9 +553,9 @@ const UndergradProjectsPage: React.FC = () => {
             <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
               <motion.div
                 className="max-w-md mb-16"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 + (index * 0.2) }}
+                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
               >
                 <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
                   {project.title}
@@ -609,9 +626,9 @@ const UndergradProjectsPage: React.FC = () => {
             <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
               <motion.div
                 className="max-w-4xl mb-16"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 + (index * 0.2) }}
+                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
               >
                 <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
                   {project.title}
@@ -674,7 +691,7 @@ const UndergradProjectsPage: React.FC = () => {
           className={`fixed bottom-8 left-8 z-[60] ${isWidescreen ? 'text-gray-800' : 'text-white'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
         >
         <div className="flex items-center space-x-4">
           <span className="text-sm font-subtitle tracking-wider uppercase">

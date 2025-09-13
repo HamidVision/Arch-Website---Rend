@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} bg-black text-white antialiased`}>
-        {/* HE Splash Screen */}
+        {/* HE Splash Screen - Only shows on initial load */}
         <HELoadingComponent
           variant="splash"
           timeoutMs={2000}

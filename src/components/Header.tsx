@@ -10,10 +10,11 @@ const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false 
 
 interface HeaderProps {
   forceSolid?: boolean;
-  backgroundClass?: string; // NEW
+  backgroundClass?: string;
+  textColorClass?: string; // NEW - for text/icon colors
 }
 
-const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass }) => {
+const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, textColorClass }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -44,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass }) 
 
   const HamburgerIcon: React.FC<{ onClick: () => void; isOpen: boolean }> = ({ onClick, isOpen }) => (
     <button
-      className="relative z-[70] h-6 w-8 focus:outline-none"
+      className={`relative z-[70] h-6 w-8 focus:outline-none ${textColorClass || 'text-white'}`}
       onClick={onClick}
       aria-label="Toggle menu"
     >
@@ -65,16 +66,19 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass }) 
     </button>
   );
   
-  const PortfolioToggleIcon: React.FC = () => (
-    <button onClick={handlePortfolioToggle} className="focus:outline-none" aria-label="Toggle projects overlay or open project">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-        <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-        <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-        <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-      </svg>
-    </button>
-  );
+  const PortfolioToggleIcon: React.FC = () => {
+    const strokeColor = textColorClass?.includes('black') ? 'black' : 'white';
+    return (
+      <button onClick={handlePortfolioToggle} className="focus:outline-none" aria-label="Toggle projects overlay or open project">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
+          <rect x="14" y="4" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
+          <rect x="4" y="14" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
+          <rect x="14" y="14" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
+        </svg>
+      </button>
+    );
+  };
 
   const base = 'fixed top-0 left-0 w-full z-[70] transition-colors duration-300';
   const solidBg = backgroundClass || 'bg-black/60 backdrop-blur-sm';

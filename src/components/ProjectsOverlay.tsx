@@ -43,7 +43,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Advanced research',
       description: 'Sophisticated design solutions and research-driven projects from graduate studies.',
       color: 'from-orange-600 to-red-600',
-      image: null,
+      image: '/graduate-projects/grad-hero.png',
       icons: [
         '/graduate-projects/icons/momentum-hub.png',
         '/graduate-projects/icons/nook.png',
@@ -103,17 +103,16 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   };
 
   const handleTileClick = (tileId: string) => {
+    // Start the fade out animation
     setIsVisible(false);
-    setTimeout(() => {
-      router.push(`/${tileId}`);
-    }, 300);
+    // Navigate immediately to reduce flicker
+    router.push(`/${tileId}`);
   };
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(() => {
-      onClose();
-    }, 300);
+    // Call onClose immediately to prevent animation delays
+    onClose();
   };
 
   // Scroll to current tile when zoomed
@@ -170,14 +169,14 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   }, [tiles.length]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isVisible && (
         <motion.div
           className={`fixed inset-0 bg-white/70 z-[60] flex flex-col ${isZoomed ? 'items-center justify-center' : ''}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
         >
           {/* Horizontal Scrolling Container */}
           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>

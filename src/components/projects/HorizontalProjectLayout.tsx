@@ -27,7 +27,6 @@ export default function HorizontalProjectLayout({
   backLinkText = 'Back to Projects'
 }: HorizontalProjectLayoutProps) {
   const [viewMode, setViewMode] = useState<'hero' | 'analysis'>('hero');
-  const [showGrid, setShowGrid] = useState(false);
   const [isSitePlanHovered, setIsSitePlanHovered] = useState(false);
   const [showDetailedView, setShowDetailedView] = useState(false);
   const [mainImageWidth, setMainImageWidth] = useState<number>(0);
@@ -66,16 +65,6 @@ export default function HorizontalProjectLayout({
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Grid toggle (works in both modes)
-      if (e.key.toLowerCase() === 'g') {
-        e.preventDefault();
-        console.log('Grid toggle activated'); // Debug log
-        setShowGrid(prev => {
-          console.log('Grid changing from', prev, 'to', !prev);
-          return !prev;
-        });
-        return;
-      }
 
       if (e.key === 'Escape' && viewMode === 'analysis') {
         setViewMode('hero');
@@ -129,71 +118,6 @@ export default function HorizontalProjectLayout({
 
   return (
     <>
-      {/* Architectural Grid System - Only show when showGrid is true */}
-      {showGrid && (
-        <div 
-          className="fixed inset-0 pointer-events-none"
-          style={{ zIndex: 9999 }}
-        >
-          {/* Vertical Grid Lines with Numbers */}
-          {Array.from({ length: 25 }, (_, i) => (
-            <div key={`v-${i}`}>
-              <div
-                className="absolute top-0 bottom-0 border-l border-red-500/30"
-                style={{
-                  left: `${(i * 4)}%`,
-                  width: '1px'
-                }}
-              />
-              {/* Vertical Line Numbers */}
-              <div
-                className="absolute top-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
-                style={{
-                  left: `${(i * 4)}%`,
-                  transform: 'translateX(-50%)'
-                }}
-              >
-                {i + 1}
-              </div>
-            </div>
-          ))}
-          
-          {/* Horizontal Grid Lines with Letters */}
-          {Array.from({ length: 19 }, (_, i) => (
-            <div key={`h-${i}`}>
-              <div
-                className="absolute left-0 right-0 border-t border-red-500/30"
-                style={{
-                  top: `${(i * 5.55)}%`,
-                  height: '1px'
-                }}
-              />
-              {/* Horizontal Line Letters */}
-              <div
-                className="absolute left-1 text-red-500 text-xs font-mono bg-white/80 px-1 rounded"
-                style={{
-                  top: `${(i * 5.55)}%`,
-                  transform: 'translateY(-50%)'
-                }}
-              >
-                {String.fromCharCode(65 + i)}
-              </div>
-            </div>
-          ))}
-          
-          {/* Center Cross Lines */}
-          <div className="absolute top-0 bottom-0 left-1/2 border-l border-red-500/50 w-px" />
-          <div className="absolute left-0 right-0 top-1/2 border-t border-red-500/50 h-px" />
-          
-          {/* Grid Info */}
-          <div 
-            className="absolute top-2 left-2 text-red-500 text-xs font-mono bg-white/90 px-2 py-1 rounded border border-red-500/50"
-            style={{ zIndex: 10000 }}
-          >
-            GRID: ON (Press G to toggle) | Format: Letter-Number (e.g., C-7)
-          </div>
-        </div>
-      )}
 
       {/* Global Header Layer - Outside main container to avoid stacking context issues */}
       <div className="fixed inset-0 pointer-events-none z-[9999]">
@@ -260,18 +184,6 @@ export default function HorizontalProjectLayout({
           </div>
         </div>
 
-        {/* Grid Test Button - Temporary */}
-        <div className="absolute top-2 right-2 pointer-events-auto">
-          <button
-            onClick={() => {
-              console.log('Grid button clicked, current state:', showGrid);
-              setShowGrid(!showGrid);
-            }}
-            className="bg-red-500 text-white px-2 py-1 text-xs rounded border border-red-600"
-          >
-            Grid: {showGrid ? 'ON' : 'OFF'}
-          </button>
-        </div>
 
         {/* View Counter */}
         <div className="absolute bottom-8 right-8 pointer-events-none">

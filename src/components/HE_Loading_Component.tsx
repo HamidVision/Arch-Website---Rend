@@ -19,18 +19,37 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
   subtitle = 'Architecture & Design Studio',
   tagline = 'Creating spaces that inspire'
 }) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true); // Start visible
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 500); // Fade out duration
-    }, timeoutMs);
+    // Development mode override - always show loading in development
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    // Check if this is a fresh page load (not just a route change)
+    const hasLoadedBefore = sessionStorage.getItem('hasLoadedBefore');
+    const shouldShow = isDevelopment || !hasLoadedBefore || !document.referrer;
+    
+    if (shouldShow) {
+      setIsVisible(true);
+      
+      // Only set the session flag in production
+      if (!isDevelopment) {
+        sessionStorage.setItem('hasLoadedBefore', 'true');
+      }
+      
+      const timer = setTimeout(() => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setIsVisible(false);
+        }, 500); // Fade out duration
+      }, timeoutMs);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    } else {
+      // Hide immediately if not showing
+      setIsVisible(false);
+    }
   }, [timeoutMs]);
 
   if (!isVisible) return null;

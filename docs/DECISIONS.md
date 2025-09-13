@@ -1,6 +1,158 @@
 # Design Decisions
 
-## Version v0.3.1 (Current)
+## Version v0.4.2 (Current)
+**Date**: January 2025
+**Status**: ✅ All decisions implemented
+
+### Border Crossing Page Architecture Decisions
+
+#### **Header Consistency Strategy**
+- **Decision**: Exact same header system across all project pages (HE button, portfolio grid, menu hamburger)
+- **Rationale**: Creates unified navigation experience and professional consistency
+- **Implementation**: Black background with white icons, identical positioning and styling
+- **Result**: Seamless user experience across different project presentations
+
+#### **Horizontal Scroll System**
+- **Decision**: Convert mouse wheel vertical movement to horizontal scroll for architectural drawings
+- **Rationale**: Allows natural navigation through wide architectural plans while maintaining viewport
+- **Implementation**: `containerRef.current.scrollLeft += e.deltaY` with prevented default behavior
+- **Result**: Intuitive navigation through horizontal architectural content
+
+#### **Text Overlay Framework**
+- **Decision**: Transparent text overlays without background interference
+- **Rationale**: Preserves architectural drawing visibility while providing essential project information
+- **Implementation**: `backgroundColor: 'transparent'`, `backdropFilter: 'none'`, no borders or shadows
+- **Result**: Clean text presentation that complements rather than obscures architectural content
+
+#### **Typography Consistency**
+- **Decision**: Helvetica Neue font system matching Congregation Center standards
+- **Rationale**: Maintains professional architectural presentation quality across all project pages
+- **Implementation**: `fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"` with consistent sizing
+- **Result**: Unified typographic voice across entire portfolio
+
+#### **Responsive Positioning System**
+- **Decision**: Percentage-based positioning for text overlays (`top: '20%'`, `left: '62%'`)
+- **Rationale**: Ensures proper scaling across all screen sizes and aspect ratios
+- **Implementation**: `transform: 'translate(-50%, -50%)'` for precise centering
+- **Result**: Consistent text placement regardless of viewport size
+
+---
+
+## Version v0.4.1 (Completed)
+**Date**: January 2025
+**Status**: ✅ All decisions implemented
+
+### UX Enhancement System Decisions
+
+#### **Progressive Disclosure Architecture**
+- **Decision**: Three-phase hint system (text → glow → interaction cleanup)
+- **Rationale**: Gentle guidance without overwhelming new users while maintaining clean experience for returning visitors
+- **Implementation**: Timed state management with 3.5-second progression
+- **Result**: Improved discoverability without compromising professional presentation
+
+#### **Hint Text Positioning Strategy**
+- **Decision**: Position hint text at exact location of future content (render/video area)
+- **Rationale**: Creates spatial connection between instruction and resulting action
+- **Implementation**: Same coordinates as content display box (top: '18%', left: '38.15%')
+- **Result**: Intuitive flow from instruction to content visualization
+
+#### **Animation Subtlety Principle**
+- **Decision**: Gentle pulse without visible borders, subtle glow effects
+- **Rationale**: Architectural presentations require sophisticated, non-distracting animations
+- **Implementation**: 3-second gentle pulse with `border: none !important`, 2-second glow cycle
+- **Result**: Professional guidance that enhances rather than disrupts the design
+
+#### **Smart Cleanup Philosophy**
+- **Decision**: All hints disappear permanently after any first interaction
+- **Rationale**: Experienced users should have clean, uncluttered interface
+- **Implementation**: `firstInteraction` state tracking with comprehensive cleanup
+- **Result**: One-time guidance system that doesn't interfere with repeated use
+
+#### **Standard Cursor Approach**
+- **Decision**: Use browser's standard pointer cursor instead of custom icons
+- **Rationale**: Custom cursors often look unprofessional or unclear, standard pointer is universally recognized
+- **Implementation**: `cursor: pointer` for all interactive button areas
+- **Result**: Clear, familiar interaction indicators
+
+---
+
+## Version v0.4.0 (Completed)
+**Date**: January 2025
+**Status**: ✅ All decisions implemented
+
+### Interactive Content System Decisions
+
+#### **Button-Based Navigation Architecture**
+- **Decision**: Six circular numbered buttons positioned over architectural drawing
+- **Rationale**: Provides intuitive, spatial navigation that directly corresponds to building levels
+- **Implementation**: Absolute positioning with percentage-based coordinates for responsive design
+- **Result**: Interactive system that maintains visual connection to architectural content
+
+#### **Toggle Interaction Pattern**
+- **Decision**: Click button to show content, click again to hide (toggle functionality)
+- **Rationale**: Reduces visual clutter and allows users to focus on architecture when desired
+- **Implementation**: Single state variable with `activeButton === buttonNumber ? null : buttonNumber` logic
+- **Result**: Clean, predictable interaction that keeps interface uncluttered
+
+#### **Three-Tier Content Display System**
+- **Decision**: Separate boxes for title, main content, and description with distinct z-indexing
+- **Rationale**: Creates clear information hierarchy while maintaining visual balance
+- **Implementation**: Title (z-35), Main Content (z-30), Description (z-35) with strategic positioning
+- **Result**: Organized content presentation that doesn't overwhelm the architectural image
+
+#### **Orange Brand Color Integration**
+- **Decision**: Use Orange-500 (#F97316) as primary interactive color for consistency
+- **Rationale**: Maintains brand identity and provides high contrast for accessibility
+- **Implementation**: Active button backgrounds, content box accents, and hover states
+- **Result**: Cohesive visual language that reinforces brand while ensuring usability
+
+#### **Performance-Optimized Rendering**
+- **Decision**: Conditional rendering of content boxes only when button is active
+- **Rationale**: Reduces DOM complexity and improves performance on lower-end devices
+- **Implementation**: `{activeButton && (<> content boxes </>)}` conditional rendering
+- **Result**: Efficient resource usage with smooth interactions
+
+---
+
+## Version v0.3.2 (Completed)
+**Date**: December 2024
+**Status**: ✅ All decisions implemented
+
+### Fixed Text Box Positioning Decisions
+
+#### **Direct DOM Manipulation Approach**
+- **Decision**: Use `useEffect` with direct DOM manipulation instead of React Portal
+- **Rationale**: React Portals still remain within React component tree and affected by parent stacking contexts
+- **Implementation**: `document.createElement()` and `document.body.appendChild()` for complete isolation
+- **Result**: Text box perfectly fixed relative to viewport, unaffected by scroll or parent containers
+
+#### **Native Browser APIs Over Framework Solutions**
+- **Decision**: Leverage native DOM APIs instead of React-specific positioning solutions
+- **Rationale**: Framework abstractions can introduce unexpected side effects with CSS stacking contexts
+- **Implementation**: Direct style manipulation using `Object.assign(element.style, {...})` 
+- **Result**: Predictable, cross-browser compatible positioning behavior
+
+#### **Maximum Z-Index Strategy**
+- **Decision**: Use z-index of 99999 for critical UI elements that must stay on top
+- **Rationale**: Ensures text box remains visible above all other content including overlays and transitions
+- **Implementation**: `zIndex: '99999'` applied directly to element style
+- **Result**: Text box consistently appears above all other page elements
+
+#### **Component Lifecycle Management**
+- **Decision**: Implement proper cleanup function to remove DOM elements on component unmount
+- **Rationale**: Prevents memory leaks and DOM pollution when navigating between pages
+- **Implementation**: `return () => { document.getElementById('id')?.remove(); }` in useEffect
+- **Result**: Clean component lifecycle with no residual DOM elements
+
+#### **Framer Motion Stacking Context Mitigation**
+- **Decision**: Bypass `RouteTransitionWrapper` effects by rendering outside React tree
+- **Rationale**: Framer Motion's `motion.div` creates new stacking context affecting fixed positioning
+- **Implementation**: Direct DOM manipulation renders elements independent of motion wrapper
+- **Result**: Fixed elements immune to animation framework side effects
+
+---
+
+## Version v0.3.1 (Completed)
 **Date**: January 2025
 **Status**: ✅ All decisions implemented
 

@@ -8,6 +8,8 @@ interface AspectRatioHeroSplitProps {
   heroAlt: string;
   secondSrc: string;
   secondAlt: string;
+  thirdSrc: string;          // NEW: for site-analysis-l2.jpg
+  thirdAlt: string;          // NEW
   overlaySrc: string;
   overlayPositionInitial: { top: string; left: string; width: string; height?: string };
   overlayPositionActivated: { top: string; left: string; width: string; height?: string };
@@ -19,12 +21,14 @@ export default function AspectRatioHeroSplit({
   heroAlt,
   secondSrc,
   secondAlt,
+  thirdSrc,
+  thirdAlt,
   overlaySrc,
   overlayPositionInitial,
   overlayPositionActivated,
   className = ''
 }: AspectRatioHeroSplitProps) {
-  const [isActivated, setIsActivated] = useState(false);
+  const [toggleState, setToggleState] = useState(0); // 0: initial, 1: second image, 2: third image
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -38,10 +42,11 @@ export default function AspectRatioHeroSplit({
     return 80; // Fallback to default if header not found
   };
 
-  const setAspectSplit = () => {
+  const setAspectSplit = (state: number) => {
     const heroImg = panelRef.current?.querySelector<HTMLImageElement>('.hero img');
     const secondImg = panelRef.current?.querySelector<HTMLImageElement>('.second-render img');
-    if (!heroImg || !secondImg) return;
+    const thirdImg = panelRef.current?.querySelector<HTMLImageElement>('.third-render img');
+    if (!heroImg || !secondImg || !thirdImg) return;
 
     // Get dynamic header height
     const headerHeight = getHeaderHeight();
@@ -49,18 +54,44 @@ export default function AspectRatioHeroSplit({
     // Available visual height under the header
     const availableHeight = window.innerHeight - headerHeight;
 
-    // Compute proportional heights by aspect ratio
+    // Compute aspect ratios for all images
     const heroAspect = heroImg.naturalHeight / heroImg.naturalWidth;
     const secondAspect = secondImg.naturalHeight / secondImg.naturalWidth;
+    const thirdAspect = thirdImg.naturalHeight / thirdImg.naturalWidth;
 
-    const k = availableHeight / (heroAspect + secondAspect);
-    const heroHeightPx = k * heroAspect;
-    const secondHeightPx = k * secondAspect;
+    let heroHeightPx: number;
+    let secondHeightPx: number;
+    let thirdHeightPx: number;
+
+    if (state === 0) {
+      // State 0: Only hero image visible (full height)
+      heroHeightPx = availableHeight;
+      secondHeightPx = 0;
+      thirdHeightPx = 0;
+    } else if (state === 1) {
+      // State 1: Hero + Second image visible
+      const k = availableHeight / (heroAspect + secondAspect);
+      heroHeightPx = k * heroAspect;
+      secondHeightPx = k * secondAspect;
+      thirdHeightPx = 0;
+    } else if (state === 2) {
+      // State 2: Hero + Third image visible
+      const k = availableHeight / (heroAspect + thirdAspect);
+      heroHeightPx = k * heroAspect;
+      secondHeightPx = 0;
+      thirdHeightPx = k * thirdAspect;
+    } else {
+      // Fallback
+      heroHeightPx = availableHeight;
+      secondHeightPx = 0;
+      thirdHeightPx = 0;
+    }
 
     // Store as px, not percentages — eliminates rounding gaps and is unambiguous
     document.documentElement.style.setProperty('--available-height', `${availableHeight}px`);
     document.documentElement.style.setProperty('--hero-height-px', `${heroHeightPx}px`);
     document.documentElement.style.setProperty('--second-height-px', `${secondHeightPx}px`);
+    document.documentElement.style.setProperty('--third-height-px', `${thirdHeightPx}px`);
 
     // Keep the container full viewport height to avoid bottom gap
     if (containerRef.current) {
@@ -76,16 +107,14 @@ export default function AspectRatioHeroSplit({
 
   // Run aspect split when activated and on resize
   useEffect(() => {
-    setAspectSplit(); // run once on mount to handle initial layout
-    window.addEventListener('resize', setAspectSplit);
-    return () => window.removeEventListener('resize', setAspectSplit);
+    setAspectSplit(0); // run once on mount to handle initial layout
+    window.addEventListener('resize', () => setAspectSplit(toggleState));
+    return () => window.removeEventListener('resize', () => setAspectSplit(toggleState));
   }, []);
 
   useEffect(() => {
-    if (isActivated) {
-      setAspectSplit();
-    }
-  }, [isActivated]);
+    setAspectSplit(toggleState);
+  }, [toggleState]);
 
   // Mouse wheel -> horizontal scroll
   useEffect(() => {
@@ -101,15 +130,20 @@ export default function AspectRatioHeroSplit({
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
 
-  const overlayPos = isActivated ? overlayPositionActivated : overlayPositionInitial;
+  const overlayPos = toggleState === 0 ? overlayPositionInitial : overlayPositionActivated;
+
+  // Toggle handler for cycling through states
+  const handleToggle = () => {
+    setToggleState(prev => (prev + 1) % 3); // Cycles: 0→1→2→0
+  };
 
   return (
     <div ref={containerRef} className={`horizontal-section ${className}`}>
-      <div ref={panelRef} className={`panel ${isActivated ? 'activated' : 'initial'}`}>
+      <div ref={panelRef} className={`panel ${toggleState === 0 ? 'initial' : 'activated'}`}>
         {/* Hero section: initial occupies full available height; activated uses computed px */}
         <motion.section
           className="hero"
-          animate={{ height: isActivated ? 'var(--hero-height-px)' : 'var(--available-height)' }}
+          animate={{ height: toggleState === 0 ? 'var(--available-height)' : 'var(--hero-height-px)' }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
           style={{ position: 'relative' }}
         >
@@ -129,12 +163,12 @@ export default function AspectRatioHeroSplit({
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
-            onClick={() => setIsActivated(prev => !prev)}
+            onClick={handleToggle}
             role="button"
             aria-label="Toggle analysis"
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') setIsActivated(prev => !prev);
+              if (e.key === 'Enter' || e.key === ' ') handleToggle();
             }}
           >
             <span className="absolute inset-0 rounded-full bg-white opacity-50 animate-ping"></span>
@@ -154,12 +188,23 @@ export default function AspectRatioHeroSplit({
         <motion.section
           className="second-render"
           animate={{
-            height: isActivated ? 'var(--second-height-px)' : 0,
-            opacity: isActivated ? 1 : 0
+            height: toggleState === 1 ? 'var(--second-height-px)' : 0,
+            opacity: toggleState === 1 ? 1 : 0
           }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
           <img src={secondSrc} alt={secondAlt} draggable={false} />
+        </motion.section>
+
+        <motion.section
+          className="third-render"
+          animate={{
+            height: toggleState === 2 ? 'var(--third-height-px)' : 0,
+            opacity: toggleState === 2 ? 1 : 0
+          }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+        >
+          <img src={thirdSrc} alt={thirdAlt} draggable={false} />
         </motion.section>
       </div>
     </div>

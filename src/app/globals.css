@@ -29,6 +29,67 @@
     font-family: var(--font-body);
     font-weight: 300; /* Light */
   }
+
+  /* Custom slow ping animation for architectural buttons */
+  .animate-ping-slow {
+    animation: ping-slow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping-slow {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* Hover scale animation for button numbers */
+  .hover-scale-number {
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+
+  .hover-scale-number:hover {
+    transform: scale(1.5);
+  }
+
+  /* Gentle pulse animation for first-time user guidance */
+  .gentle-pulse {
+    animation: gentle-pulse 3s ease-in-out infinite;
+    border: none !important;
+  }
+
+  @keyframes gentle-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.85; }
+  }
+
+  /* Button glow effect for progressive disclosure */
+  .button-glow {
+    animation: button-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes button-glow {
+    0%, 100% { 
+      box-shadow: 0 0 0 rgba(249, 115, 22, 0.4);
+      border-color: rgba(249, 115, 22, 0.5);
+    }
+    50% { 
+      box-shadow: 0 0 15px rgba(249, 115, 22, 0.8);
+      border-color: rgba(249, 115, 22, 1);
+    }
+  }
+
+  /* Custom cursor for button area */
+  .button-area-cursor {
+    cursor: pointer;
+  }
+
+  .button-area-cursor:hover {
+    cursor: pointer;
+  }
 }
 
 @layer base {
@@ -393,6 +454,11 @@
 :root {
   --hero-height: 100%;
   --second-height: 0%;
+  --third-height: 0%;
+  --available-height: 100%; /* default for safety */
+  --hero-height-px: 100px;   /* default for safety */
+  --second-height-px: 0px;  /* default for safety */
+  --third-height-px: 0px;   /* default for safety */
 }
 
 body {
@@ -428,7 +494,8 @@ body {
 
 /* Sections inside panel */
 .hero,
-.second-render {
+.second-render,
+.third-render {
   flex: 0 0 auto;
   overflow: hidden;
   transition: height 0.5s ease, opacity 0.5s ease;
@@ -440,7 +507,8 @@ body {
 
 /* Height-driven scaling; no black fill; left anchoring */
 .hero img,
-.second-render img {
+.second-render img,
+.third-render img {
   height: 100%;
   width: auto;                 /* key: width derives from height */
   object-fit: contain;         /* no cropping */
@@ -453,9 +521,11 @@ body {
    using px variables from the component. These lines remain for structure only. */
 .initial .hero { /* height set inline to var(--available-height) */ }
 .initial .second-render { height: 0; opacity: 0; }
+.initial .third-render { height: 0; opacity: 0; }
 
 .activated .hero { /* height set inline to var(--hero-height-px) */ }
 .activated .second-render { /* height set inline to var(--second-height-px) */ opacity: 1; }
+.activated .third-render { /* height set inline to var(--third-height-px) */ opacity: 1; }
 
 /* Remove any old trigger button footprint */
 .activation-trigger { display: none !important; }
@@ -518,3 +588,5 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Congregation Center styles have been moved to component-level to avoid affecting other pages */
