@@ -42,7 +42,7 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Intimate Spaces',
       description: 'An exploration of intimate architectural spaces that create moments of reflection and connection within urban environments.',
       color: 'from-purple-600 to-indigo-600',
-      image: '/graduate-projects/the-nook/nook-tile.jpg'
+      image: '/graduate-projects/nook/nook-tile.jpg'
     },
     {
       id: 'wellness-bazaar',
