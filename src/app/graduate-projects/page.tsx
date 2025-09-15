@@ -50,7 +50,7 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Health & Wellbeing',
       description: 'A comprehensive wellness complex integrating healthcare, community services, and sustainable design principles.',
       color: 'from-teal-600 to-green-600',
-      image: '/graduate-projects/wellness-bazaar/wellness-tile.jpg'
+      image: '/graduate-projects/wellness-bazaar/wellness-tile.png'
     }
   ];
 
