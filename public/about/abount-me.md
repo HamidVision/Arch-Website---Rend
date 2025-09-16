@@ -1,0 +1,15 @@
+Page 1: Crafting Intelligent Environments
+
+Welcome. I am driven by the profound intersection of the built environment and the transformative power of advanced technology. My journey in architecture began with a deep appreciation for form, function, and human experience. This foundation was significantly expanded through my doctoral research, where I explored how cutting-edge computational methods can unveil the intricate dynamics of urban life.
+
+At the University of Florida, my Ph.D. thesis, "Pedestrian Behavior Analysis in Shared Open Spaces Implementing YOLOv8," delved into pioneering techniques for understanding human movement and interaction within designed spaces. This work, along with subsequent publications, laid the groundwork for my expertise in machine learning algorithms and computer vision, specifically applied to architectural contexts. It’s here that the two pillars of my professional identity truly converged: the rigorous discipline of architectural practice with the innovative frontiers of artificial intelligence.
+
+My commitment lies in leveraging these advanced analytical tools not merely for observation, but to inform and enrich the architectural design process itself. By translating complex data into actionable insights, I aim to create spaces that are not only aesthetically compelling but also intuitively responsive, highly efficient, and profoundly human-centric.
+
+Page 2: Bridging Design and Data for the Future of Architecture
+
+My professional life has been a continuous exploration of how to bridge the gap between abstract computational models and the tangible realities of architectural design. While my research focused on developing sophisticated computer vision models—like YOLOv8—to analyze pedestrian behavior, this wasn't a departure from architecture, but rather an evolution of my approach to it. I see these algorithms as powerful new lenses through which we can understand and optimize the spaces we inhabit.
+
+Concurrently with my deep dive into machine learning and computer vision, I have maintained an active engagement with the practical aspects of architectural design. This dual focus has provided me with a unique perspective, allowing me to understand the theoretical capabilities of AI within the constraints and opportunities of real-world architectural projects. It has equipped me to not only conceptualize innovative solutions but also to implement them effectively, ensuring that technological integration enhances, rather than detracts from, the integrity and vision of a design.
+
+My ambition is to redefine architectural practice by integrating intelligent systems that can predict, adapt, and learn from human interaction. This enables the creation of truly smart buildings and urban environments—spaces that are not just aesthetically pleasing but are also optimized for human flow, comfort, and sustainability. I invite you to explore my work and discover how this synergistic approach can bring a new dimension of intelligence and innovation to your projects.

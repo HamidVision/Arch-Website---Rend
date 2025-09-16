@@ -72,7 +72,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Personal journey',
       description: 'Background, experience, and the story behind the work.',
       color: 'from-teal-600 to-green-600',
-      image: null
+      image: '/about/about-me-tile.png'
     },
     {
       id: 'contact',
@@ -80,7 +80,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Get in touch',
       description: 'Let\'s discuss your project and explore collaboration opportunities.',
       color: 'from-red-600 to-orange-600',
-      image: null
+      image: '/contact/contact-tile.png'
     }
   ];
 
