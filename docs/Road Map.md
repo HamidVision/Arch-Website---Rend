@@ -1,6 +1,6 @@
 # Arch Website Development Road Map
 
-## Current Status: v0.6.0 ✅ COMPLETED - Moving to v0.6.1
+## Current Status: v0.6.1 ✅ COMPLETED - Moving to v0.6.2
 
 ### Version v0.1.3 (Completed) ✅
 **Date**: December 2024
@@ -134,11 +134,31 @@
 
 ---
 
-## Version v0.6.1 (Next Development Phase)
+## Version v0.6.1 ✅ COMPLETED
+**Date**: January 2025
+**Status**: Successfully Completed
+
+### Major Achievements v0.6.1
+- ✅ **Portfolio Tile Image Updates** - Custom images for Computer Science Projects and Research Papers tiles
+- ✅ **Visual Consistency Enhancement** - All portfolio tiles now have custom images instead of gradient-only backgrounds
+- ✅ **Image Integration System** - Proper file organization and web path implementation
+- ✅ **User Experience Enhancement** - Improved visual appeal and professional presentation of portfolio overlay
+- ✅ **Code Quality Maintenance** - Clean, maintainable implementation following existing patterns
+
+#### Technical Milestones v0.6.1
+- **Image Path Updates**: Updated ProjectsOverlay.tsx to use custom tile images for Computer Science and Research Papers
+- **File Organization**: Proper placement of images in `/public/computer-science/` and `/public/research-papers/` directories
+- **Visual Consistency**: Eliminated gradient-only tiles in favor of custom imagery
+- **Professional Presentation**: Enhanced portfolio overlay with cohesive visual identity
+- **Code Quality**: Maintained existing component architecture and patterns
+
+---
+
+## Version v0.6.2 (Next Development Phase)
 **Date**: January 2025
 **Status**: Planning Phase
 
-### Planned Features for v0.6.1
+### Planned Features for v0.6.2
 
 #### 1. Enhanced Mobile Experience
 **Priority**: High

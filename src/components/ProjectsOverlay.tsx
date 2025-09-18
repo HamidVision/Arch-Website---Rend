@@ -56,7 +56,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Digital innovation',
       description: 'Technology-driven projects bridging architecture and computational design.',
       color: 'from-purple-600 to-indigo-600',
-      image: null
+      image: '/computer-science/computer-science-tile.png'
     },
     {
       id: 'research-papers',
@@ -64,7 +64,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Academic contributions',
       description: 'Published research and theoretical contributions to architectural discourse.',
       color: 'from-indigo-600 to-blue-600',
-      image: null
+      image: '/research-papers/Research-tile.png'
     },
     {
       id: 'about',
