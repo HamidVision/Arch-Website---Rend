@@ -6,7 +6,7 @@ import AspectRatioHeroSplit from '@/components/AspectRatioHeroSplit';
 export default function SiteAnalysisPage() {
   return (
     <main className="relative h-screen bg-white">
-      <Header forceSolid backgroundClass="bg-[#f5f5f5] backdrop-blur-sm" textColorClass="text-black" />
+      <Header forceSolid backgroundClass="bg-[#f5f5f5] backdrop-blur-sm" textColorClass="text-black" logoVariant="dark" />
       <AspectRatioHeroSplit
         heroSrc="/undergrad-projects/site-analysis/site-analysis.jpg"
         heroAlt="SOS Children's Village — Site Context Board"

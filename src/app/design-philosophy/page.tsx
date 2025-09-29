@@ -11,6 +11,7 @@ const DesignPhilosophyPage: React.FC = () => {
   const [showText, setShowText] = useState(true);
   const [showTextBackground, setShowTextBackground] = useState(true);
   const [showPageBackground, setShowPageBackground] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -88,14 +89,21 @@ const DesignPhilosophyPage: React.FC = () => {
       {/* Navigation - Always visible */}
       <motion.button
         onClick={handleBackClick}
-        className="fixed top-8 left-8 text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors z-[70] bg-transparent border-none outline-none cursor-pointer"
+        className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[70] bg-transparent border-none outline-none cursor-pointer"
         aria-label="Go to homepage"
-        style={{ fontFamily: 'inherit', textRendering: 'optimizeLegibility' }}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        HE
+        <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+          <Image
+            src="/icons/ui/logo-header-white.png"
+            alt="Architecture Portfolio Logo"
+            fill
+            className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+            priority
+          />
+        </div>
       </motion.button>
 
       {/* Portfolio and Menu Buttons - Always visible */}
@@ -120,6 +128,7 @@ const DesignPhilosophyPage: React.FC = () => {
           
           {/* Menu Button */}
           <motion.button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="relative z-[70] h-6 w-8 focus:outline-none"
             aria-label="Toggle menu"
             initial={{ opacity: 0, y: -20 }}
@@ -217,6 +226,21 @@ const DesignPhilosophyPage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Hamburger Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
+          <nav className="text-center">
+            <ul className="space-y-8 text-white">
+              <li><a href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+              <li><a href="/undergrad-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Undergrad Projects</a></li>
+              <li><a href="/graduate-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Graduate Projects</a></li>
+              <li><a href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+              <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </div>
   );
 };

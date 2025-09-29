@@ -14,6 +14,7 @@ export default function MomentumHubPage() {
   const contentBox3Ref = useRef<HTMLDivElement>(null);
   const contentBox4Ref = useRef<HTMLDivElement>(null);
   const contentBox5Ref = useRef<HTMLDivElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Add CSS keyframes for pulse animation and mosaic reveal
   useEffect(() => {
@@ -309,10 +310,18 @@ export default function MomentumHubPage() {
         {/* Custom Header matching undergrad-projects page */}
         <button
           onClick={() => window.history.back()}
-          className="fixed top-8 left-8 text-2xl font-semibold tracking-wide text-white hover:text-gray-300 transition-colors z-[100] bg-transparent border-none outline-none cursor-pointer"
+          className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >
-          HE
+          <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+            <Image
+              src="/icons/ui/logo-header.svg"
+              alt="Architecture Portfolio Logo"
+              fill
+              className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+              priority
+            />
+          </div>
         </button>
         
         {/* Portfolio and Menu Buttons */}
@@ -320,28 +329,29 @@ export default function MomentumHubPage() {
           <div className="flex items-center space-x-6">
             {/* Portfolio Button */}
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = '/graduate-projects'}
               className="focus:outline-none"
-              aria-label="Go to portfolio"
-              title="Go to portfolio"
+              aria-label="Go to graduate projects"
+              title="Go to graduate projects"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
+                <rect x="4" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="4" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
               </svg>
             </button>
 
             {/* Menu Button */}
             <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="relative h-6 w-8 focus:outline-none"
               aria-label="Toggle menu"
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out -translate-y-1"></span>
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out -translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out translate-y-1"></span>
               </div>
             </button>
           </div>
@@ -822,6 +832,21 @@ export default function MomentumHubPage() {
           </div>
         </div>
       </main>
+      
+      {/* Hamburger Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
+          <nav className="text-center">
+            <ul className="space-y-8 text-white">
+              <li><a href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+              <li><a href="/undergrad-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Undergrad Projects</a></li>
+              <li><a href="/graduate-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Graduate Projects</a></li>
+              <li><a href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+              <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+      )}
       </div>
   );
 }

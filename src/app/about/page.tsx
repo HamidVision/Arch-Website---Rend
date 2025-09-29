@@ -116,7 +116,7 @@ const AboutPage: React.FC = () => {
   return (
     <div className="h-screen bg-white text-black overflow-hidden">
       {/* Header */}
-      <Header forceSolid={true} backgroundClass="bg-white/0" textColorClass="text-black" />
+      <Header forceSolid={true} backgroundClass="bg-white/0" textColorClass="text-white" logoVariant="light" />
       
       {/* Main Content Container */}
       <main className="relative h-full pt-20">

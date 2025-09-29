@@ -121,10 +121,18 @@ export default function HorizontalProjectLayout({
 
       {/* Global Header Layer - Outside main container to avoid stacking context issues */}
       <div className="fixed inset-0 pointer-events-none z-[9999]">
-        {/* HE Logo */}
+        {/* Logo */}
         <div className="absolute top-8 left-8 pointer-events-auto">
-          <Link href={backLink} className="text-white text-2xl font-semibold tracking-wide hover:text-gray-300 transition-colors">
-            HE
+          <Link href={backLink} className="hover:opacity-75 transition-opacity">
+            <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+              <Image
+                src="/icons/ui/logo-header-white.png"
+                alt="Architecture Portfolio Logo"
+                fill
+                className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+                priority
+              />
+            </div>
           </Link>
         </div>
 

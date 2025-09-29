@@ -151,10 +151,18 @@ export default function CongregationCenterPage() {
         {/* Custom Header matching undergrad-projects page */}
         <button
           onClick={() => window.history.back()}
-          className="fixed top-8 left-8 text-2xl font-semibold tracking-wide text-white hover:text-gray-300 transition-colors z-[100] bg-transparent border-none outline-none cursor-pointer"
+          className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >
-          HE
+          <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+            <Image
+              src="/icons/ui/logo-header.svg"
+              alt="Architecture Portfolio Logo"
+              fill
+              className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+              priority
+            />
+          </div>
         </button>
         
         {/* Portfolio and Menu Buttons */}
@@ -168,10 +176,10 @@ export default function CongregationCenterPage() {
               title="Go to portfolio"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
+                <rect x="4" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="4" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
               </svg>
             </button>
 
@@ -182,8 +190,8 @@ export default function CongregationCenterPage() {
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out -translate-y-1"></span>
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out -translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out translate-y-1"></span>
               </div>
             </button>
           </div>

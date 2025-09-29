@@ -5,6 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import dynamic from 'next/dynamic';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 // Site Analysis Tile with transition animation
 const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ project, isWidescreen }) => {
@@ -189,12 +193,14 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
 const UndergradProjectsPage: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const { showLoading, handleLogoClick } = useLogoNavigation();
   const [isMobile, setIsMobile] = useState(false);
   const [currentProject, setCurrentProject] = useState(0);
   const [isWidescreen, setIsWidescreen] = useState(false);
   const [isHorizontalScrollMode, setIsHorizontalScrollMode] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Snap-assist hook for auto-centering project tiles
   useSnapAssistSmooth({
@@ -288,9 +294,6 @@ const UndergradProjectsPage: React.FC = () => {
     };
   }, [projects.length]);
 
-  const handleBackClick = () => {
-    router.push('/');
-  };
 
   const handleProjectClick = (projectId: string) => {
     router.push(`/undergrad-projects/${projectId}`);
@@ -333,12 +336,20 @@ const UndergradProjectsPage: React.FC = () => {
 
       {/* Navigation - Always visible */}
       <button
-        onClick={handleBackClick}
-        className={`fixed top-8 left-8 text-2xl font-semibold tracking-wide transition-colors z-[100] bg-transparent border-none outline-none cursor-pointer ${isHorizontalScrollMode ? 'text-gray-800 hover:text-gray-600' : 'text-white hover:text-gray-300'}`}
+        onClick={handleLogoClick}
+        className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
         aria-label="Go to homepage"
         style={{ zIndex: 100 }}
       >
-        HE
+        <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+          <Image
+            src="/icons/ui/logo-header-white.png"
+            alt="Architecture Portfolio Logo"
+            fill
+            className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+            priority
+          />
+        </div>
       </button>
 
 
@@ -347,7 +358,7 @@ const UndergradProjectsPage: React.FC = () => {
         <div className="flex items-center space-x-6">
           {/* Portfolio Button */}
           <motion.button
-            onClick={() => router.push('/')}
+            onClick={handleLogoClick}
             className="focus:outline-none relative z-[100]"
             aria-label="Go to portfolio"
             initial={{ opacity: 0, y: -10 }}
@@ -365,6 +376,7 @@ const UndergradProjectsPage: React.FC = () => {
 
           {/* Menu Button */}
           <motion.button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className={`relative z-[100] h-6 w-8 focus:outline-none ${isHorizontalScrollMode ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
             initial={{ opacity: 0, y: -10 }}
@@ -713,6 +725,32 @@ const UndergradProjectsPage: React.FC = () => {
       </motion.div>
       )}
       </main>
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.svg"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
+        </div>
+      )}
+      
+      {/* Hamburger Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
+          <nav className="text-center">
+            <ul className="space-y-8 text-white">
+              <li><a href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+              <li><a href="/undergrad-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Undergrad Projects</a></li>
+              <li><a href="/graduate-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Graduate Projects</a></li>
+              <li><a href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
+              <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </div>
   );
 };

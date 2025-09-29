@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 
 interface HELoadingComponentProps {
   variant?: 'splash' | 'minimal';
@@ -19,7 +18,7 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
   subtitle = 'Architecture & Design Studio',
   tagline = 'Creating spaces that inspire'
 }) => {
-  const [isVisible, setIsVisible] = useState(true); // Start visible
+  const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
@@ -58,59 +57,60 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-white"
+          className="fixed inset-0 z-[100] bg-white flex items-center justify-center"
           initial={{ opacity: 1 }}
           animate={{ opacity: isAnimating ? 0 : 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <div className="text-center">
+          {/* Main container - vertically centered */}
+          <div className="flex flex-col items-center justify-center">
             {/* Logo */}
-                         <motion.div
-               className="relative mb-0"
-               initial={{ scale: 0.8, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               transition={{ duration: 0.8, ease: 'easeOut' }}
-             >
-              <div className="relative w-96 h-96 mx-auto">
-                <Image
-                  src={logoUrl}
-                  alt="Studio Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </motion.div>
+            <motion.img
+              src={logoUrl}
+              alt="Studio Logo"
+              className="block mb-8"  // 32px gap
+              style={{
+                width: 'auto',
+                height: 'clamp(120px, 25vh, 250px)',
+                maxWidth: '70vw'
+              }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            />
 
-                         {/* Subtitle */}
-             <motion.h2
-               className="text-lg font-light text-gray-600 mb-0 tracking-wider uppercase"
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-             >
-              {subtitle}
-            </motion.h2>
+            {/* Text container */}
+            <div className="text-center">
+              {/* Subtitle */}
+              <motion.h2
+                className="text-base sm:text-lg font-light text-gray-600 tracking-wider uppercase"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
+              >
+                {subtitle}
+              </motion.h2>
 
-            {/* Tagline */}
-            <motion.p
-              className="text-sm text-gray-500 italic"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}
-            >
-              {tagline}
-            </motion.p>
+              {/* Tagline */}
+              <motion.p
+                className="text-xs sm:text-sm text-gray-500 italic mt-1"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}
+              >
+                {tagline}
+              </motion.p>
+            </div>
 
-            {/* Loading indicator */}
+            {/* Loading indicator - positioned below everything */}
             <motion.div
-              className="mt-8"
+              className="absolute bottom-20"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.9 }}
             >
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin mx-auto"></div>
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
             </motion.div>
           </div>
         </motion.div>

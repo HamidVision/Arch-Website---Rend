@@ -1,10 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 export default function BorderCrossingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [showLoading, setShowLoading] = useState(false);
+  const router = useRouter();
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
@@ -24,16 +30,38 @@ export default function BorderCrossingPage() {
     }
   }, []);
 
+  const handleLogoClick = () => {
+    setShowLoading(true);
+    
+    // Wait for loading animation to start, then navigate
+    setTimeout(() => {
+      router.push('/');
+    }, 100); // Small delay to ensure loading state is set
+    
+    // Reset loading state after navigation
+    setTimeout(() => {
+      setShowLoading(false);
+    }, 2500); // Slightly longer than loading animation
+  };
+
   return (
     <div className="relative h-screen overflow-hidden bg-black">
       <main className="relative h-screen overflow-hidden bg-black">
         {/* Custom Header matching undergrad-projects page */}
         <button
-          onClick={() => window.history.back()}
-          className="fixed top-8 left-8 text-2xl font-semibold tracking-wide text-white hover:text-gray-300 transition-colors z-[100] bg-transparent border-none outline-none cursor-pointer"
+          onClick={handleLogoClick}
+          className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >
-          HE
+          <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
+            <Image
+              src="/icons/ui/logo-header.svg"
+              alt="Architecture Portfolio Logo"
+              fill
+              className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
+              priority
+            />
+          </div>
         </button>
         
         {/* Portfolio and Menu Buttons */}
@@ -47,10 +75,10 @@ export default function BorderCrossingPage() {
               title="Go to portfolio"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-                <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
+                <rect x="4" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="14" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
+                <rect x="4" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
               </svg>
             </button>
 
@@ -61,8 +89,8 @@ export default function BorderCrossingPage() {
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out -translate-y-1"></span>
-                <span className="absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out -translate-y-1"></span>
+                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out translate-y-1"></span>
               </div>
             </button>
           </div>
@@ -174,6 +202,17 @@ export default function BorderCrossingPage() {
         </div>
       </div>
       </main>
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.svg"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
+        </div>
+      )}
     </div>
   );
 }

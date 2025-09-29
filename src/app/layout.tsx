@@ -33,7 +33,7 @@ export default function RootLayout({
         <HELoadingComponent
           variant="splash"
           timeoutMs={2000}
-          logoUrl="/brand/logo-loading.svg"
+          logoUrl="/brand/logo-loading.png"
           subtitle="Architecture & Design Studio"
           tagline="Creating spaces that inspire"
         />
