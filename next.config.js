@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+const basePath = isProd ? '/Arch-Website---Rend' : '';
+
 const nextConfig = {
   // GitHub Pages configuration
   output: 'export',
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/Arch-Website---Rend' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/Arch-Website---Rend/' : '',
+  basePath: basePath,
+  assetPrefix: isProd ? `${basePath}/` : '',
   
   images: {
     domains: ['images.pexels.com'], // Allow external images for now
