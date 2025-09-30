@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import GridOverlay from '@/components/GridOverlay';
 import Image from 'next/image';
+
 
 const HomePage: React.FC = () => {
   const [showGrid, setShowGrid] = useState(false);
