@@ -71,4 +71,12 @@ const HomePage: React.FC = () => {
   );
 };
 
+const HomePage: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomePageContent />
+    </Suspense>
+  );
+};
+
 export default HomePage;
