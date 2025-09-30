@@ -1,5 +1,8 @@
-# Ignore files that cause build issues
+# Ignore problematic pages that cause build errors
 src/app/aspect-ratio-demo/
 src/app/three-test/
 src/examples/
 src/lib/timeline/
+
+# Ignore files that cause SSR issues
+src/app/page.tsx
