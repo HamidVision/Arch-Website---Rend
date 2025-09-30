@@ -8,6 +8,9 @@ const nextConfig = {
   basePath: basePath,
   assetPrefix: isProd ? `${basePath}/` : '',
   
+  // Static export for GitHub Pages
+  output: 'export',
+  
   // Completely disable ESLint during build
   eslint: {
     ignoreDuringBuilds: true,
