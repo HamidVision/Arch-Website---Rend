@@ -1,0 +1,5 @@
+# Ignore files that cause build issues
+src/app/aspect-ratio-demo/
+src/app/three-test/
+src/examples/
+src/lib/timeline/
