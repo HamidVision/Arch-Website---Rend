@@ -8,14 +8,19 @@ const nextConfig = {
   basePath: basePath,
   assetPrefix: isProd ? `${basePath}/` : '',
   
-  // Skip linting during build for GitHub Pages
+  // Completely disable ESLint during build
   eslint: {
     ignoreDuringBuilds: true,
   },
   
-  // Skip TypeScript checking during build for GitHub Pages
+  // Completely disable TypeScript checking during build
   typescript: {
     ignoreBuildErrors: true,
+  },
+  
+  // Disable all linting and type checking
+  experimental: {
+    esmExternals: false,
   },
   
   images: {
