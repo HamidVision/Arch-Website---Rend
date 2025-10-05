@@ -1,6 +1,64 @@
 # Project History
 
-## Version v0.3.1 (Current)
+## Version v0.6.4 (Latest)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Feature: Coming Soon Pages for Computer Science and Research Papers
+Created professional "Coming Soon" pages for Computer Science Projects and Research Papers & Publications sections to provide user-friendly placeholders while content is being developed.
+
+#### What Changed
+- Created `/computer-science` page with animated "Coming Soon" interface
+- Created `/research-papers` page with animated "Coming Soon" interface
+- Updated navigation routes to include new page paths
+- Added gradient backgrounds and floating animations for visual appeal
+
+#### Files Touched
+- `src/app/computer-science/page.tsx` - New Coming Soon page for Computer Science Projects
+- `src/app/research-papers/page.tsx` - New Coming Soon page for Research Papers
+- `src/data/navigation.ts` - Added new routes to projectRoutes array
+
+#### Design Features
+- **Animated Icons**: Custom SVG icons with gradient backgrounds (purple/indigo for CS, indigo/blue for Research)
+- **Framer Motion Animations**: Staggered entrance animations and floating elements
+- **Responsive Design**: Mobile-first approach with proper scaling
+- **Brand Consistency**: Matches existing site's black theme and typography
+- **Interactive Elements**: Animated back button with hover effects
+
+#### Why
+The ProjectsOverlay component already referenced these sections, but the actual pages didn't exist, causing 404 errors when users clicked on these tiles. These Coming Soon pages provide a professional interim solution while maintaining user experience.
+
+#### Follow-ups
+- Replace Coming Soon pages with actual content when Computer Science and Research Papers are ready
+- Consider adding email subscription for updates on these sections
+
+---
+
+## Version v0.6.3 (Previous)
+**Date**: January 2025
+**Status**: ✅ Complete
+
+### Fix: Next.js Headers Warning Resolution
+Resolved the "Specified headers will not automatically work with output: export" warning by removing incompatible custom headers configuration.
+
+#### What Changed
+- Removed `async headers()` function from `next.config.js`
+- Added explanatory comments about static export limitations
+- Eliminated multiple warning messages during development server startup
+
+#### Files Touched
+- `next.config.js` - Removed headers configuration for static export compatibility
+
+#### Why
+The project uses `output: 'export'` for static site generation (GitHub Pages deployment), but custom headers require server-side processing which is incompatible with static files. The warnings were harmless but cluttered the development output.
+
+#### Follow-ups
+- Consider configuring security headers at the GitHub Pages or CDN level if needed
+- Monitor for any security implications of removing client-side headers
+
+---
+
+## Version v0.3.1 (Previous)
 **Date**: January 2025
 **Status**: ✅ Complete
 

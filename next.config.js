@@ -26,28 +26,9 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
   
-  // Headers for security and performance
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
+  // Note: Custom headers removed for static export compatibility
+  // Headers cannot be set with output: 'export' as static files don't support custom headers
+  // If needed, configure security headers at the server level (GitHub Pages, CDN, etc.)
 };
 
 export default nextConfig;

@@ -59,6 +59,21 @@ export const projectRoutes: ProjectRoute[] = [
     category: 'undergrad-projects',
     slug: 'undergrad-projects', 
     title: 'Undergrad Projects'
+  },
+  {
+    category: 'graduate-projects',
+    slug: 'graduate-projects',
+    title: 'Graduate Projects'
+  },
+  {
+    category: 'computer-science',
+    slug: 'computer-science',
+    title: 'Computer Science Projects'
+  },
+  {
+    category: 'research-papers',
+    slug: 'research-papers',
+    title: 'Research Papers & Publications'
   }
 ];
 
