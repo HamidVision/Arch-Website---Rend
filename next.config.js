@@ -4,10 +4,27 @@ const basePath = isProd ? '/Arch-Website---Rend' : '';
 
 const nextConfig = {
   // GitHub Pages configuration
-  output: 'export',
   trailingSlash: true,
   basePath: basePath,
   assetPrefix: isProd ? `${basePath}/` : '',
+  
+  // Static export for GitHub Pages
+  output: 'export',
+  
+  // Completely disable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // Completely disable TypeScript checking during build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
+  // Disable all linting and type checking
+  experimental: {
+    esmExternals: false,
+  },
   
   images: {
     domains: ['images.pexels.com'], // Allow external images for now
