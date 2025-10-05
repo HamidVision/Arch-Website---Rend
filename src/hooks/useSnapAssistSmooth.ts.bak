@@ -48,7 +48,9 @@ export function useSnapAssistSmooth({
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / easingDuration, 1);
         const eased = easeOutCubic(progress);
-        container.scrollTop = start + change * eased;
+        if (container) {
+          container.scrollTop = start + change * eased;
+        }
         if (progress < 1) requestAnimationFrame(animateScroll);
       }
 

@@ -24,7 +24,6 @@ export default function RouteTransitionWrapper({ children }: { children: React.R
         }}
         // Add transform safeguards
         style={{ 
-          transformStyle: 'auto',
           willChange: 'auto' 
         }}
       >

@@ -66,7 +66,7 @@ export default function ComputerSciencePage() {
               Coming Soon
             </h2>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              I'm currently developing a comprehensive showcase of my computer science projects, 
+              I&apos;m currently developing a comprehensive showcase of my computer science projects, 
               including software development, algorithms, and technical implementations. 
               This section will feature interactive demos, code repositories, and detailed 
               documentation of my programming journey.
@@ -127,12 +127,12 @@ export default function ComputerSciencePage() {
               key={i}
               className="absolute text-purple-400/10 font-mono text-sm"
               initial={{ 
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: typeof window !== 'undefined' ? Math.random() * window.innerWidth : 0,
+                y: typeof window !== 'undefined' ? Math.random() * window.innerHeight : 0,
                 opacity: 0 
               }}
               animate={{ 
-                y: [null, -20, null],
+                y: [0, -20, 0],
                 opacity: [0, 0.3, 0] 
               }}
               transition={{ 

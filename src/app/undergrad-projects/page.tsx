@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
+// import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import dynamic from 'next/dynamic';
 
@@ -203,15 +203,15 @@ const UndergradProjectsPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Snap-assist hook for auto-centering project tiles
-  useSnapAssistSmooth({
-    containerSelector: '.projects-container',
-    itemSelector: '.project-card',
-    minVisibleRatio: 0.95, // 5% tolerance
-    delayMs: 2000,         // 2s pause before snapping
-    align: 'start',        // or 'center'
-    useCustomEasing: true, // enable cinematic ease
-    easingDuration: 600    // slightly slower settle
-  });
+  // useSnapAssistSmooth({
+  //   containerSelector: '.projects-container',
+  //   itemSelector: '.project-card',
+  //   minVisibleRatio: 0.95, // 5% tolerance
+  //   delayMs: 2000,         // 2s pause before snapping
+  //   align: 'start',        // or 'center'
+  //   useCustomEasing: true, // enable cinematic ease
+  //   easingDuration: 600    // slightly slower settle
+  // });
 
   const projects = [
     {
