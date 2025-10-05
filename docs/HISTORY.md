@@ -1,6 +1,54 @@
 # Project History
 
-## Version v0.6.4 (Latest)
+## Version v0.6.5 (Latest)
+**Date**: October 2025
+**Status**: ✅ Complete
+
+### Feature: Netlify Deployment Configuration
+Migrated from GitHub Pages to Netlify for improved performance, better form handling, and professional hosting capabilities.
+
+#### What Changed
+- Created comprehensive `netlify.toml` configuration file
+- Updated `next.config.js` to detect Netlify environment and disable basePath
+- Removed Vercel-specific configuration files (`vercel.json`, `.vercelignore`)
+- Added `.netlifyignore` for optimized deployments
+- Configured security headers and caching rules
+
+#### Files Touched
+- `netlify.toml` - New comprehensive Netlify configuration
+- `next.config.js` - Added Netlify environment detection
+- `.netlifyignore` - Exclude unnecessary files from deployment
+- Removed `vercel.json` - No longer needed
+
+#### Configuration Features
+- **Automatic builds** from GitHub repository
+- **Security headers** (X-Frame-Options, CSP, etc.)
+- **Optimized caching** for static assets (1 year cache)
+- **SPA redirect rules** for client-side routing
+- **Environment variables** for build optimization
+- **Next.js plugin** integration
+
+#### Why
+Netlify provides superior hosting capabilities compared to GitHub Pages, including:
+- Form handling for contact page
+- Better performance with global CDN
+- More flexible configuration options
+- Professional analytics and deployment previews
+- Easier custom domain setup
+
+#### Deployment URLs
+- **Netlify Production**: https://[your-site].netlify.app
+- **GitHub Pages** (backup): https://hamidvision.github.io/Arch-Website---Rend/
+
+#### Follow-ups
+- Test all pages and navigation on Netlify
+- Configure custom domain if needed
+- Set up form handling for contact page
+- Enable Netlify Analytics for visitor insights
+
+---
+
+## Version v0.6.4 (Previous)
 **Date**: January 2025
 **Status**: ✅ Complete
 

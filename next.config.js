@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
-const basePath = isProd ? '/Arch-Website---Rend' : '';
+const isNetlify = process.env.NETLIFY === 'true';
+
+// Use basePath only for GitHub Pages, not for Netlify
+const basePath = (isProd && !isNetlify) ? '/Arch-Website---Rend' : '';
 
 const nextConfig = {
-  // GitHub Pages configuration
+  // Static export configuration
   trailingSlash: true,
   basePath: basePath,
-  assetPrefix: isProd ? `${basePath}/` : '',
+  assetPrefix: (isProd && !isNetlify) ? `${basePath}/` : '',
   
-  // Static export for GitHub Pages
+  // Static export for deployment
   output: 'export',
   
   // Completely disable ESLint during build

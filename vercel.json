@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "framework": "nextjs",
-  "env": {
-    "SKIP_LINT": "true",
-    "NEXT_PUBLIC_SKIP_LINT": "true"
-  }
-}

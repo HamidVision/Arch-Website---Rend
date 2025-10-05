@@ -1,0 +1,42 @@
+# Netlify ignore file
+# Files and directories to exclude from deployment
+
+# Development files
+.git
+.github
+node_modules
+.next
+.cache
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Test files
+tests
+*.test.js
+*.spec.js
+
+# Backup files
+*.bak
+
+# Environment files
+.env.local
+.env.development
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Temporary files
+tmp
+temp
+
