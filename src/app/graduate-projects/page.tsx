@@ -40,7 +40,7 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Community & Innovation',
       description: 'A dynamic community center designed to foster innovation, collaboration, and sustainable urban development through adaptive architecture.',
       color: 'from-orange-600 to-red-600',
-      image: '/graduate-projects/momentum-hub/momentum-tile.png'
+      image: '/graduate-projects/momentum-hub/momentum-tile.jpg'
     },
     {
       id: 'the-nook',
@@ -56,7 +56,7 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Health & Wellbeing',
       description: 'A comprehensive wellness complex integrating healthcare, community services, and sustainable design principles.',
       color: 'from-teal-600 to-green-600',
-      image: '/graduate-projects/wellness-bazaar/wellness-tile.png'
+      image: '/graduate-projects/wellness-bazaar/wellness-tile.jpg'
     }
   ];
 
@@ -327,7 +327,7 @@ const GraduateProjectsPage: React.FC = () => {
           {/* Right Side - Background Image */}
           <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
             <img
-              src="/graduate-projects/grad-hero.png"
+              src="/graduate-projects/grad-hero.jpg"
               alt="Graduate Projects"
               className="w-full h-screen object-cover object-bottom"
               onError={(e) => {/* Image load error */}}

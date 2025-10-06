@@ -43,7 +43,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Advanced research',
       description: 'Sophisticated design solutions and research-driven projects from graduate studies.',
       color: 'from-orange-600 to-red-600',
-      image: '/graduate-projects/grad-hero.png',
+      image: '/graduate-projects/grad-hero.jpg',
       icons: [
         '/graduate-projects/icons/momentum-hub.png',
         '/graduate-projects/icons/nook.png',
@@ -56,7 +56,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Digital innovation',
       description: 'Technology-driven projects bridging architecture and computational design.',
       color: 'from-purple-600 to-indigo-600',
-      image: '/computer-science/computer-science-tile.png'
+      image: '/computer-science/computer-science-tile.webp'
     },
     {
       id: 'research-papers',
@@ -64,7 +64,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Academic contributions',
       description: 'Published research and theoretical contributions to architectural discourse.',
       color: 'from-indigo-600 to-blue-600',
-      image: '/research-papers/Research-tile.png'
+      image: '/research-papers/research-tile.jpg'
     },
     {
       id: 'about',
@@ -80,7 +80,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Get in touch',
       description: 'Let\'s discuss your project and explore collaboration opportunities.',
       color: 'from-red-600 to-orange-600',
-      image: '/contact/contact-tile.png'
+      image: '/contact/contact-tile.webp'
     }
   ];
 
