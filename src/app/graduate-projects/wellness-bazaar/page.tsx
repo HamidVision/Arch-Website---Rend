@@ -397,36 +397,7 @@ const WellnessBazaarPage: React.FC = () => {
                 <span className="hover-scale-number">6</span>
               </button>
 
-              {/* Initial Hint Text */}
-              {showInitialHint && (
-                <motion.div
-                  className="absolute z-30 flex items-center justify-center"
-                  style={{
-                    top: '0%',
-                    left: '60%',
-                    width: '23%',
-                    height: '60%'
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-                >
-                  <p 
-                    className="text-center text-gray-800 font-bold px-4"
-                    style={{
-                      fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                      fontSize: '1.5rem',
-                      lineHeight: '1.4',
-                      margin: '0',
-                      letterSpacing: '0.08em',
-                      textShadow: '0 1px 3px rgba(0,0,0,0.3)'
-                    }}
-                  >
-                    CLICK NUMBERED BUTTONS TO EXPLORE THE PROJECT
-                  </p>
-                </motion.div>
-              )}
+              {/* Initial Hint Text - Removed: instructions now in orange box */}
 
               {/* Content Display System - Always Visible */}
               <>
