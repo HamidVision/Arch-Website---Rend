@@ -402,8 +402,8 @@ const WellnessBazaarPage: React.FC = () => {
                 <motion.div
                   className="absolute z-30 flex items-center justify-center"
                   style={{
-                    top: '18%',
-                    left: '38.15%',
+                    top: '0%',
+                    left: '60%',
                     width: '23%',
                     height: '60%'
                   }}
@@ -428,70 +428,72 @@ const WellnessBazaarPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* Content Display System */}
-              {(activeButton || isDeactivating) && (
-                <>
-                  {/* Title Text Box */}
-                  <motion.div
-                    className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-center justify-start"
+              {/* Content Display System - Always Visible */}
+              <>
+                {/* Title Text Box */}
+                <motion.div
+                  className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-center justify-start"
+                  style={{
+                    top: '8%',
+                    left: '63.3%',
+                    width: '12%',
+                    height: '8%'
+                  }}
+                  initial={{ opacity: 1, x: 0 }}
+                  animate={showTitle && activeButton ? { 
+                    opacity: 1, 
+                    x: 0 
+                  } : { 
+                    opacity: activeButton ? 0 : 1, 
+                    x: 0 
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                >
+                  <h3 
+                    className="text-left text-gray-800"
                     style={{
-                      top: '8%',
-                      left: '63.3%',
-                      width: '12%',
-                      height: '8%'
-                    }}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={showTitle ? { 
-                      opacity: 1, 
-                      x: 0 
-                    } : { 
-                      opacity: 0, 
-                      x: -30 
-                    }}
-                    transition={{ 
-                      duration: 0.6, 
-                      ease: [0.25, 0.1, 0.25, 1]
+                      fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                      fontWeight: 'bold',
+                      fontSize: '1.9rem',
+                      margin: '0'
                     }}
                   >
-                    <h3 
-                      className="text-left text-gray-800"
-                      style={{
-                        fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                        fontWeight: 'bold',
-                        fontSize: '1.9rem',
-                        margin: '0'
-                      }}
-                    >
-                      {contentData[activeButton as keyof typeof contentData].title}
-                    </h3>
-                  </motion.div>
+                    {activeButton ? contentData[activeButton as keyof typeof contentData].title : "Wellness Bazaar"}
+                  </h3>
+                </motion.div>
 
-                  {/* Content Display Box */}
-                  <motion.div
-                    className="absolute bg-transparent backdrop-blur-none rounded-lg z-30 flex items-center justify-center"
-                    style={{
-                      top: '18%',
-                      left: '63%',
-                      width: '12%',
-                      height: '58%',
-                      border: '2px solid #ee7d2f'
-                    }}
-                    initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
-                    animate={showContent ? { 
-                      opacity: 1, 
-                      scale: 1, 
-                      filter: 'blur(0px)' 
-                    } : { 
-                      opacity: 0, 
-                      scale: 0.95, 
-                      filter: 'blur(4px)' 
-                    }}
-                    transition={{ 
-                      duration: 0.5, 
-                      ease: [0.25, 0.1, 0.25, 1]
-                    }}
-                  >
-                    {activeButton === 1 ? (
+                {/* Content Display Box - Always Visible with Orange Border */}
+                <motion.div
+                  className="absolute bg-transparent backdrop-blur-none rounded-lg z-30 flex items-center justify-center"
+                  style={{
+                    top: '18%',
+                    left: '63%',
+                    width: '12%',
+                    height: '58%',
+                    border: '2px solid #ee7d2f'
+                  }}
+                  initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    filter: 'blur(0px)' 
+                  }}
+                  transition={{ 
+                    duration: 0.5, 
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                >
+                    {!activeButton ? (
+                      /* Default content when no button is active */
+                      <div className="w-full h-full flex items-center justify-center p-4">
+                        <p className="text-center text-gray-600 text-sm leading-relaxed">
+                          Click numbered buttons to explore different sections of the Wellness Bazaar project
+                        </p>
+                      </div>
+                    ) : activeButton === 1 ? (
                       /* Content for Button 1 - Display wellness-1.jpg */
                       <div className="w-full h-full flex items-center justify-center p-2">
                         <Image
@@ -526,10 +528,10 @@ const WellnessBazaarPage: React.FC = () => {
                         />
                       </div>
                     ) : activeButton === 3 ? (
-                      /* Content for Button 3 - Display wellness-3.png */
+                      /* Content for Button 3 - Display wellness-3.jpg */
                       <div className="w-full h-full flex items-center justify-center p-2">
                         <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-3.png"
+                          src="/graduate-projects/wellness-bazaar/wellness-3.jpg"
                           alt="Fitness Hub - Night Time Section Cut"
                           width={0}
                           height={0}
@@ -584,39 +586,44 @@ const WellnessBazaarPage: React.FC = () => {
                     ) : null}
                   </motion.div>
 
-                  {/* Description Text Box */}
-                  <div
-                    className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-start justify-start transition-all duration-300"
+                {/* Description Text Box - Always Visible */}
+                <div
+                  className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-start justify-start transition-all duration-300"
+                  style={{
+                    top: '80%',
+                    left: '69.2%',
+                    width: '12%',
+                    height: '25%',
+                    transform: 'translateX(-50%)'
+                  }}
+                >
+                  <div 
+                    className="text-left text-gray-700 px-3 py-2 w-full h-full"
                     style={{
-                      top: '80%',
-                      left: '69.2%',
-                      width: '12%',
-                      height: '25%',
-                      transform: 'translateX(-50%)'
+                      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                      fontSize: '1.275rem',
+                      lineHeight: '1.4',
+                      margin: '0',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      overflow: 'hidden'
                     }}
                   >
-                    <div 
-                      className="text-left text-gray-700 px-3 py-2 w-full h-full"
-                      style={{
-                        fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                        fontSize: '1.275rem',
-                        lineHeight: '1.4',
-                        margin: '0',
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        justifyContent: 'flex-start',
-                        overflow: 'hidden'
-                      }}
-                    >
+                    {activeButton ? (
                       <ArchitecturalTypewriter
                         text={contentData[activeButton as keyof typeof contentData].description}
                         speed={25}
                         isTyping={isTyping}
                       />
-                    </div>
+                    ) : (
+                      <p className="text-gray-600">
+                        Explore this comprehensive wellness complex that integrates healthcare, community services, and sustainable design principles.
+                      </p>
+                    )}
                   </div>
-                </>
-              )}
+                </div>
+              </>
 
               {/* Overlay Image - Changes based on active button */}
               <div className="absolute z-30" style={{
