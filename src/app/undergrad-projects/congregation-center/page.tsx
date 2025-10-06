@@ -45,6 +45,7 @@ export default function CongregationCenterPage() {
   const [showInitialHint, setShowInitialHint] = useState(true);
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
@@ -205,7 +206,13 @@ export default function CongregationCenterPage() {
         >
           <div className="h-full w-max flex">
             {/* Background Image Section with Text Overlay */}
-            <div className="h-screen flex-shrink-0 relative" style={{ width: 'max-content' }}>
+            <div className="h-screen flex-shrink-0 relative bg-black" style={{ width: 'max-content' }}>
+               {/* Loading placeholder */}
+               {!imageLoaded && (
+                 <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
+                   <div className="text-white text-xl">Loading...</div>
+                 </div>
+               )}
                <Image
                  src="/undergrad-projects/congregation-center/congregation-hero.jpg"
                  alt="Congregation Center - Main View"
@@ -215,11 +222,14 @@ export default function CongregationCenterPage() {
                  className="h-screen w-auto object-contain"
                  style={{
                    width: 'auto',
-                   height: '100vh'
+                   height: '100vh',
+                   opacity: imageLoaded ? 1 : 0,
+                   transition: 'opacity 0.5s ease-in-out'
                  }}
                  priority
                  unoptimized={true}
                  quality={100}
+                 onLoadingComplete={() => setImageLoaded(true)}
                />
                
                {/* Text Box Overlay */}
@@ -497,10 +507,10 @@ export default function CongregationCenterPage() {
                          />
                        </div>
                      ) : activeButton === 2 ? (
-                       /* Content for Button 2 - Display c2.png image */
+                       /* Content for Button 2 - Display c2.jpg image */
                        <div className="w-full h-full flex items-center justify-center p-2">
                          <Image
-                           src="/undergrad-projects/congregation-center/c2.png"
+                           src="/undergrad-projects/congregation-center/c2.jpg"
                            alt="Office Level - Level 2 Content"
                            width={0}
                            height={0}
@@ -515,10 +525,10 @@ export default function CongregationCenterPage() {
                          />
                        </div>
                      ) : activeButton === 3 ? (
-                       /* Content for Button 3 - Display c3.png image */
+                       /* Content for Button 3 - Display c3.jpg image */
                        <div className="w-full h-full flex items-center justify-center p-2">
                          <Image
-                           src="/undergrad-projects/congregation-center/c3.png"
+                           src="/undergrad-projects/congregation-center/c3.jpg"
                            alt="Shopping Center - Level 3 Content"
                            width={0}
                            height={0}
@@ -533,10 +543,10 @@ export default function CongregationCenterPage() {
                          />
                        </div>
                      ) : activeButton === 4 ? (
-                       /* Content for Button 4 - Display c4.png image */
+                       /* Content for Button 4 - Display c4.jpg image */
                        <div className="w-full h-full flex items-center justify-center p-2">
                          <Image
-                           src="/undergrad-projects/congregation-center/c4.png"
+                           src="/undergrad-projects/congregation-center/c4.jpg"
                            alt="Public Plaza: Public Realm - Level 4 Content"
                            width={0}
                            height={0}
@@ -551,10 +561,10 @@ export default function CongregationCenterPage() {
                          />
                        </div>
                      ) : activeButton === 5 ? (
-                       /* Content for Button 5 - Display c5.png image */
+                       /* Content for Button 5 - Display c5.jpg image */
                        <div className="w-full h-full flex items-center justify-center p-2">
                          <Image
-                           src="/undergrad-projects/congregation-center/c5.png"
+                           src="/undergrad-projects/congregation-center/c5.jpg"
                            alt="Urban Integration - Level 5 Content"
                            width={0}
                            height={0}
@@ -569,10 +579,10 @@ export default function CongregationCenterPage() {
                          />
                        </div>
                      ) : activeButton === 6 ? (
-                       /* Content for Button 6 - Display c6.png image */
+                       /* Content for Button 6 - Display c6.jpg image */
                        <div className="w-full h-full flex items-center justify-center p-2">
                          <Image
-                           src="/undergrad-projects/congregation-center/c6.png"
+                           src="/undergrad-projects/congregation-center/c6.jpg"
                            alt="Public Plaza: Skywalk View - Level 6 Content"
                            width={0}
                            height={0}
