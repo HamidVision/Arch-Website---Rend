@@ -22,20 +22,15 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Development mode override - always show loading in development
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    
     // Check if this is a fresh page load (not just a route change)
     const hasLoadedBefore = sessionStorage.getItem('hasLoadedBefore');
-    const shouldShow = isDevelopment || !hasLoadedBefore || !document.referrer;
+    const shouldShow = !hasLoadedBefore || !document.referrer;
     
     if (shouldShow) {
       setIsVisible(true);
       
-      // Only set the session flag in production
-      if (!isDevelopment) {
-        sessionStorage.setItem('hasLoadedBefore', 'true');
-      }
+      // Set the session flag
+      sessionStorage.setItem('hasLoadedBefore', 'true');
       
       const timer = setTimeout(() => {
         setIsAnimating(true);

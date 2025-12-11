@@ -48,7 +48,6 @@ const WellnessBazaarPage: React.FC = () => {
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleBackClick = () => {
     router.push('/graduate-projects');
@@ -219,29 +218,14 @@ const WellnessBazaarPage: React.FC = () => {
           <div className="h-full w-max flex">
             {/* Background Image Section with Text Overlay */}
             <div className="h-screen flex-shrink-0 relative bg-black" style={{ width: 'max-content' }}>
-              {/* Loading placeholder */}
-              {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black z-10">
-                  <div className="text-white text-xl">Loading...</div>
-                </div>
-              )}
-              <Image
+              <img
                 src="/graduate-projects/wellness-bazaar/wellness-hero.jpg"
                 alt="Wellness Bazaar - Main View"
-                width={0}
-                height={0}
-                sizes="100vw"
                 className="h-screen w-auto object-contain"
                 style={{
                   width: 'auto',
-                  height: '100vh',
-                  opacity: imageLoaded ? 1 : 0,
-                  transition: 'opacity 0.5s ease-in-out'
+                  height: '100vh'
                 }}
-                priority
-                unoptimized={true}
-                quality={100}
-                onLoadingComplete={() => setImageLoaded(true)}
               />
               
               {/* Text Box Overlay */}

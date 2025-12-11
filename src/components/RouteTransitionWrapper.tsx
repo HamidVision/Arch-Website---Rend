@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 export default function RouteTransitionWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
-  // Skip animation wrapper for congregation center page to prevent stacking context issues
-  if (pathname === '/undergrad-projects/congregation-center') {
+  // Skip animation wrapper for pages with custom horizontal scroll to prevent stacking context issues
+  if (pathname === '/undergrad-projects/congregation-center' || pathname === '/graduate-projects/wellness-bazaar') {
     return <>{children}</>;
   }
   
