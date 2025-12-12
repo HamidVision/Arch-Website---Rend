@@ -2,6 +2,9 @@
 
 A sophisticated Next.js application showcasing architectural projects with interactive features, smooth animations, and professional design consistency.
 
+> ⚠️ **Important Note on Asset Usage**:  
+> While the code for this project is open source, all **images, videos, and branding materials** are proprietary and strictly copyrighted. You may use the code for educational purposes or as a reference, but you **MUST replace all assets** with your own content.
+
 ## 🚀 **Latest Release - v1.0.0**
 
 ### **Border Crossing Project Page**
@@ -310,6 +313,8 @@ npm run preflight       # Pre-deployment checks
 ## 📝 **License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+> **Note**: The MIT License applies to the code only. All visual assets (images, videos, logos) are **Copyright © Hamid Esmaeillou** and exclude from the open source license.
 
 ---
 
