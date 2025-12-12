@@ -13,6 +13,129 @@ import NavigationMenu from '@/components/NavigationMenu';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
+// Generic Project Tile with transition animation
+const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
+  const [transitioning, setTransitioning] = useState(false);
+  const router = useRouter();
+
+  // Prefetch destination for smoother transition
+  useEffect(() => {
+    router.prefetch(`/graduate-projects/${project.id}`);
+  }, [router, project.id]);
+
+  const handleReadMore = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Hack: Set body to white immediately to prevent black flash during router unmount
+    document.body.style.backgroundColor = '#ffffff'; 
+    if (!transitioning) setTransitioning(true);
+  };
+
+  const onHeroSlideComplete = () => {
+    // Navigate immediately - no fade out
+    router.push(`/graduate-projects/${project.id}`);
+  };
+
+  return (
+    <motion.div
+      id={id}
+      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group ${transitioning ? 'bg-white z-20' : 'bg-black'}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
+    >
+      {/* Left Side - White Background with Text (only on widescreen) */}
+      {isWidescreen && (
+        <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
+          <motion.div
+            className="max-w-md mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
+              {project.title}
+            </h2>
+            <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
+              {project.subtitle}
+            </h3>
+            <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
+              {project.description}
+            </p>
+          </motion.div>
+
+          {/* READ MORE Button */}
+          <motion.div
+            className="absolute bottom-8 right-8 z-10"
+            initial={{ opacity: 0, y: 10 }} // Match button entrance
+            animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <CurtainButton 
+              onClick={handleReadMore} 
+              isWidescreen={true}
+              className="!px-8 !py-3" // Ensure padding matches if needed
+              variant={project.id === 'the-nook' ? 'inverse' : 'default'}
+            />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Right Side - Background Image */}
+      <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-visible bg-transparent h-screen`}>
+        <motion.img
+          src={project.image}
+          alt={project.title}
+          className="absolute inset-0 w-full h-full object-cover object-bottom will-change-transform"
+          initial={false}
+          animate={transitioning ? { x: '-100vw' } : { x: '0vw' }}
+          transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
+          onAnimationComplete={() => transitioning && onHeroSlideComplete()}
+          onError={(e) => {/* Image load error */}}
+          onLoad={() => {/* Image loaded successfully */}}
+        />
+        {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
+      </div>
+
+      {/* Overlay Content (only on 4:3/square) */}
+      {!isWidescreen && (
+        <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
+          <motion.div
+            className="max-w-4xl mb-16"
+            initial={{ opacity: 0, y: 50 }}
+            animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
+              {project.title}
+            </h2>
+            <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
+              {project.subtitle}
+            </h3>
+            <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
+              {project.description}
+            </p>
+          </motion.div>
+
+          {/* READ MORE Button */}
+          <motion.div
+            className="absolute bottom-8 right-8 z-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <CurtainButton 
+              onClick={handleReadMore} 
+              isWidescreen={false}
+              variant={project.id === 'the-nook' ? 'inverse' : 'default'}
+            />
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
 const GraduateProjectsPage: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -381,95 +504,12 @@ const GraduateProjectsPage: React.FC = () => {
 
       {/* Individual Project Tiles - Only show when not in horizontal scroll mode */}
       {!isHorizontalScrollMode && projects.map((project, index) => (
-        <motion.div
-          key={project.id}
-          id={`section-${index + 1}`}
-          className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 + (index * 0.05) }}
-          onClick={() => handleProjectClick(project.id)}
-        >
-          {/* Left Side - White Background with Text (only on widescreen) */}
-          {isWidescreen && (
-            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
-              <motion.div
-                className="max-w-md mb-16"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
-              >
-                <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
-                  {project.title}
-                </h2>
-                <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
-                  {project.subtitle}
-                </h3>
-                <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
-                  {project.description}
-                </p>
-              </motion.div>
-
-              {/* READ MORE Button */}
-              <div className="absolute bottom-8 right-8 z-10">
-                 <CurtainButton 
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleProjectClick(project.id);
-                   }}
-                   isWidescreen={true}
-                   variant={project.id === 'the-nook' ? 'inverse' : 'default'}
-                 />
-              </div>
-            </div>
-          )}
-
-          {/* Right Side - Background Image */}
-          <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-screen object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
-              onError={(e) => {/* Image load error */}}
-              onLoad={() => {/* Image loaded successfully */}}
-            />
-            {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
-          </div>
-
-          {/* Overlay Content (only on 4:3/square) */}
-          {!isWidescreen && (
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
-              <motion.div
-                className="max-w-4xl mb-16"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
-              >
-                <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
-                  {project.title}
-                </h2>
-                <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
-                  {project.subtitle}
-                </h3>
-                <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
-                  {project.description}
-                </p>
-              </motion.div>
-
-              {/* READ MORE Button */}
-              <div className="absolute bottom-8 right-8 z-10">
-                 <CurtainButton 
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleProjectClick(project.id);
-                   }}
-                   isWidescreen={false}
-                   variant={project.id === 'the-nook' ? 'inverse' : 'default'}
-                 />
-              </div>
-            </div>
-          )}
-        </motion.div>
+        <ProjectTile 
+          key={project.id} 
+          id={`section-${index + 1}`} 
+          project={project} 
+          isWidescreen={isWidescreen} 
+        />
       ))}
 
       {/* Progress Indicator - Only show when not in horizontal scroll mode */}
@@ -500,17 +540,7 @@ const GraduateProjectsPage: React.FC = () => {
       </motion.div>
       )}
       </main>
-      {showLoading && (
-        <div className="fixed inset-0 z-[9999]">
-          <HELoadingComponent
-            variant="splash"
-            timeoutMs={2000}
-            logoUrl="/brand/logo-loading.svg"
-            subtitle="Architecture & Design Studio"
-            tagline="Creating spaces that inspire"
-          />
-        </div>
-      )}
+
       
       {/* Hamburger Menu Overlay */}
       <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

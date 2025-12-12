@@ -13,26 +13,27 @@ import NavigationMenu from '@/components/NavigationMenu';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
-// Site Analysis Tile with transition animation
-const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
+// Generic Project Tile with transition animation
+const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
   const [transitioning, setTransitioning] = useState(false);
-  const [fadingOut, setFadingOut] = useState(false);
   const router = useRouter();
+
+  // Prefetch destination for smoother transition
+  useEffect(() => {
+    router.prefetch(`/undergrad-projects/${project.id}`);
+  }, [router, project.id]);
 
   const handleReadMore = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    // Hack: Set body to white immediately to prevent black flash during router unmount
+    document.body.style.backgroundColor = '#ffffff'; 
     if (!transitioning) setTransitioning(true);
   };
 
   const onHeroSlideComplete = () => {
-    // Start fade-out of entire tile content
-    setFadingOut(true);
-    
-    // Navigate after fade-out completes
-    setTimeout(() => {
-      router.push('/undergrad-projects/site-analysis');
-    }, 400); // 300ms fade + 100ms buffer
+    // Navigate immediately - no fade out
+    router.push(`/undergrad-projects/${project.id}`);
   };
 
   const onTextFadeComplete = () => {
@@ -48,10 +49,10 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
   return (
     <motion.div
       id={id}
-      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group bg-black`}
+      className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group ${transitioning ? 'bg-white z-20' : 'bg-black'}`}
       initial={{ opacity: 0 }}
-      animate={{ opacity: fadingOut ? 0 : 1 }}
-      transition={{ duration: fadingOut ? 0.2 : 0.3, delay: fadingOut ? 0 : 0.1 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
     >
       {/* Left Side - White Background with Text (only on widescreen) */}
       {isWidescreen && (
@@ -63,13 +64,13 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
-              SITE ANALYSIS
+              {project.title}
             </h2>
             <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
-              Understanding Context & Place
+              {project.subtitle}
             </h3>
             <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
-              Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.
+              {project.description}
             </p>
           </motion.div>
 
@@ -84,6 +85,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
               onClick={handleReadMore} 
               isWidescreen={true}
               className="!px-8 !py-3" // Ensure padding matches if needed
+              variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
             />
           </motion.div>
         </div>
@@ -92,8 +94,8 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
       {/* Right Side - Background Image */}
       <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-visible bg-transparent h-screen`}>
         <motion.img
-          src="/undergrad-projects/site-analysis/site-tile.jpg"
-          alt="Site Analysis"
+          src={project.image}
+          alt={project.title}
           className="absolute inset-0 w-full h-full object-cover object-bottom will-change-transform"
           initial={false}
           animate={transitioning ? { x: '-100vw' } : { x: '0vw' }}
@@ -115,13 +117,13 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
-              SITE ANALYSIS
+              {project.title}
             </h2>
             <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
-              Understanding Context & Place
+              {project.subtitle}
             </h3>
             <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
-              Comprehensive analysis of site conditions, environmental factors, and contextual relationships that inform architectural decisions.
+              {project.description}
             </p>
           </motion.div>
 
@@ -135,6 +137,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: str
             <CurtainButton 
               onClick={handleReadMore} 
               isWidescreen={false}
+              variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
             />
           </motion.div>
         </div>
@@ -149,6 +152,12 @@ const UndergradProjectsPage: React.FC = () => {
   const { showLoading, handleLogoClick } = useLogoNavigation();
   const [isMobile, setIsMobile] = useState(false);
   const [currentProject, setCurrentProject] = useState(0);
+  
+  useEffect(() => {
+    // Ensure global background is black when on the projects list
+    document.body.style.backgroundColor = 'black';
+  }, []);
+
   const [isWidescreen, setIsWidescreen] = useState(false);
   const [isHorizontalScrollMode, setIsHorizontalScrollMode] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -517,104 +526,14 @@ const UndergradProjectsPage: React.FC = () => {
       )}
 
       {/* Individual Project Tiles - Only show when not in horizontal scroll mode */}
-      {!isHorizontalScrollMode && projects.map((project, index) => {
-        // Special handling for Site Analysis tile with transition animation
-        if (project.id === 'site-analysis') {
-          return <SiteAnalysisTile key={project.id} id={`section-${index + 1}`} project={project} isWidescreen={isWidescreen} />;
-        }
-        
-        return (
-        <motion.div
-          key={project.id}
-          id={`section-${index + 1}`}
-          className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.1 + (index * 0.05) }}
-          onClick={() => handleProjectClick(project.id)}
-        >
-          {/* Left Side - White Background with Text (only on widescreen) */}
-          {isWidescreen && (
-            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
-              <motion.div
-                className="max-w-md mb-16"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
-              >
-                <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
-                  {project.title}
-                </h2>
-                <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
-                  {project.subtitle}
-                </h3>
-                <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
-                  {project.description}
-                </p>
-              </motion.div>
-
-              {/* READ MORE Button */}
-              <div className="absolute bottom-8 right-8 z-10">
-                 <CurtainButton 
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleProjectClick(project.id);
-                   }}
-                   isWidescreen={true}
-                   variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
-                 />
-              </div>
-            </div>
-          )}
-
-          {/* Right Side - Background Image */}
-          <div className={`${isWidescreen ? 'w-3/5' : 'w-full'} relative overflow-hidden bg-gray-200 h-screen`}>
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-screen object-cover object-bottom group-hover:scale-105 transition-transform duration-700"
-              onError={(e) => {/* Image load error */}}
-              onLoad={() => {/* Image loaded successfully */}}
-            />
-            {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
-          </div>
-
-          {/* Overlay Content (only on 4:3/square) */}
-          {!isWidescreen && (
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
-              <motion.div
-                className="max-w-4xl mb-16"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 + (index * 0.05) }}
-              >
-                <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
-                  {project.title}
-                </h2>
-                <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
-                  {project.subtitle}
-                </h3>
-                <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
-                  {project.description}
-                </p>
-              </motion.div>
-
-              {/* READ MORE Button */}
-              <div className="absolute bottom-8 right-8 z-10">
-                 <CurtainButton 
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleProjectClick(project.id);
-                   }}
-                   isWidescreen={false}
-                   variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
-                 />
-              </div>
-            </div>
-          )}
-        </motion.div>
-        );
-      })}
+      {!isHorizontalScrollMode && projects.map((project, index) => (
+        <ProjectTile 
+          key={project.id} 
+          id={`section-${index + 1}`} 
+          project={project} 
+          isWidescreen={isWidescreen} 
+        />
+      ))}
 
       {/* Progress Indicator - Only show when not in horizontal scroll mode */}
       {!isHorizontalScrollMode && (
@@ -644,17 +563,7 @@ const UndergradProjectsPage: React.FC = () => {
       </motion.div>
       )}
       </main>
-      {showLoading && (
-        <div className="fixed inset-0 z-[9999]">
-          <HELoadingComponent
-            variant="splash"
-            timeoutMs={2000}
-            logoUrl="/brand/logo-loading.svg"
-            subtitle="Architecture & Design Studio"
-            tagline="Creating spaces that inspire"
-          />
-        </div>
-      )}
+
       
       {/* Hamburger Menu Overlay */}
       <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

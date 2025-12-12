@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
@@ -44,9 +44,6 @@ export default function CongregationCenterPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeButton, setActiveButton] = useState<number | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [showTitle, setShowTitle] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [isDeactivating, setIsDeactivating] = useState(false);
   const [showInitialHint, setShowInitialHint] = useState(true);
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
@@ -84,6 +81,18 @@ export default function CongregationCenterPage() {
     }
   }, [showInitialHint, firstInteraction]);
 
+  useEffect(() => {
+    if (activeButton) {
+      // Cleanup previous typing state immediately
+      setIsTyping(false);
+      // Delay typing to match the animation sequence
+      const timer = setTimeout(() => setIsTyping(true), 400);
+      return () => clearTimeout(timer);
+    } else {
+      setIsTyping(false);
+    }
+  }, [activeButton]);
+
   const handleButtonClick = (buttonNumber: number) => {
     // Hide hints on first interaction
     if (firstInteraction) {
@@ -93,54 +102,9 @@ export default function CongregationCenterPage() {
     }
 
     if (activeButton === buttonNumber) {
-      // Deactivate with smooth exit animation sequence
-      setIsDeactivating(true);
-      
-      // Reverse sequence: stop typing → hide title → hide content → clear button
-      // 1. Stop typing immediately
-      setIsTyping(false);
-      
-      // 2. Hide title after 100ms
-      setTimeout(() => {
-        setShowTitle(false);
-      }, 100);
-      
-      // 3. Hide content after 250ms
-      setTimeout(() => {
-        setShowContent(false);
-      }, 250);
-      
-      // 4. Clear active button and reset deactivating flag after 600ms (after all animations complete)
-      setTimeout(() => {
-        setActiveButton(null);
-        setIsDeactivating(false);
-      }, 600);
-      
+      setActiveButton(null);
     } else {
-      // Reset states for new activation
-      setIsTyping(false);
-      setShowTitle(false);
-      setShowContent(false);
-      setIsDeactivating(false);
-      
-      // Activate new button
       setActiveButton(buttonNumber);
-      
-      // Coordinated animation sequence:
-      // 1. Content appears first (render/video)
-      setTimeout(() => {
-        setShowContent(true);
-      }, 50);
-      
-      // 2. Title slides in
-      setTimeout(() => {
-        setShowTitle(true);
-      }, 200);
-      
-      // 3. Description starts typing
-      setTimeout(() => {
-        setIsTyping(true);
-      }, 400);
     }
   };
 
@@ -155,8 +119,8 @@ export default function CongregationCenterPage() {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden bg-black">
-      <main className="relative h-screen overflow-hidden bg-black">
+    <div className="relative h-screen overflow-hidden bg-white">
+      <main className="relative h-screen overflow-hidden bg-white">
         {/* Custom Header matching undergrad-projects page */}
         <button
           onClick={handleLogoClick}
@@ -200,8 +164,8 @@ export default function CongregationCenterPage() {
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? 'rotate-45' : '-translate-y-1'}`}></span>
-                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? '-rotate-45' : 'translate-y-1'}`}></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out ${isMenuOpen ? 'rotate-45' : '-translate-y-1'}`}></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out ${isMenuOpen ? '-rotate-45' : 'translate-y-1'}`}></span>
               </div>
             </button>
           </div>
@@ -218,11 +182,13 @@ export default function CongregationCenterPage() {
         >
           <div className="h-full w-max flex">
             {/* Background Image Section with Text Overlay */}
-            <div className="h-screen flex-shrink-0 relative bg-black" style={{ width: 'max-content', minWidth: '100vw' }}>
+            <div className="h-screen flex-shrink-0 relative bg-white" style={{ width: 'max-content', minWidth: '100vw' }}>
                <img
                  src="/undergrad-projects/congregation-center/congregation-hero.jpg"
                  alt="Congregation Center - Main View"
                  className="h-screen w-auto object-contain"
+                 loading="eager"
+                 fetchPriority="high"
                  style={{
                    width: 'auto',
                    height: '100vh',
@@ -230,49 +196,7 @@ export default function CongregationCenterPage() {
                  }}
                />
                
-               {/* Text Box Overlay */}
-               <div 
-                 className="absolute z-50"
-                 style={{
-                   top: '48%',
-                   left: '21%',
-                   transform: 'translateY(-50%)',
-                   backgroundColor: 'transparent',
-                   backdropFilter: 'none',
-                   WebkitBackdropFilter: 'none',
-                   border: 'none',
-                   padding: '2.5rem',
-                   borderRadius: '0px',
-                   boxShadow: 'none',
-                   maxWidth: '34rem',
-                   width: '90vw',
-                   maxHeight: '80vh'
-                 }}>
-                 <h1 style={{
-                   fontSize: '2rem',
-                   fontWeight: '700',
-                   marginBottom: '1.5rem',
-                   letterSpacing: '0.05em',
-                   textTransform: 'uppercase',
-                   fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                   color: '#111827',
-                   lineHeight: '1.2',
-                   margin: '0 0 1.5rem 0',
-                   textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
-                 }}>
-                   THE CONGREGATION CENTER
-                 </h1>
-                 <p style={{
-                   color: '#374151',
-                   lineHeight: '1.7',
-                   fontSize: '1rem',
-                   margin: '0',
-                   fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                   textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
-                 }}>
-                   The Congregation Center is a visionary multipurpose tower conceived at the intersection of modern design, community engagement, and urban sustainability. Functioning as a vibrant vertical neighborhood, the project seamlessly integrates commercial, residential, office, and event spaces into a single, cohesive structure. Its most defining architectural feature is the dynamic, staggered form, an intentional design choice that generates a series of green terraces and gardens on various levels, weaving nature into the building's fabric. At its base, an inviting open plaza connects directly to the urban landscape, creating a welcoming hub for public life and activity. The Congregation Center is designed not just as a building, but as a living ecosystem that fosters connection, promotes a sustainable lifestyle, and enhances the surrounding community.
-                 </p>
-               </div>
+
 
                {/* Interactive Buttons - Updated positions */}
                {/* Button 1 */}
@@ -393,259 +317,309 @@ export default function CongregationCenterPage() {
                  <span className="hover-scale-number">6</span>
                </button>
 
-               {/* Initial Hint Text */}
-               {showInitialHint && (
-                 <motion.div
-                   className="absolute z-30 flex items-center justify-center"
-                   style={{
-                     top: '18%',
-                     left: '38.15%',
-                     width: '23%',
-                     height: '60%'
-                   }}
-                   initial={{ opacity: 0 }}
-                   animate={{ opacity: 1 }}
-                   exit={{ opacity: 0 }}
-                   transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-                 >
-                   <p 
-                     className="text-center text-gray-800 font-bold px-4"
-                     style={{
-                       fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                       fontSize: '1.5rem',
-                       lineHeight: '1.4',
-                       margin: '0',
-                       letterSpacing: '0.08em',
-                       textShadow: '0 1px 3px rgba(0,0,0,0.3)'
-                     }}
-                   >
-                     CLICK NUMBERED BUTTONS TO EXPLORE THE PROJECT
-                   </p>
-                 </motion.div>
-               )}
-
                {/* Content Display System */}
-               {(activeButton || isDeactivating) && (
-                 <>
-                   {/* Title Text Box - Moved higher to avoid being behind render box */}
-                   <motion.div
-                     className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-center justify-start"
-                     style={{
-                       top: '8%',
-                       left: '38.15%',
-                       width: '23%',
-                       height: '8%'
-                     }}
-                     initial={{ opacity: 0, x: -30 }}
-                     animate={showTitle ? { 
-                       opacity: 1, 
-                       x: 0 
-                     } : { 
-                       opacity: 0, 
-                       x: -30 
-                     }}
-                     transition={{ 
-                       duration: 0.6, 
-                       ease: [0.25, 0.1, 0.25, 1] // Gentle architectural easing
-                     }}
-                   >
-                     <h3 
-                       className="text-left text-gray-800"
-                       style={{
-                         fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                         fontWeight: 'bold',
-                         fontSize: '1.9rem',
-                         margin: '0'
-                       }}
-                     >
-                       {contentData[activeButton as keyof typeof contentData].title}
-                     </h3>
-                   </motion.div>
+               <AnimatePresence>
+                 {/* Intro Text Overlay - Fades out when a button is clicked */}
+                 {!activeButton && (
+                  <motion.div 
+                    key="intro-text"
+                    className="absolute z-50 pointer-events-none"
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    style={{
+                      top: '48%',
+                      left: '21%',
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'transparent',
+                      backdropFilter: 'none',
+                      WebkitBackdropFilter: 'none',
+                      border: 'none',
+                      padding: '2.5rem',
+                      borderRadius: '0px',
+                      boxShadow: 'none',
+                      maxWidth: '34rem',
+                      width: '90vw',
+                      maxHeight: '80vh'
+                    }}>
+                    <h1 className="pointer-events-auto" style={{
+                      fontSize: '2rem',
+                      fontWeight: '700',
+                      marginBottom: '1.5rem',
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase',
+                      fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                      color: '#111827',
+                      lineHeight: '1.2',
+                      margin: '0 0 1.5rem 0',
+                      textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                    }}>
+                      THE CONGREGATION CENTER
+                    </h1>
+                    <p className="pointer-events-auto" style={{
+                      color: '#374151',
+                      lineHeight: '1.7',
+                      fontSize: '1rem',
+                      margin: '0',
+                      fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                      textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                    }}>
+                      The Congregation Center is a visionary multipurpose tower conceived at the intersection of modern design, community engagement, and urban sustainability. Functioning as a vibrant vertical neighborhood, the project seamlessly integrates commercial, residential, office, and event spaces into a single, cohesive structure. Its most defining architectural feature is the dynamic, staggered form, an intentional design choice that generates a series of green terraces and gardens on various levels, weaving nature into the building's fabric. At its base, an inviting open plaza connects directly to the urban landscape, creating a welcoming hub for public life and activity. The Congregation Center is designed not just as a building, but as a living ecosystem that fosters connection, promotes a sustainable lifestyle, and enhances the surrounding community.
+                    </p>
+                  </motion.div>
+                 )}
 
-                   {/* Content Display Box */}
+                 {showInitialHint && (
                    <motion.div
-                     className="absolute bg-transparent border-transparent backdrop-blur-none rounded-lg z-30 flex items-center justify-center"
+                     key="initial-hint"
+                     className="absolute z-30 flex items-center justify-center"
                      style={{
                        top: '18%',
                        left: '38.15%',
                        width: '23%',
                        height: '60%'
                      }}
-                     initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
-                     animate={showContent ? { 
-                       opacity: 1, 
-                       scale: 1, 
-                       filter: 'blur(0px)' 
-                     } : { 
-                       opacity: 0, 
-                       scale: 0.95, 
-                       filter: 'blur(4px)' 
-                     }}
-                     transition={{ 
-                       duration: 0.5, 
-                       ease: [0.25, 0.1, 0.25, 1] // Architectural easing
-                     }}
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     exit={{ opacity: 0 }}
+                     transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
                    >
-                     {activeButton === 1 ? (
-                       /* Content for Button 1 - Display video */
-                       <div className="w-full h-full flex items-center justify-center p-2 relative">
-                         <video
-                           src="/undergrad-projects/congregation-center/congregation-event-center.mp4"
-                           autoPlay
-                           loop
-                           muted
-                           playsInline
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                         {/* Enscape Logo Overlay */}
-                         <div 
-                           className="absolute bottom-4 right-4 z-10 opacity-100"
-                           style={{
-                             width: '120px',
-                             height: 'auto'
-                           }}
-                         >
-                          <Image
-                            src="/undergrad-projects/congregation-center/enscape-logo.png"
-                            alt="Enscape Logo"
-                            width={90}
-                            height={28}
-                            className="object-contain"
-                          />
-                         </div>
-                       </div>
-                     ) : activeButton === 2 ? (
-                       /* Content for Button 2 - Display c2.jpg image */
-                       <div className="w-full h-full flex items-center justify-center p-2">
-                         <Image
-                           src="/undergrad-projects/congregation-center/c2.jpg"
-                           alt="Office Level - Level 2 Content"
-                           width={0}
-                           height={0}
-                           sizes="100%"
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                       </div>
-                     ) : activeButton === 3 ? (
-                       /* Content for Button 3 - Display c3.jpg image */
-                       <div className="w-full h-full flex items-center justify-center p-2">
-                         <Image
-                           src="/undergrad-projects/congregation-center/c3.jpg"
-                           alt="Shopping Center - Level 3 Content"
-                           width={0}
-                           height={0}
-                           sizes="100%"
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                       </div>
-                     ) : activeButton === 4 ? (
-                       /* Content for Button 4 - Display c4.jpg image */
-                       <div className="w-full h-full flex items-center justify-center p-2">
-                         <Image
-                           src="/undergrad-projects/congregation-center/c4.jpg"
-                           alt="Public Plaza: Public Realm - Level 4 Content"
-                           width={0}
-                           height={0}
-                           sizes="100%"
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                       </div>
-                     ) : activeButton === 5 ? (
-                       /* Content for Button 5 - Display c5.jpg image */
-                       <div className="w-full h-full flex items-center justify-center p-2">
-                         <Image
-                           src="/undergrad-projects/congregation-center/c5.jpg"
-                           alt="Urban Integration - Level 5 Content"
-                           width={0}
-                           height={0}
-                           sizes="100%"
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                       </div>
-                     ) : activeButton === 6 ? (
-                       /* Content for Button 6 - Display c6.jpg image */
-                       <div className="w-full h-full flex items-center justify-center p-2">
-                         <Image
-                           src="/undergrad-projects/congregation-center/c6.jpg"
-                           alt="Public Plaza: Skywalk View - Level 6 Content"
-                           width={0}
-                           height={0}
-                           sizes="100%"
-                           className="w-full h-full object-contain rounded-md"
-                           style={{
-                             width: 'auto',
-                             height: 'auto',
-                             maxWidth: '100%',
-                             maxHeight: '100%'
-                           }}
-                         />
-                       </div>
-                     ) : null}
-                   </motion.div>
-
-                   {/* Description Text Box - Moved lower to avoid being behind render box */}
-                   <div
-                     className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-start justify-start transition-all duration-300"
-                     style={{
-                       top: '80%',
-                       left: '49.65%',
-                       width: '23%',
-                       height: '18%',
-                       transform: 'translateX(-50%)'
-                     }}
-                   >
-                     <div 
-                       className="text-left text-gray-700 px-3 py-2 w-full h-full"
+                     <p 
+                       className="text-center text-gray-800 font-bold px-4"
                        style={{
-                         fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                         fontSize: '1.275rem',
+                         fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                         fontSize: '1.5rem',
                          lineHeight: '1.4',
                          margin: '0',
-                         display: 'flex',
-                         alignItems: 'flex-start',
-                         justifyContent: 'flex-start',
-                         overflow: 'hidden'
+                         letterSpacing: '0.08em',
+                         textShadow: '0 1px 3px rgba(0,0,0,0.3)'
                        }}
                      >
-                       <ArchitecturalTypewriter
-                         text={contentData[activeButton as keyof typeof contentData].description}
-                         speed={25}
-                         isTyping={isTyping}
-                       />
-                     </div>
-                   </div>
-                 </>
-               )}
+                       CLICK NUMBERED BUTTONS TO EXPLORE THE PROJECT
+                     </p>
+                   </motion.div>
+                 )}
+
+                 {activeButton && (
+                   <>
+                     {/* Title Text Box */}
+                     <motion.div
+                       key={'title-' + activeButton}
+                       className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-center justify-start"
+                       style={{
+                         top: '8%',
+                         left: '38.15%',
+                         width: '23%',
+                         height: '8%'
+                       }}
+                       initial={{ opacity: 0, x: -30 }}
+                       animate={{ opacity: 1, x: 0 }}
+                       exit={{ opacity: 0, x: -30 }}
+                       transition={{ 
+                         duration: 0.6, 
+                         ease: [0.25, 0.1, 0.25, 1],
+                         delay: 0.2
+                       }}
+                     >
+                       <h3 
+                         className="text-left text-gray-800"
+                         style={{
+                           fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                           fontWeight: 'bold',
+                           fontSize: '1.9rem',
+                           margin: '0'
+                         }}
+                       >
+                         {contentData[activeButton as keyof typeof contentData].title}
+                       </h3>
+                     </motion.div>
+ 
+                     {/* Content Display Box */}
+                     <motion.div
+                       key={'content-' + activeButton}
+                       className="absolute bg-transparent border-transparent backdrop-blur-none rounded-lg z-30 flex items-center justify-center"
+                       style={{
+                         top: '18%',
+                         left: '38.15%',
+                         width: '23%',
+                         height: '60%'
+                       }}
+                       initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+                       animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                       exit={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
+                       transition={{ 
+                         duration: 0.5, 
+                         ease: [0.25, 0.1, 0.25, 1],
+                         delay: 0.05
+                       }}
+                     >
+                       {activeButton === 1 ? (
+                         /* Content for Button 1 - Display video */
+                         <div className="w-full h-full flex items-center justify-center p-2 relative">
+                           <video
+                             src="/undergrad-projects/congregation-center/congregation-event-center.mp4"
+                             autoPlay
+                             loop
+                             muted
+                             playsInline
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                           {/* Enscape Logo Overlay */}
+                           <div 
+                             className="absolute bottom-4 right-4 z-10 opacity-100"
+                             style={{
+                               width: '120px',
+                               height: 'auto'
+                             }}
+                           >
+                            <Image
+                              src="/undergrad-projects/congregation-center/enscape-logo.png"
+                              alt="Enscape Logo"
+                              width={90}
+                              height={28}
+                              className="object-contain"
+                            />
+                           </div>
+                         </div>
+                       ) : activeButton === 2 ? (
+                         /* Content for Button 2 - Display c2.jpg image */
+                         <div className="w-full h-full flex items-center justify-center p-2">
+                           <Image
+                             src="/undergrad-projects/congregation-center/c2.jpg"
+                             alt="Office Level - Level 2 Content"
+                             width={0}
+                             height={0}
+                             sizes="100%"
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                         </div>
+                       ) : activeButton === 3 ? (
+                         /* Content for Button 3 - Display c3.jpg image */
+                         <div className="w-full h-full flex items-center justify-center p-2">
+                           <Image
+                             src="/undergrad-projects/congregation-center/c3.jpg"
+                             alt="Shopping Center - Level 3 Content"
+                             width={0}
+                             height={0}
+                             sizes="100%"
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                         </div>
+                       ) : activeButton === 4 ? (
+                         /* Content for Button 4 - Display c4.jpg image */
+                         <div className="w-full h-full flex items-center justify-center p-2">
+                           <Image
+                             src="/undergrad-projects/congregation-center/c4.jpg"
+                             alt="Public Plaza: Public Realm - Level 4 Content"
+                             width={0}
+                             height={0}
+                             sizes="100%"
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                         </div>
+                       ) : activeButton === 5 ? (
+                         /* Content for Button 5 - Display c5.jpg image */
+                         <div className="w-full h-full flex items-center justify-center p-2">
+                           <Image
+                             src="/undergrad-projects/congregation-center/c5.jpg"
+                             alt="Urban Integration - Level 5 Content"
+                             width={0}
+                             height={0}
+                             sizes="100%"
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                         </div>
+                       ) : activeButton === 6 ? (
+                         /* Content for Button 6 - Display c6.jpg image */
+                         <div className="w-full h-full flex items-center justify-center p-2">
+                           <Image
+                             src="/undergrad-projects/congregation-center/c6.jpg"
+                             alt="Public Plaza: Skywalk View - Level 6 Content"
+                             width={0}
+                             height={0}
+                             sizes="100%"
+                             className="w-full h-full object-contain rounded-md"
+                             style={{
+                               width: 'auto',
+                               height: 'auto',
+                               maxWidth: '100%',
+                               maxHeight: '100%'
+                             }}
+                           />
+                         </div>
+                       ) : null}
+                     </motion.div>
+ 
+                     {/* Description Text Box */}
+                     <motion.div
+                       key={activeButton ? "desc-" + activeButton : "desc"}
+                       className="absolute bg-transparent backdrop-blur-none rounded-lg z-35 flex items-start justify-start transition-all duration-300"
+                       style={{
+                         top: '80%',
+                         left: '49.65%',
+                         width: '23%',
+                         height: '18%',
+                         transform: 'translateX(-50%)'
+                       }}
+                       initial={{ opacity: 0 }}
+                       animate={{ opacity: 1 }}
+                       exit={{ opacity: 0 }}
+                       transition={{ duration: 0.5, delay: 0.3 }}
+                     >
+                       <div 
+                         className="text-left text-gray-700 px-3 py-2 w-full h-full"
+                         style={{
+                           fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                           fontSize: '1.275rem',
+                           lineHeight: '1.4',
+                           margin: '0',
+                           display: 'flex',
+                           alignItems: 'flex-start',
+                           justifyContent: 'flex-start',
+                           overflow: 'hidden'
+                         }}
+                       >
+                         <ArchitecturalTypewriter
+                           text={contentData[activeButton as keyof typeof contentData].description}
+                           speed={25}
+                           isTyping={isTyping}
+                         />
+                       </div>
+                     </motion.div>
+                   </>
+                 )}
+               </AnimatePresence>
             </div>
           </div>
         </div>

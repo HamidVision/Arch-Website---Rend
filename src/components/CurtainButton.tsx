@@ -24,8 +24,8 @@ const CurtainButton: React.FC<CurtainButtonProps> = ({
       onClick={onClick}
       // 1. Changed 'group' to 'group/btn' to isolate this hover event
       // 2. Added 'backdrop-blur-none' and 'bg-transparent' to ensure no ghost background
-      className={`group/btn relative overflow-hidden px-8 py-3 border outline-none focus:outline-none bg-transparent ${
-        isInverse ? 'border-black' : 'border-white'
+      className={`group/btn relative overflow-hidden px-8 py-3 border outline-none focus:outline-none bg-transparent transition-colors duration-500 [transition-timing-function:cubic-bezier(0.19,1,0.22,1)] ${
+        isInverse ? 'border-black text-black hover:text-white' : 'border-white text-white hover:text-black'
       } ${className}`}
       style={{
         borderRadius: '0px',

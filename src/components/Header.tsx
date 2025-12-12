@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from './NavigationMenu';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false });
 const HELoadingComponent = dynamic(() => import('./HE_Loading_Component'), { ssr: false });
@@ -31,11 +32,11 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
   // Handle URL params triggers
   useEffect(() => {
     // Check if URL has ?openProjects=true
-    const hasUrlParam = searchParams && searchParams.get('openProjects') === 'true';
+    const hasUrlParam = searchParams?.get('openProjects') === 'true';
 
     if (hasUrlParam) {
       setIsProjectsOpen(true);
-      // Clean up
+      // Clean up URL without refresh
       const newUrl = window.location.pathname;
       window.history.replaceState({}, '', newUrl);
     }
@@ -63,18 +64,19 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
     const pathDepth = pathSegments.length;
 
     if (pathname === '/') {
-      if (isProjectsOpen && !isZoomed) {
-        setIsZoomed(true);
-      } else if (isProjectsOpen && isZoomed) {
+      // Toggle overlay on Home
+      if (isProjectsOpen) {
+        setIsProjectsOpen(false);
         setIsZoomed(false);
       } else {
         setIsProjectsOpen(true);
         setIsZoomed(false);
       }
     } else if (pathDepth === 1) {
-      setShouldOpenOverlay(true);
-      router.push('/');
+      // Category Page -> Home (Depth 1)
+      router.push('/?openProjects=true');
     } else if (pathDepth >= 2) {
+      // Project Page -> Category Page (Depth > 1)
       const parentPath = '/' + pathSegments.slice(0, -1).join('/');
       router.push(parentPath);
     }
@@ -117,14 +119,11 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
     const pathDepth = pathSegments.length;
 
     if (pathname === '/') {
-      if (isProjectsOpen) {
-        return isZoomed ? 'Zoom out' : 'Zoom in';
-      }
-      return 'View Portfolio';
+      return isProjectsOpen ? 'Close Portfolio' : 'View Portfolio';
     } else if (pathDepth === 1) {
       return 'Back to Portfolio';
     } else {
-      return 'Go Back';
+      return 'Back to Projects';
     }
   };
 
@@ -186,7 +185,19 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
       {/* Replaced hardcoded menu with shared NavigationMenu */}
       <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      {isProjectsOpen && <ProjectsOverlay isZoomed={isZoomed} onClose={handleCloseProjects} />}
+      <AnimatePresence>
+        {isProjectsOpen && (
+          <motion.div
+            key="projects-overlay-wrapper"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[60]"
+          >
+            <ProjectsOverlay isZoomed={isZoomed} onClose={handleCloseProjects} />
+          </motion.div>
+        )}
+      </AnimatePresence>
       {showLoading && (
         <div className="fixed inset-0 z-[9999]">
           <HELoadingComponent

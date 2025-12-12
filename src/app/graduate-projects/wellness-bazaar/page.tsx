@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
@@ -463,104 +463,138 @@ const WellnessBazaarPage: React.FC = () => {
                     ease: [0.25, 0.1, 0.25, 1]
                   }}
                 >
+                  <AnimatePresence mode="wait">
                     {!activeButton ? (
                       /* Default content when no button is active */
-                      <div className="w-full h-full flex items-center justify-center p-4">
-                        <p className="text-center text-gray-600 text-sm leading-relaxed">
-                          Click numbered buttons to explore different sections of the Wellness Bazaar project
-                        </p>
-                      </div>
-                    ) : activeButton === 1 ? (
-                      /* Content for Button 1 - Display wellness-1.jpg */
-                      <div className="w-full h-full flex items-center justify-center p-2">
-                        <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-1.jpg"
-                          alt="Wellness Center - Level 1 Content"
-                          width={0}
-                          height={0}
-                          sizes="100%"
-                          className="w-full h-full object-contain rounded-md"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
-                      </div>
-                    ) : activeButton === 2 ? (
-                      /* Content for Button 2 - Display wellness-2.jpg */
-                      <div className="w-full h-full flex items-center justify-center p-2">
-                        <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-2.jpg"
-                          alt="Health Clinic - Day Time Section Cut"
-                          width={0}
-                          height={0}
-                          sizes="100%"
-                          className="w-full h-full object-contain rounded-md"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
-                      </div>
-                    ) : activeButton === 3 ? (
-                      /* Content for Button 3 - Display wellness-3.jpg */
-                      <div className="w-full h-full flex items-center justify-center p-2">
-                        <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-3.jpg"
-                          alt="Fitness Hub - Night Time Section Cut"
-                          width={0}
-                          height={0}
-                          sizes="100%"
-                          className="w-full h-full object-contain rounded-md"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
-                      </div>
-                    ) : activeButton === 4 ? (
-                      /* Content for Button 4 - Display wellness-4.jpg */
-                      <div className="w-full h-full flex items-center justify-center p-2">
-                        <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-4.jpg"
-                          alt="Retail Marketplace"
-                          width={0}
-                          height={0}
-                          sizes="100%"
-                          className="w-full h-full object-contain rounded-md"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
-                      </div>
-                    ) : activeButton === 5 ? (
-                      /* Content for Button 5 - Display wellness-5.jpg */
-                      <div className="w-full h-full flex items-center justify-center p-2">
-                        <Image
-                          src="/graduate-projects/wellness-bazaar/wellness-5.jpg"
-                          alt="Community Garden"
-                          width={0}
-                          height={0}
-                          sizes="100%"
-                          className="w-full h-full object-contain rounded-md"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
-                      </div>
-                    ) : activeButton === 6 ? (
-                      /* Content for Button 6 - Empty content box since image appears as overlay */
-                      <div className="w-full h-full flex items-center justify-center p-2 bg-transparent rounded-md">
-                        <span className="text-transparent text-sm">Button 6 Content</span>
-                      </div>
-                    ) : null}
+                      <motion.div
+                        key="default"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full h-full"
+                      >
+                        <div className="w-full h-full flex items-center justify-center p-4">
+                          <p className="text-center text-gray-600 text-sm leading-relaxed">
+                            Click numbered buttons to explore different sections of the Wellness Bazaar project
+                          </p>
+                        </div>
+                      </motion.div>
+                    ) : showContent && (
+                      <motion.div
+                        key={`content-${activeButton}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full h-full"
+                      >
+                        {activeButton === 1 ? (
+                          /* Content for Button 1 - Display wellness-1.jpg */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <Image
+                              src="/graduate-projects/wellness-bazaar/wellness-1.jpg"
+                              alt="Wellness Center - Level 1 Content"
+                              width={0}
+                              height={0}
+                              sizes="100%"
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : activeButton === 2 ? (
+                          /* Content for Button 2 - Display wellness-2.jpg */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <Image
+                              src="/graduate-projects/wellness-bazaar/wellness-2.jpg"
+                              alt="Health Clinic - Day Time Section Cut"
+                              width={0}
+                              height={0}
+                              sizes="100%"
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : activeButton === 3 ? (
+                          /* Content for Button 3 - Display wellness-3.jpg */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <Image
+                              src="/graduate-projects/wellness-bazaar/wellness-3.jpg"
+                              alt="Fitness Hub - Night Time Section Cut"
+                              width={0}
+                              height={0}
+                              sizes="100%"
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : activeButton === 4 ? (
+                          /* Content for Button 4 - Display wellness-4.jpg */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <Image
+                              src="/graduate-projects/wellness-bazaar/wellness-4.jpg"
+                              alt="Retail Marketplace"
+                              width={0}
+                              height={0}
+                              sizes="100%"
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : activeButton === 5 ? (
+                          /* Content for Button 5 - Display wellness-5.jpg */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <Image
+                              src="/graduate-projects/wellness-bazaar/wellness-5.jpg"
+                              alt="Community Garden"
+                              width={0}
+                              height={0}
+                              sizes="100%"
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : activeButton === 6 ? (
+                          /* Content for Button 6 - Towers Video */
+                          <div className="w-full h-full flex items-center justify-center p-2">
+                            <video
+                              src="/graduate-projects/wellness-bazaar/towers.mp4"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              className="w-full h-full object-contain rounded-md"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   </motion.div>
 
                 {/* Description Text Box - Always Visible */}
@@ -603,7 +637,7 @@ const WellnessBazaarPage: React.FC = () => {
               </>
 
               {/* Overlay Image - Changes based on active button */}
-              <div className="absolute z-30" style={{
+              <div className="absolute z-30 pointer-events-none" style={{
                 top: '0',
                 right: '0',
                 height: '100vh',

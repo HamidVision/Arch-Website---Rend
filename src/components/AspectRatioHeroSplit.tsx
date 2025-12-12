@@ -1,5 +1,4 @@
-'use client';
-
+// Reverted to original state to fix layout issues
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
@@ -143,11 +142,15 @@ export default function AspectRatioHeroSplit({
         {/* Hero section: initial occupies full available height; activated uses computed px */}
         <motion.section
           className="hero"
-          animate={{ height: toggleState === 0 ? 'var(--available-height)' : 'var(--hero-height-px)' }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ 
+            height: toggleState === 0 ? 'var(--available-height)' : 'var(--hero-height-px)',
+            opacity: 1
+          }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
           style={{ position: 'relative' }}
         >
-          <img src={heroSrc} alt={heroAlt} draggable={false} />
+          <img src={heroSrc} alt={heroAlt} draggable={false} loading="eager" />
 
           {/* Clickable overlay with ping ring (invisible PNG until hover) */}
           <motion.div
