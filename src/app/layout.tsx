@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import HELoadingComponent from '@/components/HE_Loading_Component';
 import RouteTransitionWrapper from '@/components/RouteTransitionWrapper';
+import DisableRightClick from '@/components/DisableRightClick';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,6 +40,9 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} bg-black text-white antialiased`}>
         <LoadingProvider>
+          {/* Global Disable Right Click */}
+          <DisableRightClick />
+          
           {/* HE Splash Screen - Shows on initial load AND context transitions */}
           <HELoadingComponent
             variant="splash"

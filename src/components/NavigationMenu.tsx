@@ -161,6 +161,16 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
             })}
           </motion.ul>
         </nav>
+
+        {/* Copyright Footer */}
+        <div className="absolute bottom-8 left-0 right-0 text-center px-6 pointer-events-none z-[220]">
+          <p className="text-[10px] md:text-xs text-white/30 font-light tracking-wide uppercase">
+            &copy; 2025 Hamid Esmaeillou. All Rights Reserved.
+          </p>
+          <p className="text-[10px] md:text-xs text-white/30 font-light tracking-wide mt-1">
+            All content, images, and designs are the intellectual property of Hamid Esmaeillou.
+          </p>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
