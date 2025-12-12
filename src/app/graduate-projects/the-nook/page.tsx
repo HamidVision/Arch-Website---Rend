@@ -263,7 +263,7 @@ const NookPage: React.FC = () => {
                >
                  {/* Drawing Image */}
                  <Image
-                   src="/graduate-projects/the-nook/nook-drawing.png"
+                   src="/graduate-projects/the-nook/nook-drawing.jpg"
                    alt="The Nook Drawing"
                    width={870}
                    height={555}
@@ -275,7 +275,7 @@ const NookPage: React.FC = () => {
                  
                  {/* Render Image */}
                  <Image
-                   src="/graduate-projects/the-nook/nook-render.png"
+                   src="/graduate-projects/the-nook/nook-render.jpg"
                    alt="The Nook Render"
                    width={870}
                    height={555}

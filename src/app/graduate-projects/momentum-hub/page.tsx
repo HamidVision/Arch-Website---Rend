@@ -464,7 +464,7 @@ export default function MomentumHubPage() {
                >
                  <div className="w-full h-full flex items-center justify-center p-1">
                    <Image
-                     src="/graduate-projects/momentum-hub/Momentum-1.png"
+                     src="/graduate-projects/momentum-hub/Momentum-1.jpg"
                      alt="Momentum Hub Content 1"
                      width={0}
                      height={0}
@@ -499,7 +499,7 @@ export default function MomentumHubPage() {
                >
                  <div className="w-full h-full flex items-center justify-center p-1">
                    <Image
-                     src="/graduate-projects/momentum-hub/momentum-2.png"
+                     src="/graduate-projects/momentum-hub/momentum-2.jpg"
                      alt="Momentum Hub Content 2"
                      width={0}
                      height={0}
@@ -534,7 +534,7 @@ export default function MomentumHubPage() {
                >
                  <div className="w-full h-full flex items-center justify-center p-1">
                    <Image
-                     src="/graduate-projects/momentum-hub/momentum-3.png"
+                     src="/graduate-projects/momentum-hub/momentum-3.jpg"
                      alt="Momentum Hub Content 3"
                      width={0}
                      height={0}
@@ -569,7 +569,7 @@ export default function MomentumHubPage() {
                >
                  <div className="w-full h-full flex items-center justify-center p-1">
                    <Image
-                     src="/graduate-projects/momentum-hub/Momentum-4.png"
+                     src="/graduate-projects/momentum-hub/Momentum-4.jpg"
                      alt="Momentum Hub Content 4"
                      width={0}
                      height={0}
@@ -811,7 +811,7 @@ export default function MomentumHubPage() {
                  >
                    <div className="w-full h-full flex items-center justify-center p-1">
                      <Image
-                       src="/graduate-projects/momentum-hub/Momentum-5.png"
+                       src="/graduate-projects/momentum-hub/Momentum-5.jpg"
                        alt="Momentum Hub Content 5"
                        width={0}
                        height={0}
