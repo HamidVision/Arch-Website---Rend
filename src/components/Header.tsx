@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import NavigationMenu from './NavigationMenu';
 
 const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false });
 const HELoadingComponent = dynamic(() => import('./HE_Loading_Component'), { ssr: false });
@@ -13,8 +14,8 @@ const HELoadingComponent = dynamic(() => import('./HE_Loading_Component'), { ssr
 interface HeaderProps {
   forceSolid?: boolean;
   backgroundClass?: string;
-  textColorClass?: string; // NEW - for text/icon colors
-  logoVariant?: 'light' | 'dark'; // NEW - for logo color variant
+  textColorClass?: string;
+  logoVariant?: 'light' | 'dark';
 }
 
 const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, textColorClass, logoVariant = 'light' }) => {
@@ -25,47 +26,55 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
   const { showLoading, handleLogoClick } = useLogoNavigation();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Handle URL params triggers
+  useEffect(() => {
+    // Check if URL has ?openProjects=true
+    const hasUrlParam = searchParams && searchParams.get('openProjects') === 'true';
+
+    if (hasUrlParam) {
+      setIsProjectsOpen(true);
+      // Clean up
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [searchParams]);
+
+
 
   const navigateToFirstProject = () => {
-    router.push('/projects/momentum-hub'); // closest/first project for now
+    router.push('/projects/momentum-hub');
   };
 
   // Handle overlay state based on navigation
   useEffect(() => {
     if (pathname === '/' && shouldOpenOverlay) {
-      // Open overlay when returning to home from a subpage
       setIsProjectsOpen(true);
       setShouldOpenOverlay(false);
     } else if (pathname !== '/' && isProjectsOpen) {
-      // Close overlay when navigating away from home
       setIsProjectsOpen(false);
       setIsZoomed(false);
     }
-  }, [pathname, shouldOpenOverlay]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathname, shouldOpenOverlay]);
 
   const handlePortfolioToggle = () => {
     const pathSegments = pathname.split('/').filter(segment => segment !== '');
     const pathDepth = pathSegments.length;
 
     if (pathname === '/') {
-      // On home page: toggle overlay
       if (isProjectsOpen && !isZoomed) {
-        // When overlay is open but not zoomed, zoom into middle tile
         setIsZoomed(true);
       } else if (isProjectsOpen && isZoomed) {
-        // When zoomed, zoom out to normal view
         setIsZoomed(false);
       } else {
-        // First click - open projects overlay
         setIsProjectsOpen(true);
         setIsZoomed(false);
       }
     } else if (pathDepth === 1) {
-      // One level deep (e.g., /design-philosophy): go to home with overlay
       setShouldOpenOverlay(true);
       router.push('/');
     } else if (pathDepth >= 2) {
-      // Two or more levels deep: go back one level
       const parentPath = '/' + pathSegments.slice(0, -1).join('/');
       router.push(parentPath);
     }
@@ -81,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
     const buttonColor = textColorClass || 'text-white';
     return (
       <button
-        className={`relative z-[70] h-6 w-8 focus:outline-none ${buttonColor}`}
+        className={`relative z-[201] h-6 w-8 focus:outline-none ${buttonColor}`} // High z-index to stay above menu
         onClick={onClick}
         aria-label="Toggle menu"
       >
@@ -168,22 +177,15 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
           </button>
           <div className="flex items-center space-x-6">
             <PortfolioToggleIcon />
+            {/* Pass isOpen to hamburger to handle animation */}
             <HamburgerIcon onClick={() => setIsMenuOpen(!isMenuOpen)} isOpen={isMenuOpen} />
           </div>
         </nav>
       </header>
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
-          <nav className="text-center">
-            <ul className="space-y-8 text-white">
-              <li><Link href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
-              <li><Link href="/projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Projects</Link></li>
-              <li><Link href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</Link></li>
-              <li><Link href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</Link></li>
-            </ul>
-          </nav>
-        </div>
-      )}
+      
+      {/* Replaced hardcoded menu with shared NavigationMenu */}
+      <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
       {isProjectsOpen && <ProjectsOverlay isZoomed={isZoomed} onClose={handleCloseProjects} />}
       {showLoading && (
         <div className="fixed inset-0 z-[9999]">

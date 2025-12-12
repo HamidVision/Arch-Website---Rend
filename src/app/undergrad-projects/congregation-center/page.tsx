@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import NavigationMenu from '@/components/NavigationMenu';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -49,6 +50,7 @@ export default function CongregationCenterPage() {
   const [showInitialHint, setShowInitialHint] = useState(true);
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
@@ -192,17 +194,21 @@ export default function CongregationCenterPage() {
 
             {/* Menu Button */}
             <button
-              className="relative h-6 w-8 focus:outline-none"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="relative h-6 w-8 focus:outline-none z-[201]"
               aria-label="Toggle menu"
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out -translate-y-1"></span>
-                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out translate-y-1"></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? 'rotate-45' : '-translate-y-1'}`}></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? '-rotate-45' : 'translate-y-1'}`}></span>
               </div>
             </button>
           </div>
         </div>
+        
+        {/* Navigation Menu Overlay */}
+        <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         
         {/* Main Content Container with horizontal scrolling */}
         <div 

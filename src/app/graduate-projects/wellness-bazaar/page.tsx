@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import NavigationMenu from '@/components/NavigationMenu';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -205,17 +206,20 @@ const WellnessBazaarPage: React.FC = () => {
             {/* Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative h-6 w-8 focus:outline-none"
+              className="relative h-6 w-8 focus:outline-none z-[201]"
               aria-label="Toggle menu"
               title="Toggle menu"
             >
               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out -translate-y-1"></span>
-                <span className="absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out translate-y-1"></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out ${isMenuOpen ? 'rotate-45 bg-white' : '-translate-y-1 bg-black'}`}></span>
+                <span className={`absolute block h-0.5 w-6 transform bg-black transition duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 bg-white' : 'translate-y-1 bg-black'}`}></span>
               </div>
             </button>
           </div>
         </div>
+        
+        {/* Navigation Menu Overlay */}
+        <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
         {/* Main Content Container with horizontal scrolling */}
         <div 
@@ -625,20 +629,7 @@ const WellnessBazaarPage: React.FC = () => {
         </div>
       </main>
       
-      {/* Hamburger Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
-          <nav className="text-center">
-            <ul className="space-y-8 text-white">
-              <li><a href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
-              <li><a href="/undergrad-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Undergrad Projects</a></li>
-              <li><a href="/graduate-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Graduate Projects</a></li>
-              <li><a href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
-              <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
-            </ul>
-          </nav>
-        </div>
-      )}
+
 
 
       {/* Global Loading Overlay */}

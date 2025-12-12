@@ -7,11 +7,14 @@ import Image from 'next/image';
 // import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import dynamic from 'next/dynamic';
+import ViewProjectButton from '@/components/ViewProjectButton';
+import CurtainButton from '@/components/CurtainButton';
+import NavigationMenu from '@/components/NavigationMenu';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 // Site Analysis Tile with transition animation
-const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ project, isWidescreen }) => {
+const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
   const [transitioning, setTransitioning] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
   const router = useRouter();
@@ -44,6 +47,7 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
 
   return (
     <motion.div
+      id={id}
       className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group bg-black`}
       initial={{ opacity: 0 }}
       animate={{ opacity: fadingOut ? 0 : 1 }}
@@ -71,41 +75,16 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
 
           {/* READ MORE Button */}
           <motion.div
-            className="absolute bottom-8 right-8 cursor-pointer group/button"
-            style={{
-              backgroundColor: '#1f2937',
-              borderColor: '#4b5563',
-              color: '#ffffff',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              padding: '12px 24px',
-              borderRadius: '0px',
-              fontSize: '14px',
-              fontWeight: '500',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              zIndex: '10',
-              position: 'absolute',
-              bottom: '32px',
-              right: '32px',
-              overflow: 'hidden'
-            }}
-            onClick={handleReadMore}
-            initial={{ opacity: 1 }}
+            className="absolute bottom-8 right-8 z-10"
+            initial={{ opacity: 0, y: 10 }} // Match button entrance
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <motion.div
-              className="absolute inset-0 bg-white origin-left z-0"
-              initial={{ scaleX: 0 }}
-              whileHover={{ scaleX: 1 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+            <CurtainButton 
+              onClick={handleReadMore} 
+              isWidescreen={true}
+              className="!px-8 !py-3" // Ensure padding matches if needed
             />
-            
-            {/* Text with CSS transition */}
-            <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
-              READ MORE
-            </span>
           </motion.div>
         </div>
       )}
@@ -148,41 +127,15 @@ const SiteAnalysisTile: React.FC<{ project: any; isWidescreen: boolean }> = ({ p
 
           {/* READ MORE Button */}
           <motion.div
-            className="absolute bottom-8 right-8 cursor-pointer group/button"
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              borderColor: 'rgba(255, 255, 255, 1)',
-              color: '#ffffff',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              padding: '12px 24px',
-              borderRadius: '0px',
-              fontSize: '14px',
-              fontWeight: '500',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              zIndex: '10',
-              position: 'absolute',
-              bottom: '32px',
-              right: '32px',
-              overflow: 'hidden'
-            }}
-            onClick={handleReadMore}
-            initial={{ opacity: 1 }}
+            className="absolute bottom-8 right-8 z-10"
+            initial={{ opacity: 0, y: 10 }}
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <motion.div
-              className="absolute inset-0 bg-white origin-left z-0"
-              initial={{ scaleX: 0 }}
-              whileHover={{ scaleX: 1 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+            <CurtainButton 
+              onClick={handleReadMore} 
+              isWidescreen={false}
             />
-            
-            {/* Text with CSS transition */}
-            <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
-              READ MORE
-            </span>
           </motion.div>
         </div>
       )}
@@ -275,24 +228,42 @@ const UndergradProjectsPage: React.FC = () => {
       checkAspectRatio();
     });
     
-    // Track scroll position to update current project
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const projectIndex = Math.floor(scrollPosition / windowHeight);
-      setCurrentProject(Math.max(0, Math.min(projectIndex, projects.length)));
+    // Use IntersectionObserver for more robust scroll tracking
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5 // Trigger when 50% of the section is visible
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('resize', () => {
-        checkMobile();
-        checkAspectRatio();
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Extract index from ID: section-0 (overview), section-1, etc.
+          const id = entry.target.id;
+          if (id === 'section-overview') {
+            setCurrentProject(0);
+          } else if (id.startsWith('section-')) {
+            const index = parseInt(id.split('-')[1]);
+            setCurrentProject(index);
+          }
+        }
       });
-      window.removeEventListener('scroll', handleScroll);
     };
-  }, [projects.length]);
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe Overview
+    const overviewSection = document.getElementById('section-overview');
+    if (overviewSection) observer.observe(overviewSection);
+
+    // Observe Projects
+    projects.forEach((_, index) => {
+      const projectSection = document.getElementById(`section-${index + 1}`);
+      if (projectSection) observer.observe(projectSection);
+    });
+
+    return () => observer.disconnect();
+  }, [projects.length, isHorizontalScrollMode]);
 
 
   const handleProjectClick = (projectId: string) => {
@@ -487,6 +458,7 @@ const UndergradProjectsPage: React.FC = () => {
         </div>
       ) : (
         <motion.div
+          id="section-overview"
           className={`relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -494,7 +466,7 @@ const UndergradProjectsPage: React.FC = () => {
         >
           {/* Left Side - White Background with Text (only on widescreen) */}
           {isWidescreen && (
-            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
+            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 md:pb-48">
               <motion.div
                 className="max-w-md"
                 initial={{ opacity: 0, y: 20 }}
@@ -548,12 +520,13 @@ const UndergradProjectsPage: React.FC = () => {
       {!isHorizontalScrollMode && projects.map((project, index) => {
         // Special handling for Site Analysis tile with transition animation
         if (project.id === 'site-analysis') {
-          return <SiteAnalysisTile key={project.id} project={project} isWidescreen={isWidescreen} />;
+          return <SiteAnalysisTile key={project.id} id={`section-${index + 1}`} project={project} isWidescreen={isWidescreen} />;
         }
         
         return (
         <motion.div
           key={project.id}
+          id={`section-${index + 1}`}
           className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-hidden'} cursor-pointer group`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -581,42 +554,15 @@ const UndergradProjectsPage: React.FC = () => {
               </motion.div>
 
               {/* READ MORE Button */}
-              <div
-                className="absolute bottom-8 right-8 cursor-pointer group/button"
-                style={{
-                  backgroundColor: isWidescreen ? '#1f2937' : 'rgba(0, 0, 0, 0.8)',
-                  borderColor: isWidescreen ? '#4b5563' : 'rgba(255, 255, 255, 1)',
-                  color: isWidescreen ? '#ffffff' : '#ffffff',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  padding: '12px 24px',
-                  borderRadius: '0px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  zIndex: '10',
-                  position: 'absolute',
-                  bottom: '32px',
-                  right: '32px',
-                  overflow: 'hidden'
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleProjectClick(project.id);
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-white origin-left z-0"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                />
-                
-                {/* Text with CSS transition */}
-                <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
-                  READ MORE
-                </span>
+              <div className="absolute bottom-8 right-8 z-10">
+                 <CurtainButton 
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     handleProjectClick(project.id);
+                   }}
+                   isWidescreen={true}
+                   variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
+                 />
               </div>
             </div>
           )}
@@ -654,42 +600,15 @@ const UndergradProjectsPage: React.FC = () => {
               </motion.div>
 
               {/* READ MORE Button */}
-              <div
-                className="absolute bottom-8 right-8 cursor-pointer group/button"
-                style={{
-                  backgroundColor: isWidescreen ? '#1f2937' : 'rgba(0, 0, 0, 0.8)',
-                  borderColor: isWidescreen ? '#4b5563' : 'rgba(255, 255, 255, 1)',
-                  color: isWidescreen ? '#ffffff' : '#ffffff',
-                  borderWidth: '1px',
-                  borderStyle: 'solid',
-                  padding: '12px 24px',
-                  borderRadius: '0px',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  zIndex: '10',
-                  position: 'absolute',
-                  bottom: '32px',
-                  right: '32px',
-                  overflow: 'hidden'
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleProjectClick(project.id);
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-white origin-left z-0"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                />
-                
-                {/* Text with CSS transition */}
-                <span className="relative z-10 transition-colors duration-300 group-hover/button:text-black">
-                  READ MORE
-                </span>
+              <div className="absolute bottom-8 right-8 z-10">
+                 <CurtainButton 
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     handleProjectClick(project.id);
+                   }}
+                   isWidescreen={false}
+                   variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
+                 />
               </div>
             </div>
           )}
@@ -738,19 +657,7 @@ const UndergradProjectsPage: React.FC = () => {
       )}
       
       {/* Hamburger Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/75 z-[65] flex items-center justify-center">
-          <nav className="text-center">
-            <ul className="space-y-8 text-white">
-              <li><a href="/" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Home</a></li>
-              <li><a href="/undergrad-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Undergrad Projects</a></li>
-              <li><a href="/graduate-projects" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Graduate Projects</a></li>
-              <li><a href="/about" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a></li>
-              <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
-            </ul>
-          </nav>
-        </div>
-      )}
+      <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   );
 };
