@@ -55,6 +55,54 @@ export default function ResearchPapersPage() {
             Research Papers & Publications
           </motion.h1>
 
+          {/* Research Paper Tiles */}
+          <div className="grid grid-cols-1 gap-4 max-w-4xl mx-auto mb-12 text-left">
+            {/* Paper 1 */}
+            <motion.div 
+              className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent group-hover:from-indigo-300 group-hover:to-blue-300 transition-all">
+                AI Design Approach for Urban Plaza: Human Behavior-Based Algorithm
+              </h3>
+              <p className="text-sm text-gray-400 font-mono">
+                ASCE Computing in Civil Engineering 2021, 1327-1334
+              </p>
+            </motion.div>
+
+            {/* Paper 2 */}
+            <motion.div 
+              className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+            >
+              <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent group-hover:from-indigo-300 group-hover:to-blue-300 transition-all">
+                Advancing Pedestrian Behavior Analysis in Urban Spaces Using YOLOv10, LSTM Networks, and DeepSORT Tracking
+              </h3>
+              <p className="text-sm text-gray-400 font-mono">
+                Under Review
+              </p>
+            </motion.div>
+
+            {/* Paper 3 */}
+            <motion.div 
+              className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.8 }}
+            >
+              <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-indigo-400 to-blue-400 bg-clip-text text-transparent group-hover:from-indigo-300 group-hover:to-blue-300 transition-all">
+                Spatial Usage Patterns and Environmental Influences in Urban Open Spaces
+              </h3>
+              <p className="text-sm text-gray-400 font-mono">
+                Under Review
+              </p>
+            </motion.div>
+          </div>
+
           {/* Coming Soon message */}
           <motion.div
             className="mb-8"

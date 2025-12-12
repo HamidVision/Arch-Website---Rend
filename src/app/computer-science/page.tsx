@@ -1,18 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Header from '@/components/Header';
+import { MatrixOverlay } from '@/components/animations/MatrixOverlay';
 
 export default function ComputerSciencePage() {
+  const [showMatrix, setShowMatrix] = useState(false);
+
+  // Trigger Matrix animation after initial page animations (approx 2s)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowMatrix(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <Header />
       
-      <main className="relative flex items-center justify-center min-h-screen px-4">
+      <main className="relative flex items-center justify-center min-h-screen px-4 z-10">
         {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-indigo-900/20" />
+        
+        {/* Matrix Overlay - Triggered after animations, z-0 to sit behind content */}
+        <MatrixOverlay running={showMatrix} side="center" />
         
         {/* Main content */}
         <motion.div 
@@ -62,15 +76,53 @@ export default function ComputerSciencePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
           >
-            <h2 className="text-2xl md:text-3xl font-light text-gray-300 mb-4">
+            {/* Coming Soon Header */}
+            <h2 className="text-2xl md:text-3xl font-light text-gray-300 mb-8">
               Coming Soon
             </h2>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              I&apos;m currently developing a comprehensive showcase of my computer science projects, 
-              including software development, algorithms, and technical implementations. 
-              This section will feature interactive demos, code repositories, and detailed 
-              documentation of my programming journey.
-            </p>
+
+            {/* Project Tiles */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12 text-left">
+              {/* Tile 1: Archi Pal */}
+              <motion.div 
+                className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              >
+                <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:to-indigo-300 transition-all">
+                  Archi Pal
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
+                  An expert-level AI research companion for Architecture, built on a curated database of history, theory, and style. It utilizes reliability-aware retrieval to offer semantic, scholarly insights, prioritizing verified academic discourse over general web content for students and professionals.
+                </p>
+              </motion.div>
+
+              {/* Tile 2: Urban Dynamics Analysis */}
+              <motion.div 
+                className="group relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+              >
+                <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:to-indigo-300 transition-all">
+                  Urban Dynamics Analysis
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
+                  Bridging design intent and public usage through advanced computer vision. Using YOLO architecture, this project quantifies human behavior and movement patterns in shared spaces, providing data-driven insights to help architects create environments truly responsive to community needs.
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Description Box */}
+            <div className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 mx-auto max-w-4xl">
+              <p className="text-lg text-gray-400 leading-relaxed">
+                I&apos;m currently developing a comprehensive showcase of my computer science projects, 
+                including software development, algorithms, and technical implementations. 
+                This section will feature interactive demos, code repositories, and detailed 
+                documentation of my programming journey.
+              </p>
+            </div>
           </motion.div>
 
           {/* Animated dots */}

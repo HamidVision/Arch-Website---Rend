@@ -5,7 +5,7 @@ import React, { useRef, useEffect, useCallback } from 'react';
 export interface MatrixOverlayProps {
   running: boolean;
   internalFadeTiming?: number; // ms for fade transition
-  side?: 'right' | 'left'; // which side to draw the matrix
+  side?: 'right' | 'left' | 'center'; // which side to draw the matrix
   widthPct?: number; // percentage of screen width to use
   message?: string; // message to encode as binary
   colorHead?: string; // color for the head character
@@ -27,218 +27,212 @@ export const MatrixOverlay: React.FC<MatrixOverlayProps> = ({
   side = 'right',
   widthPct = 50,
   message = "You were born with wings. You are not meant for crawling",
-  colorHead = 'rgba(0,0,0,0.85)',
-  colorTrail = 'rgba(0,0,0,0.6)',
+  colorHead = 'rgba(255,255,255,0.9)',
+  colorTrail = 'rgba(255,255,255,0.6)',
   bgFade = 0.12
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
-  const streamsRef = useRef<Stream[]>([]);
-
-  // Matrix configuration
-  const config = {
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  
+  // State for matrix configuration
+  const stateRef = useRef({
     fontSize: 16,
     minSpeed: 80,
     maxSpeed: 220,
     trailLenMin: 10,
-    trailLenMax: 24
-  };
+    trailLenMax: 24,
+    rightStart: 0,
+    columns: 0,
+    columnWidth: 0,
+    streams: [] as Stream[],
+    segments: [] as string[][],
+    lastTime: 0
+  });
 
-  // Convert text to binary bits
-  const textToBits = (text: string): string[] => {
+  const textToBits = (str: string) => {
     const bits = [];
-    for (let i = 0; i < text.length; i++) {
-      const code = text.charCodeAt(i);
-      const b = code.toString(2).padStart(8, '0');
-      for (let j = 0; j < b.length; j++) bits.push(b[j]);
+    for (let i = 0; i < str.length; i++) {
+        const code = str.charCodeAt(i);
+        const b = code.toString(2).padStart(8, '0');
+        for (let j = 0; j < b.length; j++) bits.push(b[j]);
     }
     return bits;
   };
 
-  // Split bits into segments for different streams
-  const splitBits = (bits: string[], segments: number): string[][] => {
-    const out = [];
-    const size = Math.ceil(bits.length / segments);
-    for (let i = 0; i < segments; i++) {
-      const start = i * size;
-      const end = Math.min(bits.length, start + size);
-      const seg = bits.slice(start, end);
-      if (seg.length === 0) break;
-      out.push(seg);
-    }
-    return out;
+  const splitBits = (bits: string[], segments: number) => {
+      const out = [];
+      const size = Math.ceil(bits.length / segments);
+      for (let i = 0; i < segments; i++) {
+          const start = i * size;
+          const end = Math.min(bits.length, start + size);
+          const seg = bits.slice(start, end);
+          if (seg.length === 0) break;
+          out.push(seg);
+      }
+      return out;
   };
 
-  // Initialize matrix streams
-  const initStreams = useCallback(() => {
+  const rand = (min: number, max: number) => min + Math.random() * (max - min);
+  const randInt = (min: number, max: number) => Math.floor(rand(min, max + 1));
+
+  const resize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const w = canvas.width;
-    const h = canvas.height;
+    const w = Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+    const h = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
     
-    // Calculate matrix area
+    // Set actual canvas size (no dpr scaling in HTML reference, keeping it simple to match)
+    canvas.width = w; 
+    canvas.height = h;
+
+    const state = stateRef.current;
+    state.columnWidth = Math.max(1, Math.floor(state.fontSize));
+    
+    // Calculate layout based on side and widthPct
     const matrixWidth = Math.floor(w * (widthPct / 100));
-    const columns = Math.max(1, Math.floor(matrixWidth / config.fontSize));
+    let startOffset = 0;
     
-    // Create binary segments from message
-    const allBits = textToBits(message);
-    const segments = splitBits(allBits, Math.max(3, Math.min(12, Math.ceil(columns / 6))));
-    
-    streamsRef.current = [];
-    
-    for (let i = 0; i < columns; i++) {
-      const len = Math.floor(Math.random() * (config.trailLenMax - config.trailLenMin + 1)) + config.trailLenMin;
-      const seg = segments[i % segments.length];
-      const startIdx = Math.floor(Math.random() * seg.length);
-      const chars = Array.from({ length: len }, (_, t) => seg[(startIdx + t) % seg.length]);
-      
-      streamsRef.current.push({
-        y: -Math.random() * h,
-        speed: Math.random() * (config.maxSpeed - config.minSpeed) + config.minSpeed,
-        len,
-        chars,
-        seg,
-        idx: (startIdx + len) % seg.length
-      });
+    if (side === 'right') {
+        startOffset = w - matrixWidth;
+    } else if (side === 'center') {
+        startOffset = (w - matrixWidth) / 2;
+    } else {
+        // left
+        startOffset = 0;
     }
-  }, [message, widthPct, config.fontSize, config.trailLenMin, config.trailLenMax, config.minSpeed, config.maxSpeed]);
 
-  // Matrix rain animation with binary streams
-  const drawMatrix = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    // We store the start offset in 'rightStart' to minimize state variable changes, 
+    // effectively it acts as the X-offset for the matrix block.
+    state.rightStart = Math.max(0, startOffset);
+    
+    // Columns is based on the matrix width, not the remaining space
+    state.columns = Math.max(1, Math.floor(matrixWidth / state.columnWidth));
 
-    // Guard against unsized canvas
-    if (canvas.width === 0 || canvas.height === 0) return;
+    const allBits = textToBits(message);
+    const segCount = Math.max(3, Math.min(12, Math.ceil(state.columns / 6)));
+    state.segments = splitBits(allBits, segCount);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const w = canvas.width;
-    const h = canvas.height;
-
-    // Clear canvas with fade effect - only in the matrix region
-    const matrixWidth = Math.floor(w * (widthPct / 100));
-    const startX = side === 'right' ? w - matrixWidth : 0;
-    ctx.fillStyle = `rgba(255,255,255,${bgFade})`;
-    ctx.fillRect(startX, 0, matrixWidth, h);
-
-    // Set text properties
-    ctx.font = `${config.fontSize}px "Courier New", Consolas, monospace`;
-    ctx.textBaseline = 'top';
-
-    // Draw streams
-    streamsRef.current.forEach((s, i) => {
-      if (!running) return;
-
-      const x = startX + (i * config.fontSize);
-      const headY = s.y;
-      
-      // Draw head character
-      if (headY >= 0 && headY < h) {
-        ctx.fillStyle = colorHead;
-        ctx.fillText(s.chars[0], x, headY);
-      }
-
-      // Draw trail characters
-      for (let t = 1; t < s.len; t++) {
-        const yy = headY - t * config.fontSize;
-        if (yy < -config.fontSize) break;
-        if (yy > h) continue;
+    state.streams = Array.from({ length: state.columns }, (_, i) => {
+        const len = randInt(state.trailLenMin, state.trailLenMax);
+        const seg = state.segments[i % state.segments.length];
+        const startIdx = randInt(0, seg.length - 1);
+        const chars = Array.from({ length: len }, (_, t) => seg[(startIdx + t) % seg.length]);
         
-        const op = Math.max(0, 0.7 - (t / s.len) * 0.7);
-        ctx.fillStyle = colorTrail.replace('0.6', op.toString());
-        ctx.fillText(s.chars[t], x, yy);
-      }
-
-      // Update stream position
-      s.y += s.speed * 0.016; // Assume 60fps
-      
-      // Reset stream when it goes off screen
-      if (headY - (s.len * config.fontSize) > h) {
-        s.y = -Math.random() * h;
-        s.speed = Math.random() * (config.maxSpeed - config.minSpeed) + config.minSpeed;
-        s.len = Math.floor(Math.random() * (config.trailLenMax - config.trailLenMin + 1)) + config.trailLenMin;
-        
-        // Update characters from segments
-        const seg = s.seg;
-        const startIdx = Math.floor(Math.random() * seg.length);
-        s.chars = Array.from({ length: s.len }, (_, t) => seg[(startIdx + t) % seg.length]);
-        s.idx = (startIdx + s.len) % seg.length;
-      }
+        return {
+            y: -randInt(0, h),
+            speed: rand(state.minSpeed, state.maxSpeed),
+            len,
+            chars,
+            seg,
+            idx: (startIdx + len) % seg.length
+        };
     });
 
-    // Continue animation if running
-    if (running) {
-      animationRef.current = requestAnimationFrame(drawMatrix);
-    }
-  }, [running, side, widthPct, bgFade, colorHead, colorTrail, config.fontSize, config.trailLenMin, config.trailLenMax, config.minSpeed, config.maxSpeed]);
-
-  // Handle canvas resize
-  const resizeCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    
-    // Set canvas size with device pixel ratio scaling
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
-    
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.scale(dpr, dpr);
+        ctx.font = `${state.fontSize}px "Courier New", Consolas, monospace`;
+        ctx.textBaseline = 'top';
+        ctxRef.current = ctx;
     }
-    
-    initStreams();
-  }, [initStreams]);
+  }, [message, side, widthPct]);
 
-  // Initialize and start animation
+  const frame = useCallback((now: number) => {
+    if (!running || !canvasRef.current || !ctxRef.current) return;
+
+    const state = stateRef.current;
+    const ctx = ctxRef.current;
+    const canvas = canvasRef.current;
+
+    const dtRaw = (now - state.lastTime) / 1000;
+    const dt = Math.max(0, Math.min(0.05, isFinite(dtRaw) ? dtRaw : 0.016));
+    state.lastTime = now;
+
+    // Use destination-out to fade existing pixels to transparent
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = `rgba(0, 0, 0, ${bgFade})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Reset to source-over for drawing new text
+    ctx.globalCompositeOperation = 'source-over';
+
+    for (let i = 0; i < state.streams.length; i++) {
+        const s = state.streams[i];
+        const prevY = s.y;
+        s.y += s.speed * dt;
+
+        const x = state.rightStart + i * state.columnWidth;
+        const prevCell = Math.floor(prevY / state.fontSize);
+        const headCell = Math.floor(s.y / state.fontSize);
+        const headY = headCell * state.fontSize;
+
+        if (headCell !== prevCell) {
+            const nextBit = s.seg[s.idx];
+            s.idx = (s.idx + 1) % s.seg.length;
+            s.chars.pop();
+            s.chars.unshift(nextBit);
+        }
+
+        if (headY >= 0 && headY < canvas.height) {
+            ctx.fillStyle = colorHead;
+            ctx.fillText(s.chars[0], x, headY);
+        }
+
+        for (let t = 1; t < s.len; t++) {
+            const yy = headY - t * state.fontSize;
+            if (yy < -state.fontSize) break;
+            if (yy > canvas.height) continue;
+            
+            const op = Math.max(0, 0.7 - (t / s.len) * 0.7);
+            // Assuming colorTrail format is 'rgba(r,g,b,alpha)' we replace the alpha
+            // For white trails 'rgba(255,255,255,0.6)', we want 'rgba(255,255,255, op)'
+            const baseColor = colorTrail.substring(0, colorTrail.lastIndexOf(','));
+            ctx.fillStyle = `${baseColor},${op})`; 
+            ctx.fillText(s.chars[t], x, yy);
+        }
+
+        if (headY - (s.len * state.fontSize) > canvas.height) {
+            s.y = -randInt(0, canvas.height);
+            s.speed = rand(state.minSpeed, state.maxSpeed);
+            s.len = randInt(state.trailLenMin, state.trailLenMax);
+            const seg = state.segments[(i + randInt(0, state.segments.length - 1)) % state.segments.length];
+            s.seg = seg;
+            const startIdx = randInt(0, seg.length - 1);
+            s.chars = Array.from({ length: s.len }, (_, t) => seg[(startIdx + t) % seg.length]);
+            s.idx = (startIdx + s.len) % seg.length;
+        }
+    }
+
+    animationRef.current = requestAnimationFrame(frame);
+  }, [running, bgFade, colorHead, colorTrail]);
+
   useEffect(() => {
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    resize();
+    window.addEventListener('resize', resize);
     
     if (running) {
-      drawMatrix();
+        stateRef.current.lastTime = performance.now();
+        animationRef.current = requestAnimationFrame(frame);
+    } else {
+        // Clear canvas when not running
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
     }
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+        window.removeEventListener('resize', resize);
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [running, drawMatrix, resizeCanvas]);
-
-  // Handle running state changes
-  useEffect(() => {
-    if (running) {
-      resizeCanvas();
-      initStreams();
-      drawMatrix();
-    } else if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
-  }, [running, drawMatrix, initStreams, resizeCanvas]);
+  }, [running, resize, frame]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="matrix-overlay-canvas"
-      style={{ 
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%', 
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 20
-      }}
+      className={`absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 ${running ? 'opacity-100' : 'opacity-0'}`}
     />
   );
 };

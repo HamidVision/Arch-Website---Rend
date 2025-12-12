@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   keywords: 'architecture, design, sustainability, portfolio, research',
   authors: [{ name: 'Architect' }],
   robots: 'index, follow',
+  icons: {
+    icon: '/brand/logo-HE-optimized.svg',
+    shortcut: '/brand/logo-HE-optimized.svg',
+    apple: '/brand/logo-HE-optimized.svg',
+  },
 };
 
 export const viewport: Viewport = {
