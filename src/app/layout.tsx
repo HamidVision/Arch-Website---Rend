@@ -21,6 +21,10 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+import { LoadingProvider } from '@/context/LoadingContext';
+
+// ... (existing imports)
+
 export default function RootLayout({
   children,
 }: {
@@ -29,18 +33,20 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} bg-black text-white antialiased`}>
-        {/* HE Splash Screen - Only shows on initial load */}
-        <HELoadingComponent
-          variant="splash"
-          timeoutMs={2000}
-          logoUrl="/brand/logo-loading.png"
-          subtitle="Architecture & Design Studio"
-          tagline="Creating spaces that inspire"
-        />
+        <LoadingProvider>
+          {/* HE Splash Screen - Shows on initial load AND context transitions */}
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.png"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
 
-        <RouteTransitionWrapper>
-          {children}
-        </RouteTransitionWrapper>
+          <RouteTransitionWrapper>
+            {children}
+          </RouteTransitionWrapper>
+        </LoadingProvider>
       </body>
     </html>
   );

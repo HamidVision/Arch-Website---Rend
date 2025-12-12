@@ -80,7 +80,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
       subtitle: 'Get in touch',
       description: 'Let\'s discuss your project and explore collaboration opportunities.',
       color: 'from-red-600 to-orange-600',
-      image: '/contact/contact-tile.webp'
+      image: '/contact/contact-tile.png'
     }
   ];
 

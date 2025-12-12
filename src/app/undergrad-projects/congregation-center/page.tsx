@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 // Custom typewriter component for architectural presentations
 function ArchitecturalTypewriter({ text, isTyping, speed = 25 }: { text: string; isTyping: boolean; speed?: number }) {
@@ -45,6 +49,9 @@ export default function CongregationCenterPage() {
   const [showInitialHint, setShowInitialHint] = useState(true);
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
+  
+  // Use standardized logo navigation hook
+  const { showLoading, handleLogoClick } = useLogoNavigation();
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
@@ -140,7 +147,7 @@ export default function CongregationCenterPage() {
     1: { title: "Event Center", description: "Blurring the line between interior and exterior living, this terrace exemplifies the project's commitment to high-quality amenity spaces. As part of the double-height event floor, this 'garden in the sky' offers a natural retreat with stunning city views. The warm wood decking and comfortable lounge seating provide an ideal setting for relaxation or social functions, seamlessly extending the adjacent glass-enclosed common area into the open air and creating a perfect backdrop for memorable occasions." },
     2: { title: "Office Level", description: "Demonstrating a core benefit of the tower's staggered design, this rendering shows an office-level terrace providing a vital connection to the outdoors. This private balcony extends the workspace, offering employees a place for fresh air, informal meetings, or a momentary escape with panoramic city views. This feature underscores a modern approach to workplace design, prioritizing employee well-being by integrating nature and open space directly into the corporate environment." },
     3: { title: "Shopping Center", description: "The first two floors of the Congregation Center are envisioned as a vibrant commercial hub, as depicted in this interior view. High ceilings and extensive glazing create a bright and airy atmosphere for shops and restaurants. A central water feature with koi fish serves as a serene and beautiful focal point, enhancing the shopping experience and guiding circulation. This space is designed to be more than a mall; it's a lively and engaging indoor streetscape that draws the public in." },
-    4: { title: "Public Plaza: Public Realm", description: "This view highlights the thoughtful integration of sensory elements within the public realm. A central water fountain acts as a captivating focal point, offering the soothing sounds of moving water and creating a tranquil micro-environment within the bustling city. The composition showcases a rich interplay of textures—smooth water, paved stone, and lush greenery—crafting an elegant and serene entryway that invites pause and reflection before one enters the building or ascends to the plaza." },
+    4: { title: "Public Plaza: Public Realm", description: "This view highlights the thoughtful integration of sensory elements within the public realm. A central water fountain acts as a captivating focal point, offering the soothing sounds of moving water and creating a tranquil micro environment within the bustling city. The composition showcases a rich interplay of textures smooth water, paved stone, and lush greenery crafting an elegant and serene entryway that invites pause and reflection before one enters the building or ascends to the plaza." },
     5: { title: "Urban Integration", description: "Highlighting the project's commitment to sustainability and urban integration, this rendering focuses on the ground-level connection to public transportation. The seamless access to a light rail or tram stop, combined with dedicated and sheltered bicycle parking, promotes eco-friendly commuting options for residents and workers. The well-lit, pedestrian-friendly design ensures a safe and pleasant experience, reinforcing the tower's role as a well-connected and accessible community anchor." },
     6: { title: "Public Plaza: Skywalk View", description: "The expansive public plaza serves as the communal heart of the project. This rendering illustrates a vibrant, open space designed for flexibility and social interaction, from casual gatherings to organized community events. Lush planters and integrated seating create a welcoming atmosphere, softening the urban environment and encouraging people to linger. The direct connection to the building's main levels and the elevated walkway ensures constant energy and flow, establishing the plaza as a true destination for residents, workers, and the wider public alike." }
   };
@@ -150,7 +157,7 @@ export default function CongregationCenterPage() {
       <main className="relative h-screen overflow-hidden bg-black">
         {/* Custom Header matching undergrad-projects page */}
         <button
-          onClick={() => window.history.back()}
+          onClick={handleLogoClick}
           className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >
@@ -475,7 +482,7 @@ export default function CongregationCenterPage() {
                    >
                      {activeButton === 1 ? (
                        /* Content for Button 1 - Display video */
-                       <div className="w-full h-full flex items-center justify-center p-2">
+                       <div className="w-full h-full flex items-center justify-center p-2 relative">
                          <video
                            src="/undergrad-projects/congregation-center/congregation-event-center.mp4"
                            autoPlay
@@ -490,6 +497,22 @@ export default function CongregationCenterPage() {
                              maxHeight: '100%'
                            }}
                          />
+                         {/* Enscape Logo Overlay */}
+                         <div 
+                           className="absolute bottom-4 right-4 z-10 opacity-100"
+                           style={{
+                             width: '120px',
+                             height: 'auto'
+                           }}
+                         >
+                          <Image
+                            src="/undergrad-projects/congregation-center/enscape-logo.png"
+                            alt="Enscape Logo"
+                            width={90}
+                            height={28}
+                            className="object-contain"
+                          />
+                         </div>
                        </div>
                      ) : activeButton === 2 ? (
                        /* Content for Button 2 - Display c2.jpg image */
@@ -621,6 +644,19 @@ export default function CongregationCenterPage() {
           </div>
         </div>
       </main>
+      
+      {/* Global Loading Overlay */}
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.png"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
+        </div>
+      )}
     </div>
   );
 }

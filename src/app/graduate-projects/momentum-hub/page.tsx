@@ -6,6 +6,10 @@ import { motion } from 'framer-motion';
 
 // Import GSAP with proper client-side handling
 import { gsap } from 'gsap';
+import dynamic from 'next/dynamic';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 export default function MomentumHubPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,7 +18,10 @@ export default function MomentumHubPage() {
   const contentBox3Ref = useRef<HTMLDivElement>(null);
   const contentBox4Ref = useRef<HTMLDivElement>(null);
   const contentBox5Ref = useRef<HTMLDivElement>(null);
+
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { showLoading, handleLogoClick } = useLogoNavigation();
 
   // Add CSS keyframes for pulse animation and mosaic reveal
   useEffect(() => {
@@ -306,10 +313,22 @@ export default function MomentumHubPage() {
 
   return (
     <div className="relative h-screen overflow-hidden bg-black">
+      {/* Global Loading Overlay */}
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.png"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
+        </div>
+      )}
       <main className="relative h-screen overflow-hidden bg-black">
         {/* Custom Header matching undergrad-projects page */}
         <button
-          onClick={() => window.history.back()}
+          onClick={handleLogoClick}
           className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >

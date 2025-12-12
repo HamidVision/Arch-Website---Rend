@@ -6,255 +6,184 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 
 const AboutPage: React.FC = () => {
-  const [imageDimensions, setImageDimensions] = useState({
-    image1Width: 0,
-    image2Width: 0,
-    comboWidth: 0,
-    comboLeft: 0,
-    overlapAmount: 0,
-    image3Width: 0,
-    image3Left: 0,
-    image4Width: 0,
-    image4Left: 0
+  const [layout, setLayout] = useState({
+    imageAW: 0,
+    imageALeft: 0,
+    imageBW: 0,
+    imageBLeft: 0,
+    slideOffsetLeft: 0,
+    slideOffsetRight: 0,
+    isReady: false
   });
 
   const [isSliding, setIsSliding] = useState(false);
-  const [slideOffsetLeft, setSlideOffsetLeft] = useState(0);
-  const [slideOffsetRight, setSlideOffsetRight] = useState(0);
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    const calculateDimensions = () => {
+    const calculateLayout = () => {
       const screenHeight = window.innerHeight;
       const screenWidth = window.innerWidth;
       
-      // Image dimensions in pixels
-      const image1WidthPx = 4107;
-      const image1HeightPx = 6520;
-      const image2WidthPx = 2025;
-      const image2HeightPx = 6520;
-      const image3WidthPx = 8000; // about-me-3.png width (designed to be larger than screen)
-      const image3HeightPx = 6520; // Same height as other images
-      const image4WidthPx = 8000; // about-me-4.png width (designed to be larger than screen)
-      const image4HeightPx = 6520; // Same height as other images
-      const targetComboWidthPx = 4417; // Target total combo width with overlap
+      // Original Design Reference Dimensions (to maintain exact positioning)
+      const REF_IMG1_W = 4107;
+      const REF_IMG2_W = 2025;
+      const REF_COMBO_W = 4417; // Target total combo width with overlap
+      const ORIGINAL_H = 6520;
+
+      // New Merged Image Dimensions (Updated based on user extension)
+      const NEW_IMG_A_W = 12000; 
+      const NEW_IMG_B_W = 11000; 
       
-      // Calculate scale factor to fit screen height
-      const scale = screenHeight / image1HeightPx; // Both images have same height
+      // Calculate scale factor to fit screen height (Standard fit)
+      // Since images are now significantly wider (12000px/11000px), 
+      // they will naturally cover the screen width without needing "cover" logic.
+      const scale = screenHeight / ORIGINAL_H;
       
-      // Calculate scaled widths
-      const scaledImage1Width = image1WidthPx * scale;
-      const scaledImage2Width = image2WidthPx * scale;
-      const scaledImage3Width = image3WidthPx * scale;
-      const scaledImage4Width = image4WidthPx * scale;
-      const scaledTargetComboWidth = targetComboWidthPx * scale;
+      // Calculate Scaled Reference Dimensions
+      const scaledRefImg1W = REF_IMG1_W * scale;
+      const scaledRefImg2W = REF_IMG2_W * scale;
+      const scaledRefComboW = REF_COMBO_W * scale;
       
-      // Calculate overlap amount
-      const overlapAmount = (scaledImage1Width + scaledImage2Width) - scaledTargetComboWidth;
+      // Calculate Scaled New Dimensions
+      const scaledImgAW = NEW_IMG_A_W * scale;
+      const scaledImgBW = NEW_IMG_B_W * scale;
+
+      // Calculate Overlap (based on reference to maintain visual center blend)
+      // overlap = (W1 + W2) - ComboW
+      const overlap = (scaledRefImg1W + scaledRefImg2W) - scaledRefComboW;
       
-      // Calculate position to center the combo
-      const comboLeft = (screenWidth - scaledTargetComboWidth) / 2;
+      // Calculate Center Position (based on reference Combo)
+      const comboLeft = (screenWidth - scaledRefComboW) / 2;
       
-      // Calculate Image 3 position (to the left of combo, right edge flush with Image 1's left edge)
-      const image3Left = comboLeft - scaledImage3Width;
+      // === LAYOUT LOGIC ===
       
-      // Calculate Image 3 width (crop if extends beyond left edge of screen)
-      const maxImage3Width = Math.min(scaledImage3Width, comboLeft);
-      const image3DisplayWidth = maxImage3Width;
-      const image3AdjustedLeft = comboLeft - image3DisplayWidth;
-      
-      // Calculate Image 4 position (to the right of combo, left edge flush with Image 2's right edge)
-      const image2RightEdge = comboLeft + scaledImage1Width - overlapAmount + scaledImage2Width;
-      const image4Left = image2RightEdge;
-      
-      // Calculate Image 4 width (crop if extends beyond right edge of screen)
-      const remainingScreenWidthRight = screenWidth - image4Left;
-      const maxImage4Width = Math.min(scaledImage4Width, remainingScreenWidthRight);
-      const image4DisplayWidth = maxImage4Width;
-      
-      setImageDimensions({
-        image1Width: scaledImage1Width,
-        image2Width: scaledImage2Width,
-        comboWidth: scaledTargetComboWidth,
-        comboLeft: comboLeft,
-        overlapAmount: overlapAmount,
-        image3Width: image3DisplayWidth,
-        image3Left: image3AdjustedLeft,
-        image4Width: image4DisplayWidth,
-        image4Left: image4Left
+      // Image A (Left Side):
+      // Anchored to the "Right" side of the reference Image 1 block.
+      // This ensures the "split" point remains exactly in the center design spot.
+      const anchorRightX = comboLeft + scaledRefImg1W;
+      const imageALeft = anchorRightX - scaledImgAW;
+
+      // Image B (Right Side):
+      // Anchored to the "Left" side of the reference Image 2 block.
+      const imageBLeft = comboLeft + scaledRefImg1W - overlap;
+
+      // Animation Offsets
+      const slideOffsetLeft = -comboLeft;
+      const refImage2RightEdge = imageBLeft + scaledRefImg2W;
+      const slideOffsetRight = screenWidth - refImage2RightEdge;
+
+      setLayout({
+        imageAW: scaledImgAW,
+        imageALeft: imageALeft,
+        imageBW: scaledImgBW,
+        imageBLeft: imageBLeft,
+        slideOffsetLeft: slideOffsetLeft,
+        slideOffsetRight: slideOffsetRight,
+        isReady: true
       });
     };
 
-    calculateDimensions();
-    window.addEventListener('resize', calculateDimensions);
-    return () => window.removeEventListener('resize', calculateDimensions);
+    calculateLayout();
+    window.addEventListener('resize', calculateLayout);
+    return () => window.removeEventListener('resize', calculateLayout);
   }, []);
 
-  // Animation effect - slide left and right after 3 seconds
+  // Animation Sequence
   useEffect(() => {
+    if (!layout.isReady) return;
+
     const timer = setTimeout(() => {
-      if (imageDimensions.comboLeft > 0) {
         setIsSliding(true);
-        // Calculate how much to slide left to align with screen edge
-        setSlideOffsetLeft(-imageDimensions.comboLeft);
-        // Calculate how much to slide right to align with screen edge
-        const image2RightEdge = imageDimensions.comboLeft + imageDimensions.image1Width - imageDimensions.overlapAmount + imageDimensions.image2Width;
-        const slideDistanceRight = window.innerWidth - image2RightEdge;
-        setSlideOffsetRight(slideDistanceRight);
         
-        // Show content after sliding animation completes (3s delay + 2s animation = 5s total)
+        // Show content after sliding animation completes
         const contentTimer = setTimeout(() => {
           setShowContent(true);
-        }, 5000); // Show content after sliding finishes
+        }, 2000); // 2s match transition duration
         
         return () => clearTimeout(contentTimer);
-      }
     }, 3000); // Start animation after 3 seconds
 
     return () => clearTimeout(timer);
-  }, [imageDimensions.comboLeft, imageDimensions.image1Width, imageDimensions.overlapAmount, imageDimensions.image2Width]);
+  }, [layout.isReady]);
+
+  if (!layout.isReady) return <div className="h-screen bg-white" />;
+
   return (
-    <div className="h-screen bg-white text-black overflow-hidden">
-      {/* Header */}
+    <div className="h-screen bg-white text-black overflow-hidden relative">
       <Header forceSolid={true} backgroundClass="bg-white/0" textColorClass="text-white" logoVariant="light" />
       
-      {/* Main Content Container */}
-      <main className="relative h-full pt-20">
+      <main className="relative h-full w-full">
         
-        {/* First Overlay Image - about-me-1.png (Left side of combo) */}
+        {/* Image A - Left Group (Slides Left) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ 
             opacity: 1, 
             scale: 1,
-            x: isSliding ? slideOffsetLeft : 0
+            x: isSliding ? layout.slideOffsetLeft : 0
           }}
           transition={{ 
             duration: 1.2, 
             ease: 'easeOut',
-            x: { duration: 2, ease: 'easeInOut', delay: 3 }
+            x: { duration: 2, ease: 'easeInOut' } 
           }}
-          className="absolute z-10"
+          className="absolute origin-right" // Scale from the split-point
           style={{
-            top: '0',
-            left: `${imageDimensions.comboLeft}px`,
+            top: 0,
+            left: layout.imageALeft,
+            width: layout.imageAW,
             height: '100%',
-            width: `${imageDimensions.image1Width}px`
+            zIndex: 10
           }}
         >
           <Image 
-            src="/about/about-me-1.png"
-            alt="About Me Image 1"
-            width={4107}
+            src="/about/about-me-A.webp"
+            alt="About Me Left"
+            width={12000}
             height={6520}
-            className="w-full h-full object-contain object-left"
+            className="w-full h-full object-contain"
             priority
           />
         </motion.div>
 
-        {/* Second Overlay Image - about-me-2.png (Right side of combo) */}
+        {/* Image B - Right Group (Slides Right) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ 
             opacity: 1, 
             scale: 1,
-            x: isSliding ? slideOffsetRight : 0
+            x: isSliding ? layout.slideOffsetRight : 0
           }}
           transition={{ 
             duration: 1.2, 
-            delay: 0.3, 
+            delay: 0.1, 
             ease: 'easeOut',
-            x: { duration: 2, ease: 'easeInOut', delay: 3 }
+            x: { duration: 2, ease: 'easeInOut' }
           }}
-          className="absolute z-20"
+          className="absolute origin-left" // Scale from the split-point
           style={{
-            top: '0',
-            left: `${imageDimensions.comboLeft + imageDimensions.image1Width - imageDimensions.overlapAmount}px`,
+            top: 0,
+            left: layout.imageBLeft,
+            width: layout.imageBW,
             height: '100%',
-            width: `${imageDimensions.image2Width}px`
+            zIndex: 20
           }}
         >
           <Image 
-            src="/about/about-me-2.png"
-            alt="About Me Image 2"
-            width={2025}
+            src="/about/about-me-B.webp"
+            alt="About Me Right"
+            width={11000}
             height={6520}
-            className="w-full h-full object-contain object-right"
+            className="w-full h-full object-contain"
             priority
           />
         </motion.div>
 
-        {/* Third Overlay Image - about-me-3.png (Flush with right side of Image 1) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1,
-            x: isSliding ? slideOffsetLeft : 0
-          }}
-          transition={{ 
-            duration: 1.2, 
-            delay: 0.6, 
-            ease: 'easeOut',
-            x: { duration: 2, ease: 'easeInOut', delay: 3 }
-          }}
-          className="absolute z-15"
-          style={{
-            top: '0',
-            left: `${imageDimensions.image3Left}px`,
-            height: '100%',
-            width: `${imageDimensions.image3Width}px`,
-            overflow: 'hidden'
-          }}
-        >
-          <Image 
-            src="/about/about-me-3.png"
-            alt="About Me Image 3"
-            width={8000}
-            height={6520}
-            className="w-full h-full object-cover object-right"
-            priority
-          />
-        </motion.div>
-
-        {/* Fourth Overlay Image - about-me-4.png (Flush with left side of Image 2) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1,
-            x: isSliding ? slideOffsetRight : 0
-          }}
-          transition={{ 
-            duration: 1.2, 
-            delay: 0.9, 
-            ease: 'easeOut',
-            x: { duration: 2, ease: 'easeInOut', delay: 3 }
-          }}
-          className="absolute z-5"
-          style={{
-            top: '0',
-            left: `${imageDimensions.image4Left}px`,
-            height: '100%',
-            width: `${imageDimensions.image4Width}px`,
-            overflow: 'hidden'
-          }}
-        >
-          <Image 
-            src="/about/about-me-4.png"
-            alt="About Me Image 4"
-            width={8000}
-            height={6520}
-            className="w-full h-full object-cover object-left"
-            priority
-          />
-        </motion.div>
-
-        {/* Content Area - Image and Text Boxes */}
+        {/* Content Area */}
         {showContent && (
           <div className="absolute inset-0 z-30 pointer-events-none">
             
-            {/* Portrait Image - Top */}
+            {/* Portrait Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -280,7 +209,7 @@ const AboutPage: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Text Box 1 - Page 1 - Above Text Box 2 */}
+            {/* Text Box 1 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -309,7 +238,7 @@ const AboutPage: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Text Box 2 - Page 2 - Below Text Box 1 */}
+            {/* Text Box 2 */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}

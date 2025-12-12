@@ -87,3 +87,6 @@ yarn-error.log*
 # Large files (PSD, etc.)
 *.psd
 external-assests/**/*.psd
+
+# Cleanup
+Temporary/

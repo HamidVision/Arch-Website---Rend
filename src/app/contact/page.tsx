@@ -90,8 +90,8 @@ const ContactPage: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
               className="text-lg md:text-xl text-gray-200 mb-8 leading-relaxed"
             >
-              Get in touch and let us know about your project, or find out more about our 
-              architectural design services. We'd love to hear from you.
+              Get in touch and let me know about your project, or find out more about my 
+              architectural design services. I'd love to hear from you.
             </motion.p>
           </motion.div>
         </section>
@@ -122,11 +122,11 @@ const ContactPage: React.FC = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white mb-2">Studio Location</h3>
+                      <h3 className="font-semibold text-white mb-2">Digital Studio</h3>
                       <p className="text-gray-300 leading-relaxed">
-                        Architecture & Design Studio<br />
-                        [Your Studio Address]<br />
-                        [City, State ZIP Code]
+                        Available worldwide via remote<br />
+                        collaboration and virtual meetings.<br />
+                        Based in [City, Country] (Optional)
                       </p>
                     </div>
                   </div>
@@ -140,10 +140,10 @@ const ContactPage: React.FC = () => {
                     <div>
                       <h3 className="font-semibold text-white mb-2">Email</h3>
                       <a 
-                        href="mailto:hello@yourstudio.com" 
+                        href="hr.esmaeillou@gmail.com" 
                         className="text-orange-500 hover:text-orange-400 transition-colors duration-300"
                       >
-                        hello@yourstudio.com
+                        hr.esmaeillou@gmail.com
                       </a>
                     </div>
                   </div>
@@ -157,7 +157,7 @@ const ContactPage: React.FC = () => {
                     <div>
                       <h3 className="font-semibold text-white mb-2">Response Time</h3>
                       <p className="text-gray-300">
-                        We typically respond within 24-48 hours
+                        I typically respond within 24-48 hours
                       </p>
                     </div>
                   </div>

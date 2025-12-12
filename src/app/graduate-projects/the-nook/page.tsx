@@ -3,6 +3,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 const NookPage: React.FC = () => {
   const router = useRouter();
@@ -11,10 +15,14 @@ const NookPage: React.FC = () => {
   const [isRenderImage, setIsRenderImage] = useState(false);
   const [typewriterText, setTypewriterText] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Use standardized logo navigation hook
+  const { showLoading, handleLogoClick } = useLogoNavigation();
 
-  const handleBackClick = () => {
+  // Removed handleBackClick since we use handleLogoClick now
+  /* const handleBackClick = () => {
     router.push('/graduate-projects');
-  };
+  }; */
 
   const handlePortfolioClick = () => {
     router.push('/graduate-projects');
@@ -160,9 +168,9 @@ const NookPage: React.FC = () => {
       <main className="relative h-screen overflow-hidden bg-black">
         {/* Custom Header matching momentum-hub page */}
         <button
-          onClick={handleBackClick}
+          onClick={handleLogoClick}
           className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
-          aria-label="Go back to graduate projects"
+          aria-label="Go to homepage"
         >
           <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
             <Image
@@ -327,6 +335,18 @@ const NookPage: React.FC = () => {
               <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
             </ul>
           </nav>
+        </div>
+      )}
+      {/* Global Loading Overlay */}
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.png"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
         </div>
       )}
     </div>

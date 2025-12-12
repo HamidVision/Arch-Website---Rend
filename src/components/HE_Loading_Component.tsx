@@ -11,6 +11,10 @@ interface HELoadingComponentProps {
   tagline?: string;
 }
 
+import { useLoading } from '@/context/LoadingContext';
+
+// ... (interface)
+
 const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
   variant = 'splash',
   timeoutMs = 2000,
@@ -20,13 +24,29 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { isLoading } = useLoading(); // Get global loading state
 
+  // Handle global loading state changes
+  useEffect(() => {
+    if (isLoading) {
+      setIsVisible(true);
+      setIsAnimating(false);
+    } else if (!isLoading && isVisible) {
+       // When loading stops, fade out
+       setIsAnimating(true);
+       setTimeout(() => {
+         setIsVisible(false);
+       }, 500);
+    }
+  }, [isLoading]);
+
+  // Handle initial load logic
   useEffect(() => {
     // Check if this is a fresh page load (not just a route change)
     const hasLoadedBefore = sessionStorage.getItem('hasLoadedBefore');
     const shouldShow = !hasLoadedBefore || !document.referrer;
     
-    if (shouldShow) {
+    if (shouldShow && !isLoading) { // Only run if not already triggered by context
       setIsVisible(true);
       
       // Set the session flag
@@ -40,11 +60,11 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
       }, timeoutMs);
 
       return () => clearTimeout(timer);
-    } else {
-      // Hide immediately if not showing
+    } else if (!shouldShow && !isLoading) {
+      // Hide immediately if not showing and not loading
       setIsVisible(false);
     }
-  }, [timeoutMs]);
+  }, [timeoutMs]); // Removed isLoading dependency to avoid conflict with above effect? Actually, splitting logic is better.
 
   if (!isVisible) return null;
 

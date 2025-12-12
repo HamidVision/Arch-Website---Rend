@@ -4,6 +4,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+
+const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 // Custom typewriter component for architectural presentations
 function ArchitecturalTypewriter({ text, isTyping, speed = 25 }: { text: string; isTyping: boolean; speed?: number }) {
@@ -48,10 +52,14 @@ const WellnessBazaarPage: React.FC = () => {
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Use standardized logo navigation hook
+  const { showLoading, handleLogoClick } = useLogoNavigation();
 
-  const handleBackClick = () => {
+  // Removed handleBackClick since we use handleLogoClick now
+  /* const handleBackClick = () => {
     router.push('/graduate-projects');
-  };
+  }; */
 
   const handlePortfolioClick = () => {
     router.push('/graduate-projects');
@@ -161,7 +169,7 @@ const WellnessBazaarPage: React.FC = () => {
       <main className="relative h-screen overflow-hidden bg-black">
         {/* Custom Header matching undergrad-projects page */}
         <button
-          onClick={() => window.history.back()}
+          onClick={handleLogoClick}
           className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
           aria-label="Go to homepage"
         >
@@ -629,6 +637,20 @@ const WellnessBazaarPage: React.FC = () => {
               <li><a href="/contact" className="text-2xl font-light tracking-widest uppercase hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
             </ul>
           </nav>
+        </div>
+      )}
+
+
+      {/* Global Loading Overlay */}
+      {showLoading && (
+        <div className="fixed inset-0 z-[9999]">
+          <HELoadingComponent
+            variant="splash"
+            timeoutMs={2000}
+            logoUrl="/brand/logo-loading.png"
+            subtitle="Architecture & Design Studio"
+            tagline="Creating spaces that inspire"
+          />
         </div>
       )}
     </div>

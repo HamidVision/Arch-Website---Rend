@@ -4,12 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
 export default function BorderCrossingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [showLoading, setShowLoading] = useState(false);
+  const { showLoading, handleLogoClick } = useLogoNavigation();
   const router = useRouter();
 
   // Handle mouse wheel scrolling for horizontal movement
@@ -30,19 +31,7 @@ export default function BorderCrossingPage() {
     }
   }, []);
 
-  const handleLogoClick = () => {
-    setShowLoading(true);
-    
-    // Wait for loading animation to start, then navigate
-    setTimeout(() => {
-      router.push('/');
-    }, 100); // Small delay to ensure loading state is set
-    
-    // Reset loading state after navigation
-    setTimeout(() => {
-      setShowLoading(false);
-    }, 2500); // Slightly longer than loading animation
-  };
+
 
   return (
     <div className="relative h-screen overflow-hidden bg-black">
