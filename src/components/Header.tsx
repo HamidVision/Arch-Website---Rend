@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -11,6 +11,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false });
 const HELoadingComponent = dynamic(() => import('./HE_Loading_Component'), { ssr: false });
+
+// Inner component to handle search params with Suspense
+const SearchParamsHandler = ({ onOpenProjects }: { onOpenProjects: () => void }) => {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Check if URL has ?openProjects=true
+    const hasUrlParam = searchParams?.get('openProjects') === 'true';
+
+    if (hasUrlParam) {
+      onOpenProjects();
+      // Clean up URL without refresh
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [searchParams, onOpenProjects]);
+
+  return null;
+};
 
 interface HeaderProps {
   forceSolid?: boolean;
@@ -27,22 +46,6 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
   const { showLoading, handleLogoClick } = useLogoNavigation();
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // Handle URL params triggers
-  useEffect(() => {
-    // Check if URL has ?openProjects=true
-    const hasUrlParam = searchParams?.get('openProjects') === 'true';
-
-    if (hasUrlParam) {
-      setIsProjectsOpen(true);
-      // Clean up URL without refresh
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
-    }
-  }, [searchParams]);
-
-
 
   const navigateToFirstProject = () => {
     router.push('/projects/momentum-hub');
@@ -161,6 +164,10 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
 
   return (
     <>
+      <Suspense fallback={null}>
+        <SearchParamsHandler onOpenProjects={() => setIsProjectsOpen(true)} />
+      </Suspense>
+
       <header className={klass}>
         <nav className="w-full px-6 py-5 flex justify-between items-center">
           <button onClick={handleLogoClick} className="focus:outline-none" aria-label="Go to homepage">
