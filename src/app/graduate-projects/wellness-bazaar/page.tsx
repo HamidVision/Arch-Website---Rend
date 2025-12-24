@@ -55,13 +55,59 @@ const WellnessBazaarPage: React.FC = () => {
   const [showButton1Glow, setShowButton1Glow] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
+  // Mobile and HD detection
+  const [isMobile, setIsMobile] = useState(false);
+  const [isHD, setIsHD] = useState(false);
+  const [showMobileOverlay, setShowMobileOverlay] = useState(false);
+  const [mobileActiveContent, setMobileActiveContent] = useState(1);
+  
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
 
-  // Removed handleBackClick since we use handleLogoClick now
-  /* const handleBackClick = () => {
-    router.push('/graduate-projects');
-  }; */
+  // Detect mobile and HD viewport
+  useEffect(() => {
+    const checkViewport = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsHD(width >= 1280 && width < 1920);
+    };
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
+
+  // Ken Burns animation variants for mobile - full width panning (300% container)
+  const mobileKenBurnsVariants = {
+    animate: {
+      x: ['-66.67%', '0%', '-66.67%'],
+      scale: [1, 1.05, 1],
+      transition: {
+        x: { duration: 35, repeat: Infinity, ease: 'easeInOut' },
+        scale: { duration: 35, repeat: Infinity, ease: 'easeInOut' }
+      }
+    }
+  };
+
+  // Add CSS keyframes for explore button pulse-border animation
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse-border {
+        0%, 100% {
+          box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+          border-color: #f97316;
+        }
+        50% {
+          box-shadow: 0 4px 25px rgba(249, 115, 22, 0.8), 0 0 0 4px rgba(249, 115, 22, 0.3);
+          border-color: #ea580c;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const handlePortfolioClick = () => {
     router.push('/graduate-projects');
@@ -182,7 +228,7 @@ const WellnessBazaarPage: React.FC = () => {
             {/* Background Image Section with Text Overlay */}
             <div className="h-screen flex-shrink-0 relative bg-black" style={{ width: 'max-content' }}>
               <img
-                src="/graduate-projects/wellness-bazaar/wellness-hero.jpg"
+                src={isMobile ? "/graduate-projects/wellness-bazaar/wellness-hero-mobile.jpg" : "/graduate-projects/wellness-bazaar/wellness-hero.jpg"}
                 alt="Wellness Bazaar - Main View"
                 className="h-screen w-auto object-contain"
                 style={{
@@ -191,52 +237,124 @@ const WellnessBazaarPage: React.FC = () => {
                 }}
               />
               
-              {/* Text Box Overlay */}
-              <div 
-                className="absolute z-50"
-                style={{
-                  top: '17.5%',
-                  left: '1%',
-                  transform: 'translateY(-50%)',
-                  backgroundColor: 'transparent',
-                  backdropFilter: 'none',
-                  WebkitBackdropFilter: 'none',
-                  border: 'none',
-                  padding: 'clamp(1rem, 3vw, 2.5rem)',
-                  borderRadius: '0px',
-                  boxShadow: 'none',
-                  maxWidth: 'min(95vw, 34rem)',
-                  width: 'auto',
-                  maxHeight: '80vh',
-                  overflow: 'auto'
-                }}>
-                <h1 style={{
-                  fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
-                  fontWeight: '700',
-                  marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                  color: '#111827',
-                  lineHeight: '1.2',
-                  margin: '0 0 clamp(0.75rem, 2vw, 1.5rem) 0',
-                  textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
-                }}>
-                  THE WELLNESS BAZAAR
-                </h1>
-                <p style={{
-                  color: '#374151',
-                  lineHeight: '1.7',
-                  fontSize: 'clamp(0.85rem, 1.8vw, 1.1rem)',
-                  margin: '0',
-                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                  textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
-                }}>
-                  The Wellness Bazaar represents a comprehensive approach to community health and wellbeing, integrating healthcare services, wellness programs, and sustainable design principles. This innovative complex serves as a hub for holistic health practices, bringing together traditional and modern approaches to wellness in a thoughtfully designed environment. The project features specialized spaces for fitness, education, healthcare, and community engagement, all unified under a single architectural vision that prioritizes human wellbeing and environmental sustainability.
-                </p>
-              </div>
+              {/* Text Box Overlay - Desktop Only */}
+              {!isMobile && (
+                <div 
+                  className="absolute z-50"
+                  style={{
+                    top: '25%',
+                    left: '1%',
+                    transform: 'translateY(-50%)',
+                    backgroundColor: 'transparent',
+                    backdropFilter: 'none',
+                    WebkitBackdropFilter: 'none',
+                    border: 'none',
+                    padding: 'clamp(1rem, 3vw, 2.5rem)',
+                    borderRadius: '0px',
+                    boxShadow: 'none',
+                    maxWidth: isHD ? 'min(90vw, 28rem)' : 'min(95vw, 34rem)',
+                    width: 'auto',
+                    maxHeight: '80vh',
+                    overflow: isHD ? 'hidden' : 'auto'
+                  }}>
+                  <h1 style={{
+                    fontSize: isHD ? 'clamp(1.1rem, 2vw, 1.5rem)' : 'clamp(1.5rem, 4vw, 2.5rem)',
+                    fontWeight: '700',
+                    marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    color: '#111827',
+                    lineHeight: '1.2',
+                    margin: '0 0 clamp(0.75rem, 2vw, 1.5rem) 0',
+                    textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                  }}>
+                    THE WELLNESS BAZAAR
+                  </h1>
+                  <p style={{
+                    color: '#374151',
+                    lineHeight: isHD ? '1.5' : '1.7',
+                    fontSize: isHD ? 'clamp(0.6rem, 1vw, 0.8rem)' : 'clamp(0.85rem, 1.8vw, 1.1rem)',
+                    margin: '0',
+                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                  }}>
+                    The Wellness Bazaar represents a comprehensive approach to community health and wellbeing, integrating healthcare services, wellness programs, and sustainable design principles. This innovative complex serves as a hub for holistic health practices, bringing together traditional and modern approaches to wellness in a thoughtfully designed environment. The project features specialized spaces for fitness, education, healthcare, and community engagement, all unified under a single architectural vision that prioritizes human wellbeing and environmental sustainability.
+                  </p>
+                </div>
+              )}
 
-              {/* Interactive Buttons */}
+              {/* Mobile Text Box - Moved down to avoid header overlap */}
+              {isMobile && (
+                <div 
+                  className="absolute z-50"
+                  style={{
+                    top: '8%',
+                    left: '0.75%',
+                    right: '95%',
+                    backgroundColor: 'transparent',
+                    padding: '1rem'
+                  }}>
+                  <h1 style={{
+                    fontSize: 'clamp(1.5rem, 6vw, 2rem)',
+                    fontWeight: '700',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    color: '#111827',
+                    lineHeight: '1.2',
+                    marginBottom: '0.75rem',
+                    textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                  }}>
+                    THE WELLNESS BAZAAR
+                  </h1>
+                  <p style={{
+                    color: '#374151',
+                    lineHeight: '1.6',
+                    fontSize: 'clamp(0.8rem, 3.5vw, 1rem)',
+                    margin: '0',
+                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
+                  }}>
+                    The Wellness Bazaar represents a comprehensive approach to community health and wellbeing, integrating healthcare services, wellness programs, and sustainable design principles. This innovative complex serves as a hub for holistic health practices, bringing together traditional and modern approaches to wellness in a thoughtfully designed environment. The project features specialized spaces for fitness, education, healthcare, and community engagement, all unified under a single architectural vision that prioritizes human wellbeing and environmental sustainability.
+                  </p>
+                </div>
+              )}
+
+              {/* Mobile Explore Button - positioned on hero image, scrolls with content */}
+              {isMobile && !showMobileOverlay && (
+                <button
+                  onClick={() => setShowMobileOverlay(true)}
+                  className="absolute z-[100] font-bold shadow-lg animate-pulse"
+                  style={{
+                    top: '55%',
+                    left: '71%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '0.85rem',
+                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                    backgroundColor: 'white',
+                    color: '#f97316',
+                    border: '2px solid #f97316',
+                    borderRadius: '12px',
+                    width: '100px',
+                    height: '100px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    padding: '0.75rem',
+                    lineHeight: '1.2',
+                    boxShadow: '0 4px 15px rgba(249, 115, 22, 0.4)',
+                    animation: 'pulse-border 2s ease-in-out infinite'
+                  }}
+                >
+                  Explore Project
+                </button>
+              )}
+
+              {/* Interactive Buttons - Desktop Only */}
+              {!isMobile && (
+                <>
               {/* Button 1 */}
               <button
                 onClick={() => handleButtonClick(1)}
@@ -354,10 +472,13 @@ const WellnessBazaarPage: React.FC = () => {
               >
                 <span className="hover-scale-number">6</span>
               </button>
+              </>
+              )}
 
               {/* Initial Hint Text - Removed: instructions now in orange box */}
 
-              {/* Content Display System - Always Visible */}
+              {/* Content Display System - Always Visible - Desktop Only */}
+              {!isMobile && (
               <>
                 {/* Title Text Box */}
                 <motion.div
@@ -386,7 +507,7 @@ const WellnessBazaarPage: React.FC = () => {
                     style={{
                       fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                       fontWeight: 'bold',
-                      fontSize: '1.9rem',
+                      fontSize: isHD ? '1.2rem' : '1.9rem',
                       margin: '0'
                     }}
                   >
@@ -564,8 +685,8 @@ const WellnessBazaarPage: React.FC = () => {
                     className="text-left text-gray-700 px-3 py-2 w-full h-full"
                     style={{
                       fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                      fontSize: '1.275rem',
-                      lineHeight: '1.4',
+                      fontSize: isHD ? '0.85rem' : '1.275rem',
+                      lineHeight: isHD ? '1.3' : '1.4',
                       margin: '0',
                       display: 'flex',
                       alignItems: 'flex-start',
@@ -587,6 +708,7 @@ const WellnessBazaarPage: React.FC = () => {
                   </div>
                 </div>
               </>
+              )}
 
               {/* Overlay Image - Changes based on active button */}
               <div className="absolute z-30 pointer-events-none" style={{
@@ -614,9 +736,118 @@ const WellnessBazaarPage: React.FC = () => {
           </div>
         </div>
       </main>
-      
 
 
+      {/* Mobile Ken Burns Full-Screen Overlay */}
+      <AnimatePresence>
+        {isMobile && showMobileOverlay && (
+          <motion.div
+            key="mobile-ken-burns-overlay"
+            className="fixed inset-0 z-50 bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Ken Burns Animated Content */}
+            <motion.div
+              className="absolute inset-0 overflow-hidden"
+              style={{ width: '300%', height: '100%' }}
+              variants={mobileKenBurnsVariants}
+              animate="animate"
+            >
+              {mobileActiveContent === 6 ? (
+                <video
+                  src="/graduate-projects/wellness-bazaar/towers.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-full object-cover"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              ) : (
+                <Image
+                  src={`/graduate-projects/wellness-bazaar/wellness-${mobileActiveContent}.jpg`}
+                  alt={contentData[mobileActiveContent as keyof typeof contentData]?.title || 'Wellness Content'}
+                  width={0}
+                  height={0}
+                  sizes="300vw"
+                  className="h-full object-cover"
+                  style={{ width: '100%', height: '100%' }}
+                  priority
+                  unoptimized={true}
+                  quality={100}
+                />
+              )}
+            </motion.div>
+
+            {/* Header - stays visible on top */}
+            <div className="absolute top-0 left-0 right-0 z-60">
+              <Header textColorClass="text-white" logoVariant="light" />
+            </div>
+
+            {/* 6 Buttons on Left Side */}
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-60">
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => setMobileActiveContent(num)}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                    mobileActiveContent === num 
+                      ? 'bg-orange-500 text-white border-2 border-white' 
+                      : 'bg-white/20 text-white border border-white/50 backdrop-blur-sm'
+                  }`}
+                  style={{
+                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                  }}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+
+            {/* Typewriter Text at Bottom */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 z-60 bg-black/70 backdrop-blur-sm px-4 py-4"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              style={{ maxHeight: '30vh', overflow: 'auto' }}
+            >
+              <h3 style={{
+                fontSize: '1rem',
+                fontWeight: '700',
+                color: 'white',
+                marginBottom: '0.5rem',
+                fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+              }}>
+                {contentData[mobileActiveContent as keyof typeof contentData]?.title || 'Wellness Bazaar'}
+              </h3>
+              <p style={{
+                fontSize: '0.8rem',
+                color: 'rgba(255,255,255,0.9)',
+                lineHeight: '1.5',
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+              }}>
+                {contentData[mobileActiveContent as keyof typeof contentData]?.description || ''}
+              </p>
+            </motion.div>
+
+            {/* Back Button */}
+            <button
+              onClick={() => setShowMobileOverlay(false)}
+              className="absolute top-20 right-4 z-60 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg border border-white/30"
+              style={{
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontSize: '0.9rem'
+              }}
+            >
+              ← Back
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Global Loading Overlay */}
       {showLoading && (

@@ -23,7 +23,22 @@ export default function MomentumHubPage() {
 
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isHD, setIsHD] = useState(false);
   const { showLoading, handleLogoClick } = useLogoNavigation();
+
+  // Detect mobile and HD viewport
+  useEffect(() => {
+    const checkViewport = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      // HD is between 1280-1440px width (standard HD/laptop screens)
+      setIsHD(width >= 1280 && width < 1920);
+    };
+    checkViewport();
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
 
   // Add CSS keyframes for pulse animation and mosaic reveal
   useEffect(() => {
@@ -370,13 +385,13 @@ export default function MomentumHubPage() {
                    padding: 'clamp(1rem, 3vw, 2.5rem)',
                    borderRadius: '0px',
                    boxShadow: 'none',
-                   maxWidth: 'min(95vw, 34rem)',
+                   maxWidth: isHD ? 'min(90vw, 21rem)' : 'min(95vw, 34rem)',
                    width: 'auto',
                    maxHeight: '80vh',
-                   overflow: 'auto'
+                   overflow: isHD ? 'hidden' : 'auto'
                  }}>
                  <h1 style={{
-                   fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+                   fontSize: isHD ? 'clamp(1rem, 1.8vw, 1.4rem)' : 'clamp(1.5rem, 4vw, 2.5rem)',
                    fontWeight: '700',
                    marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
                    letterSpacing: '0.05em',
@@ -391,8 +406,8 @@ export default function MomentumHubPage() {
                  </h1>
                  <p style={{
                    color: '#374151',
-                   lineHeight: '1.7',
-                   fontSize: 'clamp(0.9rem, 2vw, 1.2rem)',
+                   lineHeight: isHD ? '1.5' : '1.7',
+                   fontSize: isHD ? 'clamp(0.65rem, 0.85vw, 0.8rem)' : 'clamp(0.9rem, 2vw, 1.2rem)',
                    margin: '0',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
@@ -577,10 +592,10 @@ export default function MomentumHubPage() {
                  }}
                >
                  <h3 style={{
-                   fontSize: '2rem',
+                   fontSize: isMobile ? '1.25rem' : isHD ? '1.1rem' : '2rem',
                    fontWeight: '700',
                    color: '#374151',
-                   marginBottom: '1rem',
+                   marginBottom: isMobile ? '0.5rem' : '1rem',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
                  }}>
@@ -589,7 +604,7 @@ export default function MomentumHubPage() {
                  <p style={{
                    color: '#374151',
                    lineHeight: '1.6',
-                   fontSize: '1.1rem',
+                   fontSize: isMobile ? '0.85rem' : isHD ? '0.7rem' : '1.1rem',
                    margin: '0',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'
@@ -616,10 +631,10 @@ export default function MomentumHubPage() {
                  }}
                >
                  <h3 style={{
-                   fontSize: '2rem',
+                   fontSize: isMobile ? '1.25rem' : isHD ? '1.1rem' : '2rem',
                    fontWeight: '700',
                    color: '#374151',
-                   marginBottom: '1rem',
+                   marginBottom: isMobile ? '0.5rem' : '1rem',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
                  }}>
@@ -628,7 +643,7 @@ export default function MomentumHubPage() {
                  <p style={{
                    color: '#374151',
                    lineHeight: '1.6',
-                   fontSize: '1.1rem',
+                   fontSize: isMobile ? '0.85rem' : isHD ? '0.7rem' : '1.1rem',
                    margin: '0',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'
@@ -655,10 +670,10 @@ export default function MomentumHubPage() {
                  }}
                >
                  <h3 style={{
-                   fontSize: '2rem',
+                   fontSize: isMobile ? '1.25rem' : isHD ? '1.1rem' : '2rem',
                    fontWeight: '700',
                    color: '#374151',
-                   marginBottom: '1rem',
+                   marginBottom: isMobile ? '0.5rem' : '1rem',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
                  }}>
@@ -667,7 +682,7 @@ export default function MomentumHubPage() {
                  <p style={{
                    color: '#374151',
                    lineHeight: '1.6',
-                   fontSize: '1.1rem',
+                   fontSize: isMobile ? '0.85rem' : isHD ? '0.7rem' : '1.1rem',
                    margin: '0',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'
@@ -694,10 +709,10 @@ export default function MomentumHubPage() {
                  }}
                >
                  <h3 style={{
-                   fontSize: '2rem',
+                   fontSize: isMobile ? '1.25rem' : isHD ? '1.1rem' : '2rem',
                    fontWeight: '700',
                    color: '#374151',
-                   marginBottom: '1rem',
+                   marginBottom: isMobile ? '0.5rem' : '1rem',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
                  }}>
@@ -706,7 +721,7 @@ export default function MomentumHubPage() {
                  <p style={{
                    color: '#374151',
                    lineHeight: '1.6',
-                   fontSize: '1.1rem',
+                   fontSize: isMobile ? '0.85rem' : isHD ? '0.7rem' : '1.1rem',
                    margin: '0',
                    fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)'
@@ -733,7 +748,7 @@ export default function MomentumHubPage() {
                  }}
                >
                  <h3 style={{
-                   fontSize: '2rem',
+                   fontSize: isMobile ? '1.25rem' : isHD ? '1.1rem' : '2rem',
                    fontWeight: '700',
                    color: '#374151',
                    marginBottom: '0',
