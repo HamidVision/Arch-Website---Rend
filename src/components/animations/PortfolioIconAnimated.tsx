@@ -43,7 +43,8 @@ const PortfolioIconAnimated: React.FC<PortfolioIconAnimatedProps> = ({
         width: size, 
         height: size,
         // Apply color filter if strokeColor is not white
-        filter: strokeColor === 'black' ? 'invert(1)' : 'none'
+        filter: strokeColor === 'black' ? 'invert(1)' : 'none',
+        background: 'transparent'
       }}
     >
       <Lottie
@@ -51,7 +52,8 @@ const PortfolioIconAnimated: React.FC<PortfolioIconAnimatedProps> = ({
         animationData={portfolioAnimation}
         loop={true}
         autoplay={true}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', background: 'transparent' }}
+        rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }}
       />
     </div>
   );

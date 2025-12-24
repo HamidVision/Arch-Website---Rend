@@ -57,14 +57,14 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
     >
       {/* Left Side - White Background with Text (only on widescreen) */}
       {isWidescreen && (
-        <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 pb-32">
+        <div className="w-2/5 bg-white flex flex-col justify-end p-6 sm:p-8 md:p-10 lg:p-12 pb-32">
           <motion.div
-            className="max-w-md mb-16"
+            className="mb-16"
             initial={{ opacity: 0, y: 50 }}
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl font-title text-gray-800 mb-4 tracking-wider uppercase">
               {project.title}
             </h2>
             <h3 className="text-lg sm:text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
@@ -77,7 +77,7 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
 
           {/* READ MORE Button */}
           <motion.div
-            className="absolute bottom-8 right-8 z-10"
+            className="absolute bottom-16 sm:bottom-8 right-6 sm:right-8 z-10"
             initial={{ opacity: 0, y: 10 }} // Match button entrance
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -117,7 +117,7 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl font-title text-white mb-4 tracking-wider uppercase">
               {project.title}
             </h2>
             <h3 className="text-lg sm:text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
@@ -130,7 +130,7 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
 
           {/* READ MORE Button */}
           <motion.div
-            className="absolute bottom-8 right-8 z-10"
+            className="absolute bottom-16 sm:bottom-8 right-6 sm:right-8 z-10"
             initial={{ opacity: 0, y: 10 }}
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -495,7 +495,7 @@ const UndergradProjectsPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-title text-gray-800 mb-6 tracking-wider uppercase">
+                <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-title text-gray-800 mb-6 tracking-wider uppercase">
                   Undergrad Projects
                 </h1>
                 <p className="text-lg sm:text-xl md:text-2xl font-body text-gray-600 max-w-2xl leading-relaxed">
@@ -526,7 +526,7 @@ const UndergradProjectsPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-title text-white mb-6 tracking-wider uppercase">
+                <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-title text-white mb-6 tracking-wider uppercase">
                   Undergrad Projects
                 </h1>
                 <p className="text-lg sm:text-xl md:text-2xl font-body text-white/90 max-w-2xl leading-relaxed">

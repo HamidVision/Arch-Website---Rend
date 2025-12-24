@@ -49,9 +49,18 @@ export default function CongregationCenterPage() {
   const [firstInteraction, setFirstInteraction] = useState(true);
   const [showButton1Glow, setShowButton1Glow] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
@@ -119,6 +128,29 @@ export default function CongregationCenterPage() {
     6: { title: "Public Plaza: Skywalk View", description: "The expansive public plaza serves as the communal heart of the project. This rendering illustrates a vibrant, open space designed for flexibility and social interaction, from casual gatherings to organized community events. Lush planters and integrated seating create a welcoming atmosphere, softening the urban environment and encouraging people to linger. The direct connection to the building's main levels and the elevated walkway ensures constant energy and flow, establishing the plaza as a true destination for residents, workers, and the wider public alike." }
   };
 
+  // Mobile content media paths for Ken Burns animation
+  const mobileContentMedia: { [key: number]: { type: 'video' | 'image'; src: string; alt: string } } = {
+    1: { type: 'video', src: '/undergrad-projects/congregation-center/congregation-event-center.mp4', alt: 'Event Center Video' },
+    2: { type: 'image', src: '/undergrad-projects/congregation-center/c2.jpg', alt: 'Office Level' },
+    3: { type: 'image', src: '/undergrad-projects/congregation-center/c3.jpg', alt: 'Shopping Center' },
+    4: { type: 'image', src: '/undergrad-projects/congregation-center/c4.jpg', alt: 'Public Plaza: Public Realm' },
+    5: { type: 'image', src: '/undergrad-projects/congregation-center/c5.jpg', alt: 'Urban Integration' },
+    6: { type: 'image', src: '/undergrad-projects/congregation-center/c6.jpg', alt: 'Public Plaza: Skywalk View' }
+  };
+
+  // Ken Burns animation for mobile content
+  const mobileKenBurnsVariants = {
+    animate: {
+      x: ['-20%', '0%', '-20%'],
+      scale: [1.1, 1.15, 1.1],
+      transition: {
+        duration: 20,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      }
+    }
+  };
+
   return (
     <div className="relative h-screen overflow-hidden bg-white">
       <main className="relative h-screen overflow-hidden bg-white">
@@ -135,7 +167,9 @@ export default function CongregationCenterPage() {
             {/* Background Image Section with Text Overlay */}
             <div className="h-screen flex-shrink-0 relative bg-white" style={{ width: 'max-content', minWidth: '100vw' }}>
                <img
-                 src="/undergrad-projects/congregation-center/congregation-hero.jpg"
+                 src={isMobile 
+                   ? '/undergrad-projects/congregation-center/congregation-hero-mobile.jpg'
+                   : '/undergrad-projects/congregation-center/congregation-hero.jpg'}
                  alt="Congregation Center - Main View"
                  className="h-screen w-auto object-contain"
                  loading="eager"
@@ -153,7 +187,7 @@ export default function CongregationCenterPage() {
                {/* Button 1 */}
                <button
                  onClick={() => handleButtonClick(1)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 1 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
@@ -163,109 +197,109 @@ export default function CongregationCenterPage() {
                    showButton1Glow && !activeButton ? 'button-glow border border-orange-500' : ''
                  }`}
                  style={{
-                   top: '19.25%',
-                   left: '36.53%',
+                   top: isMobile ? '19%' : '19.25%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: showButton1Glow && !activeButton ? '1px solid rgba(249, 115, 22, 0.5)' : 'none'
                  }}
                  aria-label="View content 1"
                >
-                 <span className="hover-scale-number">1</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>1</span>
                </button>
 
                {/* Button 2 */}
                <button
                  onClick={() => handleButtonClick(2)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 2 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
                  }`}
                  style={{
-                   top: '22.9%',
-                   left: '36.53%',
+                   top: isMobile ? '22.9%' : '22.9%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: 'none'
                  }}
                  aria-label="View content 2"
                >
-                 <span className="hover-scale-number">2</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>2</span>
                </button>
 
                {/* Button 3 */}
                <button
                  onClick={() => handleButtonClick(3)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 3 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
                  }`}
                  style={{
-                   top: '26.6%',
-                   left: '36.53%',
+                   top: isMobile ? '26.6%' : '26.6%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: 'none'
                  }}
                  aria-label="View content 3"
                >
-                 <span className="hover-scale-number">3</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>3</span>
                </button>
 
                {/* Button 4 */}
                <button
                  onClick={() => handleButtonClick(4)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 4 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
                  }`}
                  style={{
-                   top: '30.33%',
-                   left: '36.53%',
+                   top: isMobile ? '30.33%' : '30.33%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: 'none'
                  }}
                  aria-label="View content 4"
                >
-                 <span className="hover-scale-number">4</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>4</span>
                </button>
 
                {/* Button 5 */}
                <button
                  onClick={() => handleButtonClick(5)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 5 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
                  }`}
                  style={{
-                   top: '34%',
-                   left: '36.53%',
+                   top: isMobile ? '34%' : '34%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: 'none'
                  }}
                  aria-label="View content 5"
                >
-                 <span className="hover-scale-number">5</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>5</span>
                </button>
 
                {/* Button 6 */}
                <button
                  onClick={() => handleButtonClick(6)}
-                 className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
+                 className={`absolute w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 z-40 bg-transparent text-orange-500 button-area-cursor ${
                    activeButton === 6 
                      ? 'animate-ping-slow border border-orange-500' 
                      : ''
                  }`}
                  style={{
-                   top: '37.7%',
-                   left: '36.53%',
+                   top: isMobile ? '37.7%' : '37.7%',
+                   left: isMobile ? '45.40%' : '36.53%',
                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                    border: 'none'
                  }}
                  aria-label="View content 6"
                >
-                 <span className="hover-scale-number">6</span>
+                 <span className="hover-scale-number" style={{ position: 'relative', top: '-1px', left: '-0.5px' }}>6</span>
                </button>
 
                {/* Content Display System */}
@@ -287,31 +321,32 @@ export default function CongregationCenterPage() {
                       backdropFilter: 'none',
                       WebkitBackdropFilter: 'none',
                       border: 'none',
-                      padding: '2.5rem',
+                      padding: 'clamp(1rem, 3vw, 2.5rem)',
                       borderRadius: '0px',
                       boxShadow: 'none',
-                      maxWidth: '34rem',
-                      width: '90vw',
-                      maxHeight: '80vh'
+                      maxWidth: 'min(90vw, 28rem)',
+                      width: 'auto',
+                      maxHeight: '70vh',
+                      overflow: 'hidden'
                     }}>
                     <h1 className="pointer-events-auto" style={{
-                      fontSize: '2rem',
+                      fontSize: 'clamp(1.25rem, 2vw, 2rem)',
                       fontWeight: '700',
-                      marginBottom: '1.5rem',
+                      marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
                       letterSpacing: '0.05em',
                       textTransform: 'uppercase',
                       fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                       color: '#111827',
                       lineHeight: '1.2',
-                      margin: '0 0 1.5rem 0',
+                      margin: '0 0 clamp(0.75rem, 2vw, 1.5rem) 0',
                       textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
                     }}>
                       THE CONGREGATION CENTER
                     </h1>
                     <p className="pointer-events-auto" style={{
                       color: '#374151',
-                      lineHeight: '1.7',
-                      fontSize: '1rem',
+                      lineHeight: '1.5',
+                      fontSize: 'clamp(0.85rem, 1vw, 1rem)',
                       margin: '0',
                       fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                       textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
@@ -326,10 +361,10 @@ export default function CongregationCenterPage() {
                      key="initial-hint"
                      className="absolute z-30 flex items-center justify-center"
                      style={{
-                       top: '18%',
-                       left: '38.15%',
-                       width: '23%',
-                       height: '60%'
+                       top: isMobile ? '18%' : '18%',
+                       left: isMobile ? '47.15%' : '38.15%',
+                       width: isMobile ? '5%' : '23%',
+                       height: isMobile ? '60%' : '60%'
                      }}
                      initial={{ opacity: 0 }}
                      animate={{ opacity: 1 }}
@@ -340,7 +375,7 @@ export default function CongregationCenterPage() {
                        className="text-center text-gray-800 font-bold px-4"
                        style={{
                          fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                         fontSize: '1.5rem',
+                         fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
                          lineHeight: '1.4',
                          margin: '0',
                          letterSpacing: '0.08em',
@@ -361,7 +396,7 @@ export default function CongregationCenterPage() {
                        style={{
                          top: '8%',
                          left: '38.15%',
-                         width: '23%',
+                         width: 'min(55vw, 23%)',
                          height: '8%'
                        }}
                        initial={{ opacity: 0, x: -30 }}
@@ -378,7 +413,7 @@ export default function CongregationCenterPage() {
                          style={{
                            fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                            fontWeight: 'bold',
-                           fontSize: '1.9rem',
+                           fontSize: 'clamp(1rem, 2vw, 1.9rem)',
                            margin: '0'
                          }}
                        >
@@ -393,7 +428,7 @@ export default function CongregationCenterPage() {
                        style={{
                          top: '18%',
                          left: '38.15%',
-                         width: '23%',
+                         width: 'min(55vw, 23%)',
                          height: '60%'
                        }}
                        initial={{ opacity: 0, scale: 0.95, filter: 'blur(4px)' }}
@@ -539,9 +574,10 @@ export default function CongregationCenterPage() {
                        style={{
                          top: '80%',
                          left: '49.65%',
-                         width: '23%',
+                         width: 'min(55vw, 23%)',
                          height: '18%',
-                         transform: 'translateX(-50%)'
+                         transform: 'translateX(-50%)',
+                         overflow: 'hidden'
                        }}
                        initial={{ opacity: 0 }}
                        animate={{ opacity: 1 }}
@@ -552,8 +588,8 @@ export default function CongregationCenterPage() {
                          className="text-left text-gray-700 px-3 py-2 w-full h-full"
                          style={{
                            fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                           fontSize: '1.275rem',
-                           lineHeight: '1.4',
+                           fontSize: 'clamp(0.75rem, 1vw, 1rem)',
+                           lineHeight: '1.35',
                            margin: '0',
                            display: 'flex',
                            alignItems: 'flex-start',
@@ -575,6 +611,113 @@ export default function CongregationCenterPage() {
           </div>
         </div>
       </main>
+      
+      {/* Mobile Full-Screen Content Overlay with Ken Burns Animation */}
+      <AnimatePresence>
+        {isMobile && activeButton && (
+          <motion.div
+            key="mobile-content-overlay"
+            className="fixed inset-0 z-50 bg-black overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Ken Burns Animated Content Container */}
+            <motion.div
+              className="absolute inset-0 w-[200%] h-full"
+              variants={mobileKenBurnsVariants}
+              animate="animate"
+            >
+              {mobileContentMedia[activeButton].type === 'video' ? (
+                <video
+                  src={mobileContentMedia[activeButton].src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={mobileContentMedia[activeButton].src}
+                  alt={mobileContentMedia[activeButton].alt}
+                  fill
+                  className="object-cover"
+                  sizes="200vw"
+                  priority
+                />
+              )}
+            </motion.div>
+
+            {/* Header - stays visible on top */}
+            <div className="absolute top-0 left-0 right-0 z-60">
+              <Header textColorClass="text-white" logoVariant="light" />
+            </div>
+
+            {/* Buttons on left side */}
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-60">
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => handleButtonClick(num)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                    activeButton === num 
+                      ? 'bg-orange-500 text-white border-2 border-white' 
+                      : 'bg-white/20 text-white border border-white/50 backdrop-blur-sm'
+                  }`}
+                  style={{
+                    fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                  }}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+
+            {/* Typewriter Text at Bottom */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 z-60 bg-black/70 backdrop-blur-sm px-4 py-4"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <h3 
+                className="text-white text-lg font-bold mb-2"
+                style={{
+                  fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                }}
+              >
+                {contentData[activeButton as keyof typeof contentData].title}
+              </h3>
+              <div 
+                className="text-white/90 text-sm leading-relaxed"
+                style={{
+                  fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                  maxHeight: '25vh',
+                  overflow: 'auto'
+                }}
+              >
+                <ArchitecturalTypewriter
+                  text={contentData[activeButton as keyof typeof contentData].description}
+                  speed={20}
+                  isTyping={isTyping}
+                />
+              </div>
+            </motion.div>
+
+            {/* Close/Back hint */}
+            <div className="absolute top-20 right-4 z-60">
+              <button
+                onClick={() => setActiveButton(null)}
+                className="text-white/70 text-xs bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
+              >
+                ← Back
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Global Loading Overlay */}
       {showLoading && (

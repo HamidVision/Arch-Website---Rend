@@ -202,23 +202,24 @@ const WellnessBazaarPage: React.FC = () => {
                   backdropFilter: 'none',
                   WebkitBackdropFilter: 'none',
                   border: 'none',
-                  padding: '2.5rem',
+                  padding: 'clamp(1rem, 3vw, 2.5rem)',
                   borderRadius: '0px',
                   boxShadow: 'none',
-                  maxWidth: '34rem',
-                  width: '90vw',
-                  maxHeight: '80vh'
+                  maxWidth: 'min(95vw, 34rem)',
+                  width: 'auto',
+                  maxHeight: '80vh',
+                  overflow: 'auto'
                 }}>
                 <h1 style={{
-                  fontSize: '2.5rem',
+                  fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
                   fontWeight: '700',
-                  marginBottom: '1.5rem',
+                  marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
                   letterSpacing: '0.05em',
                   textTransform: 'uppercase',
                   fontFamily: "'Helvetica Neue Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                   color: '#111827',
                   lineHeight: '1.2',
-                  margin: '0 0 1.5rem 0',
+                  margin: '0 0 clamp(0.75rem, 2vw, 1.5rem) 0',
                   textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'
                 }}>
                   THE WELLNESS BAZAAR
@@ -226,7 +227,7 @@ const WellnessBazaarPage: React.FC = () => {
                 <p style={{
                   color: '#374151',
                   lineHeight: '1.7',
-                  fontSize: '1.1rem',
+                  fontSize: 'clamp(0.85rem, 1.8vw, 1.1rem)',
                   margin: '0',
                   fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
                   textShadow: '1px 1px 2px rgba(255, 255, 255, 0.8)'

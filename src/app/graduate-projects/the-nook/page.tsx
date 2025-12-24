@@ -197,14 +197,15 @@ const NookPage: React.FC = () => {
                />
 
                {/* Content Box 1 - Text Overlay */}
-               <div className="absolute z-40 bg-white/0  p-6 rounded-lg" style={{
+               <div className="absolute z-40 bg-white/0 p-4 md:p-6 rounded-lg" style={{
                  top: '8%',
                  left: '49%',
-                 width: '850px',
-                 height: '200px'
+                 width: 'min(95vw, 850px)',
+                 maxHeight: '200px',
+                 overflow: 'auto'
                }}>
-                 <h2 className="text-2xl font-bold text-gray-800 mb-3">Background</h2>
-                 <p className="text-sm text-gray-600 typewriter-cursor">
+                 <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">Background</h2>
+                 <p className="text-xs md:text-sm text-gray-600 typewriter-cursor">
                  {typewriterText}
                  </p>
                </div>
@@ -216,8 +217,9 @@ const NookPage: React.FC = () => {
                  style={{
                    top: '33.3%',
                    left: '49.1%',
-                   width: '830px',
-                   height: '525px',
+                   width: 'min(95vw, 830px)',
+                   height: 'auto',
+                   maxHeight: '525px',
                    backgroundColor: 'transparent',
                    background: 'none',
                    border: 'none',

@@ -67,82 +67,74 @@ export default function BorderCrossingPage() {
                quality={100}
              />
              
-             {/* Text Box Overlay - positioned in middle for dev modification */}
+             {/* Text Box Overlay - The Journey section */}
              <div 
                className="absolute z-50"
                style={{
-                 top: '20%',
-                 left: '62%',
-                 transform: 'translate(-50%, -50%)',
-                 backgroundColor: 'transparent',
-                 backdropFilter: 'none',
-                 WebkitBackdropFilter: 'none',
-                 border: 'none',
-                 padding: '2rem',
-                 borderRadius: '0px',
-                 boxShadow: 'none',
-                 maxWidth: '600px',
-                 width: '90vw'
-               }}>
+                top: '22%',
+                left: '62%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: 'transparent',
+                backdropFilter: 'none',
+                WebkitBackdropFilter: 'none',
+                border: 'none',
+                padding: 'clamp(1rem, 2vw, 1.5rem)',
+                borderRadius: '0px',
+                boxShadow: 'none',
+                maxWidth: 'min(90vw, 420px)',
+                width: 'auto',
+                maxHeight: '35vh',
+                overflow: 'hidden'
+              }}>
                <h1 style={{
-                 fontSize: '2.0rem',
-                 fontWeight: '700',
-                 marginBottom: '1rem',
-                 letterSpacing: '0.05em',
-                 color: '#1f2937',
-                 fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
-               }}>
+                fontSize: 'clamp(1.25rem, 2vw, 2rem)',
+                fontWeight: '700',
+                marginBottom: 'clamp(0.5rem, 1.5vw, 0.75rem)',
+                letterSpacing: '0.05em',
+                color: '#1f2937',
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+              }}>
                  The Journey
                </h1>
                <p style={{
-                 fontSize: '1.2rem',
-                 lineHeight: '1.6',
-                 color: '#374151',
-                 fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                 fontWeight: '300',
-                 margin: '0'
-               }}>
+                fontSize: 'clamp(0.75rem, 0.9vw, 1.1rem)',
+                lineHeight: '1.5',
+                color: '#374151',
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontWeight: '300',
+                margin: '0'
+              }}>
                  Based on the provided architectural drawings, the project titled "TRANSLUCENT BORDERCROSSING" is a proposal for a new border crossing facility located in Sydney, Canada. The project's main objective is to reconceptualize the international border experience by making it feel more transparent and pleasant. To achieve this, the design proposes the creation of four border crossing stations that are integrated into a ferry route connecting the United States and Canada, shifting the point of entry from a land-based checkpoint to a more integrated, experiential journey.
                </p>
              </div>
              
-             {/* Second Text Box Overlay - positioned for dev modification */}
+             {/* Main Title - TRANSLUCENT BORDERCROSSING - positioned to avoid header */}
              <div 
                className="absolute z-50"
                style={{
-                 top: '11%',
-                 left: '10%',
-                 transform: 'translate(-50%, -50%)',
-                 backgroundColor: 'transparent',
-                 backdropFilter: 'none',
-                 WebkitBackdropFilter: 'none',
-                 border: 'none',
-                 padding: '2rem',
-                 borderRadius: '0px',
-                 boxShadow: 'none',
-                 maxWidth: '600px',
-                 width: '90vw'
-               }}>
+                top: '15%',
+                left: '10%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: 'transparent',
+                backdropFilter: 'none',
+                WebkitBackdropFilter: 'none',
+                border: 'none',
+                padding: 'clamp(0.5rem, 1.5vw, 1rem)',
+                borderRadius: '0px',
+                boxShadow: 'none',
+                maxWidth: 'min(85vw, 400px)',
+                width: 'auto'
+              }}>
                <h1 style={{
-                 fontSize: '2.5rem',
-                 fontWeight: '700',
-                 marginBottom: '1rem',
-                 letterSpacing: '0.05em',
-                 color: '#1f2937',
-                 fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
-               }}>
+                fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                fontWeight: '700',
+                marginBottom: '0',
+                letterSpacing: '0.05em',
+                color: '#1f2937',
+                fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif"
+              }}>
                  TRANSLUCENT BORDERCROSSING
                </h1>
-               <p style={{
-                 fontSize: '2.1rem',
-                 lineHeight: '1.6',
-                 color: '#374151',
-                 fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
-                 fontWeight: '300',
-                 margin: '0'
-               }}>
-                 
-               </p>
              </div>
           </div>
         </div>
