@@ -64,13 +64,13 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-title text-gray-800 mb-4 tracking-wider uppercase">
               {project.title}
             </h2>
-            <h3 className="text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-subtitle text-gray-600 mb-6 tracking-wide">
               {project.subtitle}
             </h3>
-            <p className="text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl font-body text-gray-500 max-w-2xl leading-relaxed">
               {project.description}
             </p>
           </motion.div>
@@ -117,13 +117,13 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
             animate={transitioning ? { opacity: 0, y: -8 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-title text-white mb-4 tracking-wider uppercase">
               {project.title}
             </h2>
-            <h3 className="text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-subtitle text-white/90 mb-6 tracking-wide">
               {project.subtitle}
             </h3>
-            <p className="text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl font-body text-white/80 max-w-2xl leading-relaxed">
               {project.description}
             </p>
           </motion.div>
@@ -488,17 +488,17 @@ const UndergradProjectsPage: React.FC = () => {
         >
           {/* Left Side - White Background with Text (only on widescreen) */}
           {isWidescreen && (
-            <div className="w-2/5 bg-white flex flex-col justify-end p-8 md:p-12 md:pb-48">
+            <div className="w-2/5 bg-white flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16 md:pb-48">
               <motion.div
                 className="max-w-md"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <h1 className="text-5xl md:text-7xl font-title text-gray-800 mb-6 tracking-wider uppercase">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-title text-gray-800 mb-6 tracking-wider uppercase">
                   Undergrad Projects
                 </h1>
-                <p className="text-xl md:text-2xl font-body text-gray-600 max-w-2xl leading-relaxed">
+                <p className="text-lg sm:text-xl md:text-2xl font-body text-gray-600 max-w-2xl leading-relaxed">
                   Early architectural explorations and foundational design projects from undergraduate studies.
                 </p>
               </motion.div>
@@ -519,17 +519,17 @@ const UndergradProjectsPage: React.FC = () => {
 
           {/* Overlay Content (only on 4:3/square) */}
           {!isWidescreen && (
-            <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 pb-32">
+            <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16 pb-32">
               <motion.div
                 className="max-w-4xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
-                <h1 className="text-5xl md:text-7xl font-title text-white mb-6 tracking-wider uppercase">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-title text-white mb-6 tracking-wider uppercase">
                   Undergrad Projects
                 </h1>
-                <p className="text-xl md:text-2xl font-body text-white/90 max-w-2xl leading-relaxed">
+                <p className="text-lg sm:text-xl md:text-2xl font-body text-white/90 max-w-2xl leading-relaxed">
                   Early architectural explorations and foundational design projects from undergraduate studies.
                 </p>
               </motion.div>
@@ -557,7 +557,7 @@ const UndergradProjectsPage: React.FC = () => {
           transition={{ duration: 0.3, delay: 0.2 }}
         >
         <div className="flex items-center space-x-4">
-          <span className="text-sm font-subtitle tracking-wider uppercase">
+          <span className="text-xs sm:text-sm font-subtitle tracking-wider uppercase">
             {currentProject === 0 ? 'Overview' : projects[currentProject - 1].title}
           </span>
           <div className="flex space-x-2">
