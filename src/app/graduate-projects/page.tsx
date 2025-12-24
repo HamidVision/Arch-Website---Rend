@@ -167,7 +167,8 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Community & Innovation',
       description: 'A dynamic community center designed to foster innovation, collaboration, and sustainable urban development through adaptive architecture.',
       color: 'from-orange-600 to-red-600',
-      image: '/graduate-projects/momentum-hub/momentum-tile.jpg'
+      image: '/graduate-projects/momentum-hub/momentum-tile.jpg',
+      needsDarkHeader: false // Dark tile image - needs white icons
     },
     {
       id: 'the-nook',
@@ -175,7 +176,8 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Intimate Spaces',
       description: 'An exploration of intimate architectural spaces that create moments of reflection and connection within urban environments.',
       color: 'from-purple-600 to-indigo-600',
-      image: '/graduate-projects/nook/nook-tile.jpg'
+      image: '/graduate-projects/nook/nook-tile.jpg',
+      needsDarkHeader: false // Dark tile image - needs white icons
     },
     {
       id: 'wellness-bazaar',
@@ -183,9 +185,19 @@ const GraduateProjectsPage: React.FC = () => {
       subtitle: 'Health & Wellbeing',
       description: 'A comprehensive wellness complex integrating healthcare, community services, and sustainable design principles.',
       color: 'from-teal-600 to-green-600',
-      image: '/graduate-projects/wellness-bazaar/wellness-tile.jpg'
+      image: '/graduate-projects/wellness-bazaar/wellness-tile.jpg',
+      needsDarkHeader: false // Dark tile image - needs white icons
     }
   ];
+
+  // Compute if dark icons should be used based on current visible section
+  // In widescreen mode, the left side is always white, so use dark icons when viewing any project tile
+  // In non-widescreen mode, use dark icons only for projects that have light backgrounds
+  const useDarkIcons = isHorizontalScrollMode ? true : (
+    isWidescreen ? (currentProject > 0) : (
+      currentProject > 0 && projects[currentProject - 1]?.needsDarkHeader
+    )
+  );
 
   // Check if we're in horizontal scroll mode based on URL
   useEffect(() => {
@@ -304,7 +316,7 @@ const GraduateProjectsPage: React.FC = () => {
       >
         <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
           <Image
-            src="/icons/ui/logo-header-white.png"
+            src={useDarkIcons ? "/icons/ui/logo-header.svg" : "/icons/ui/logo-header-white.png"}
             alt="Architecture Portfolio Logo"
             fill
             className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
@@ -329,7 +341,7 @@ const GraduateProjectsPage: React.FC = () => {
             <PortfolioIconAnimated
               isHovered={false}
               isActive={false}
-              strokeColor={isHorizontalScrollMode ? 'black' : 'white'}
+              strokeColor={useDarkIcons ? 'black' : 'white'}
               size={24}
             />
           </motion.button>
@@ -337,7 +349,7 @@ const GraduateProjectsPage: React.FC = () => {
           {/* Menu Button */}
           <motion.button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={`relative z-[100] h-6 w-8 focus:outline-none ${isHorizontalScrollMode ? 'text-gray-800' : 'text-white'}`}
+            className={`relative z-[100] h-6 w-8 focus:outline-none ${useDarkIcons ? 'text-gray-800' : 'text-white'}`}
             aria-label="Toggle menu"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
