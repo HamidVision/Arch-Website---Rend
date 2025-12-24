@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Header from '@/components/Header';
 
 const DesignPhilosophyPage: React.FC = () => {
   const router = useRouter();
@@ -109,62 +110,8 @@ const DesignPhilosophyPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Navigation - Always visible */}
-      <motion.button
-        onClick={handleBackClick}
-        className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[70] bg-transparent border-none outline-none cursor-pointer"
-        aria-label="Go to homepage"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
-          <Image
-            src="/icons/ui/logo-header-white.png"
-            alt="Architecture Portfolio Logo"
-            fill
-            className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
-            priority
-          />
-        </div>
-      </motion.button>
-
-      {/* Portfolio and Menu Buttons - Always visible */}
-      <div className="fixed top-0 right-0 z-[70] p-6">
-        <div className="flex items-center space-x-6">
-          {/* Portfolio Button */}
-          <motion.button
-            onClick={() => router.push('/')}
-            className="focus:outline-none"
-            aria-label="Go to portfolio"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="14" y="4" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="4" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-              <rect x="14" y="14" width="6" height="6" rx="1" stroke="white" strokeWidth="1.5"/>
-            </svg>
-          </motion.button>
-          
-          {/* Menu Button */}
-          <motion.button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="relative z-[70] h-6 w-8 focus:outline-none"
-            aria-label="Toggle menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-              <span aria-hidden="true" className="absolute block h-0.5 w-6 transform bg-current transition duration-300 ease-in-out -translate-y-1"></span>
-              <span aria-hidden="true" className="absolute block h-0.5 w-6 transform bg-current transition duration-300 ease-in-out translate-y-1"></span>
-            </div>
-          </motion.button>
-        </div>
-      </div>
+      {/* Header with white icons for dark background */}
+      <Header />
 
       {/* Text Content - Animated */}
       <AnimatePresence>

@@ -162,7 +162,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
 
   const base = 'fixed top-0 left-0 w-full z-[70] transition-colors duration-300';
   const solidBg = backgroundClass || 'bg-black/60 backdrop-blur-sm';
-  const transparentBg = 'bg-black/30';
+  const transparentBg = 'bg-transparent'; // Fully transparent like home page
 
   const klass = forceSolid ? `${base} ${solidBg}` : `${base} ${transparentBg}`;
 

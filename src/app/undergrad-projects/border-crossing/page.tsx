@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
+import Header from '@/components/Header';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -38,56 +39,8 @@ export default function BorderCrossingPage() {
   return (
     <div className="relative h-screen overflow-hidden bg-black">
       <main className="relative h-screen overflow-hidden bg-black">
-        {/* Custom Header matching undergrad-projects page */}
-        <button
-          onClick={handleLogoClick}
-          className="fixed top-8 left-8 hover:opacity-75 transition-opacity z-[100] bg-transparent border-none outline-none cursor-pointer"
-          aria-label="Go to homepage"
-        >
-          <div className="relative h-6 w-6 overflow-visible flex items-center justify-center">
-            <Image
-              src="/icons/ui/logo-header.svg"
-              alt="Architecture Portfolio Logo"
-              fill
-              className="object-contain pointer-events-none transform-gpu origin-center scale-[3] will-change-transform"
-              priority
-            />
-          </div>
-        </button>
-        
-        {/* Portfolio and Menu Buttons */}
-        <div className="fixed top-6 right-6 z-[100]">
-          <div className="flex items-center space-x-6">
-            {/* Portfolio Button */}
-            <button
-              onClick={() => window.location.href = '/'}
-              className="focus:outline-none"
-              aria-label="Go to portfolio"
-              title="Go to portfolio"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
-                <rect x="14" y="4" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
-                <rect x="14" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
-                <rect x="4" y="14" width="6" height="6" rx="1" stroke="black" strokeWidth="1.5"/>
-              </svg>
-            </button>
-
-            {/* Menu Button - Added to match other pages */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative h-6 w-8 focus:outline-none z-[201]"
-              aria-label="Toggle menu"
-            >
-               <div className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 transform">
-                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? 'rotate-45' : '-translate-y-1'}`}></span>
-                <span className={`absolute block h-0.5 w-6 transform bg-white transition duration-300 ease-in-out ${isMenuOpen ? '-rotate-45' : 'translate-y-1'}`}></span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        {/* Header with dark icons for light background */}
+        <Header textColorClass="text-black" logoVariant="dark" />
         
       {/* Main Content Container with horizontal scrolling */}
       <div 
