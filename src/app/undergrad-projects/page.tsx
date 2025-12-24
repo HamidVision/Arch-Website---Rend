@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import ViewProjectButton from '@/components/ViewProjectButton';
 import CurtainButton from '@/components/CurtainButton';
 import NavigationMenu from '@/components/NavigationMenu';
+import PortfolioIconAnimated from '@/components/animations/PortfolioIconAnimated';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -346,12 +347,12 @@ const UndergradProjectsPage: React.FC = () => {
             transition={{ duration: 0.3, delay: 0 }}
             style={{ zIndex: 100 }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="4" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
-              <rect x="14" y="4" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
-              <rect x="4" y="14" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
-              <rect x="14" y="14" width="6" height="6" rx="1" stroke={isHorizontalScrollMode ? "rgb(31, 41, 55)" : "white"} strokeWidth="1.5"/>
-            </svg>
+            <PortfolioIconAnimated
+              isHovered={false}
+              isActive={false}
+              strokeColor={isHorizontalScrollMode ? 'black' : 'white'}
+              size={24}
+            />
           </motion.button>
 
           {/* Menu Button */}
