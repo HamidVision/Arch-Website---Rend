@@ -125,7 +125,9 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
   const scrollToTile = (index: number) => {
     const container = scrollContainerRef.current;
     if (container) {
-      const tileWidth = 864; // 48rem (768px) + 96px gap
+      // Get actual tile width from DOM for accurate scrolling
+      const firstTile = container.querySelector('[data-tile]') as HTMLElement;
+      const tileWidth = firstTile ? firstTile.offsetWidth + 24 : 864; // tile width + gap
       container.scrollTo({
         left: index * tileWidth,
         behavior: 'smooth'
@@ -145,7 +147,10 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           const scrollPosition = container.scrollLeft;
-          const tileWidth = 864; // 48rem (768px) + 96px gap
+          
+          // Get actual tile width from DOM for accurate calculation
+          const firstTile = container.querySelector('[data-tile]') as HTMLElement;
+          const tileWidth = firstTile ? firstTile.offsetWidth + 24 : 864; // tile width + gap
           
           // Calculate the raw index directly from scroll position
           const rawIndex = scrollPosition / tileWidth;
@@ -252,8 +257,13 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                  </div>
               ) : (
                 // Show all tiles when not zoomed
+                // Responsive sizing: 66vw mobile, 50vw tablet, 40vw laptop, max 48rem on ultrawide
                 tiles.map((tile, index) => (
-                  <div key={tile.id} className="flex-shrink-0 w-[48rem] h-[36rem] relative">
+                  <div 
+                    key={tile.id} 
+                    data-tile
+                    className="flex-shrink-0 w-[66vw] sm:w-[50vw] lg:w-[40vw] xl:w-[35vw] 2xl:w-[30vw] max-w-3xl h-[50vh] sm:h-[45vh] lg:h-[55vh] max-h-[36rem] relative"
+                  >
                     {/* Project Icons Floating Above Tile */}
                     {tile.icons && (
                       <div className="absolute -top-20 left-8 flex justify-center space-x-3 z-10">
@@ -301,11 +311,11 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                       </div>
                       
                       {/* Title and subtitle below tile */}
-                      <div className="mt-4 text-black">
-                        <h3 className="text-2xl font-light mb-2 tracking-wider uppercase">
+                      <div className="mt-3 sm:mt-4 text-black">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-light mb-1 sm:mb-2 tracking-wider uppercase">
                           {tile.title}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           {tile.subtitle}
                         </p>
                       </div>
@@ -316,8 +326,8 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
               
               {!isZoomed && (
                 <>
-                  {/* Add right padding to center last tile */}
-                  <div className="flex-shrink-0 w-[calc(50vw-24rem)]"></div>
+                  {/* Add right padding to center last tile - matches tile width at each breakpoint */}
+                  <div className="flex-shrink-0 w-[17vw] sm:w-[25vw] lg:w-[30vw] xl:w-[32vw] 2xl:w-[35vw]"></div>
                 </>
               )}
             </div>

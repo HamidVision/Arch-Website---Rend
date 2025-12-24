@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from './NavigationMenu';
 import { motion, AnimatePresence } from 'framer-motion';
+import PortfolioIconAnimated from './animations/PortfolioIconAnimated';
 
 const ProjectsOverlay = dynamic(() => import('./ProjectsOverlay'), { ssr: false });
 const HELoadingComponent = dynamic(() => import('./HE_Loading_Component'), { ssr: false });
@@ -131,6 +132,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
   };
 
   const PortfolioToggleIcon: React.FC = () => {
+    const [isHovered, setIsHovered] = useState(false);
     const strokeColor = textColorClass?.includes('black') ? 'black' : 'white';
     const buttonLabel = getPortfolioButtonLabel();
     
@@ -140,13 +142,15 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
           onClick={handlePortfolioToggle} 
           className="focus:outline-none" 
           aria-label={buttonLabel}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="4" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
-            <rect x="14" y="4" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
-            <rect x="4" y="14" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
-            <rect x="14" y="14" width="6" height="6" rx="1" stroke={strokeColor} strokeWidth="1.5"/>
-          </svg>
+          <PortfolioIconAnimated
+            isHovered={isHovered}
+            isActive={isProjectsOpen}
+            strokeColor={strokeColor}
+            size={24}
+          />
         </button>
         {/* Tooltip */}
         <div className="absolute top-full mt-2 right-0 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">

@@ -69,18 +69,41 @@ const DesignPhilosophyPage: React.FC = () => {
       <AnimatePresence>
         {showPageBackground && (
           <motion.div 
-            className="fixed inset-0 z-0"
+            className="fixed inset-0 z-0 overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2 }}
           >
-            <Image
-              src={isMobile ? '/design-philosophy/design-philosophy-phone.jpg' : '/design-philosophy/design-philosophy-21.9.jpg'}
-              alt="Design Philosophy Page Background"
-              fill
-              className="object-cover bg-image-21-9"
-              priority
-            />
+            {isMobile ? (
+              // Mobile: Image height = screen height, width auto (proportional)
+              // Animate horizontally to show full image
+              <div className="absolute inset-0 overflow-hidden">
+                <img
+                  src="/design-philosophy/design-philosophy-phone.jpg"
+                  alt="Design Philosophy Page Background"
+                  className="h-full w-auto max-w-none animate-design-pan-img"
+                  style={{ 
+                    height: '100%',
+                    width: 'auto',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                  }}
+                />
+              </div>
+            ) : (
+              // Desktop: Static full-screen cover
+              <div className="absolute inset-0 w-full h-full">
+                <Image
+                  src="/design-philosophy/design-philosophy-21.9.jpg"
+                  alt="Design Philosophy Page Background"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="100vw"
+                />
+              </div>
+            )}
             <div className="absolute inset-0 bg-black/40"></div>
           </motion.div>
         )}
@@ -147,14 +170,14 @@ const DesignPhilosophyPage: React.FC = () => {
       <AnimatePresence>
         {showText && (
           <motion.div 
-            className="relative z-10 min-h-screen flex items-center justify-center px-8"
+            className="relative z-10 min-h-screen flex flex-col items-center justify-start pt-24 pb-12 md:justify-center md:pt-0 md:pb-0 px-4 md:px-8"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
             <div className="max-w-4xl mx-auto text-center">
-                             <motion.h1
-                 className="text-6xl md:text-8xl font-title text-white mb-8 tracking-wider uppercase"
+                              <motion.h1
+                 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-title text-white mb-6 md:mb-8 tracking-wider uppercase"
                  initial={{ opacity: 0, y: 50 }}
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ duration: 0.8, delay: 0.2 }}
@@ -162,18 +185,18 @@ const DesignPhilosophyPage: React.FC = () => {
                  Design Philosophy
                </motion.h1>
               
-                             <motion.div
-                 className="text-white/90 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto font-body"
+                              <motion.div
+                 className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto font-body"
                  initial={{ opacity: 0, y: 50 }}
                  animate={{ opacity: 1, y: 0 }}
                  transition={{ duration: 0.8, delay: 0.4 }}
                >
-                <p className="mb-6">
+                <p className="mb-4 md:mb-6">
                   At the intersection of creativity and functionality, our design philosophy 
                   embraces the fundamental principles that shape exceptional architectural experiences.
                 </p>
                 
-                <p className="mb-6">
+                <p className="mb-4 md:mb-6">
                   We believe in creating spaces that not only serve their intended purpose 
                   but also inspire, connect, and elevate the human experience through thoughtful 
                   design, sustainable practices, and innovative solutions.
@@ -187,36 +210,36 @@ const DesignPhilosophyPage: React.FC = () => {
 
               {/* Key Principles */}
               <motion.div
-                className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+                className="mt-8 md:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                                 <div className="text-center">
-                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                 <div className="text-center">
+                   <h3 className="text-xl md:text-2xl font-subtitle text-white mb-3 md:mb-4 tracking-wider uppercase">
                      Context
                    </h3>
-                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                   <p className="text-white/80 text-xs md:text-sm leading-relaxed font-body">
                      Understanding the unique environmental, cultural, and social context 
                      that shapes each project's identity and purpose.
                    </p>
                  </div>
                  
                  <div className="text-center">
-                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                   <h3 className="text-xl md:text-2xl font-subtitle text-white mb-3 md:mb-4 tracking-wider uppercase">
                      Innovation
                    </h3>
-                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                   <p className="text-white/80 text-xs md:text-sm leading-relaxed font-body">
                      Pushing boundaries through creative problem-solving and embracing 
                      new technologies and methodologies in architectural design.
                    </p>
                  </div>
                  
                  <div className="text-center">
-                   <h3 className="text-2xl font-subtitle text-white mb-4 tracking-wider uppercase">
+                   <h3 className="text-xl md:text-2xl font-subtitle text-white mb-3 md:mb-4 tracking-wider uppercase">
                      Sustainability
                    </h3>
-                   <p className="text-white/80 text-sm leading-relaxed font-body">
+                   <p className="text-white/80 text-xs md:text-sm leading-relaxed font-body">
                      Creating environmentally responsible designs that minimize impact 
                      while maximizing functionality and aesthetic appeal.
                    </p>

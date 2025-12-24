@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* Font Family Definitions */
 @layer base {
   :root {
-    --font-title: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-    --font-subtitle: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-    --font-body: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    --font-title: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    --font-subtitle: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    --font-body: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   }
 }
 
@@ -19,12 +19,12 @@
     font-family: var(--font-title);
     font-weight: 700; /* Bold */
   }
-  
+
   .font-subtitle {
     font-family: var(--font-subtitle);
     font-weight: 400; /* Regular */
   }
-  
+
   .font-body {
     font-family: var(--font-body);
     font-weight: 300; /* Light */
@@ -40,7 +40,8 @@
       transform: scale(1);
       opacity: 1;
     }
-    75%, 100% {
+    75%,
+    100% {
       transform: scale(2);
       opacity: 0;
     }
@@ -48,7 +49,7 @@
 
   /* Hover scale animation for button numbers */
   .hover-scale-number {
-    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hover-scale-number:hover {
@@ -62,8 +63,15 @@
   }
 
   @keyframes gentle-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.85; }
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.85;
+    }
   }
 
   /* Button glow effect for progressive disclosure */
@@ -72,11 +80,12 @@
   }
 
   @keyframes button-glow {
-    0%, 100% { 
+    0%,
+    100% {
       box-shadow: 0 0 0 rgba(249, 115, 22, 0.4);
       border-color: rgba(249, 115, 22, 0.5);
     }
-    50% { 
+    50% {
       box-shadow: 0 0 15px rgba(249, 115, 22, 0.8);
       border-color: rgba(249, 115, 22, 1);
     }
@@ -90,15 +99,67 @@
   .button-area-cursor:hover {
     cursor: pointer;
   }
+
+  /* Hero image horizontal pan animation for mobile */
+  .animate-hero-pan {
+    animation: hero-pan 20s ease-in-out infinite;
+  }
+
+  /* Slower pan animation for design philosophy page - 150% width container */
+  .animate-design-pan {
+    animation: design-pan 30s ease-in-out infinite;
+  }
+
+  @keyframes hero-pan {
+    0% {
+      transform: translateX(0%);
+    }
+    50% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  @keyframes design-pan {
+    0% {
+      transform: translateX(0%);
+    }
+    50% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  /* Animation for design philosophy page - translates image from left to right */
+  .animate-design-pan-img {
+    animation: design-pan-img 30s ease-in-out infinite;
+  }
+
+  @keyframes design-pan-img {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      /* Translate to show right edge: move left by (imageWidth - viewportWidth) */
+      transform: translateX(calc(100vw - 100%));
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   :root {
     --background: 0 0% 100%;
@@ -159,11 +220,11 @@
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   .text-balance {
     text-wrap: balance;
   }
-  
+
   /* Aspect ratio responsive containers */
   .hero-container {
     min-height: 100vh;
@@ -171,28 +232,28 @@
     height: 100vh;
     height: 100dvh;
   }
-  
+
   /* Responsive background handling */
   .hero-background {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
-  
+
   /* Content positioning for different aspect ratios */
   .hero-content {
     padding: clamp(1rem, 5vw, 3rem);
     max-width: min(90vw, 1200px);
   }
-  
+
   /* Hide scrollbar for webkit browsers */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none; /* Chrome, Safari and Opera */
   }
 }
 
@@ -200,28 +261,28 @@
   .animation-delay-200 {
     animation-delay: 200ms;
   }
-  
+
   .animation-delay-400 {
     animation-delay: 400ms;
   }
-  
+
   .animation-delay-600 {
     animation-delay: 600ms;
   }
-  
+
   .animation-delay-800 {
     animation-delay: 800ms;
   }
-  
+
   .animation-delay-1000 {
     animation-delay: 1000ms;
   }
-  
+
   /* Project page specific styles */
   .project-card {
     scroll-snap-align: start;
   }
-  
+
   .projects-container {
     scroll-snap-type: y mandatory;
   }
@@ -233,11 +294,11 @@
   .hero-container {
     height: 100vh;
   }
-  
+
   .hero-content h1 {
     font-size: clamp(3rem, 8vw, 8rem);
   }
-  
+
   .hero-content p {
     font-size: clamp(1rem, 2vw, 1.5rem);
   }
@@ -248,12 +309,12 @@
   .hero-container {
     min-height: 100dvh;
   }
-  
+
   .hero-content h1 {
     font-size: clamp(2rem, 6vw, 4rem);
     line-height: 1.1;
   }
-  
+
   .hero-content p {
     font-size: clamp(0.875rem, 3vw, 1.25rem);
   }
@@ -271,11 +332,11 @@
   .hero-container {
     height: 100vh;
   }
-  
+
   .hero-content h1 {
     font-size: clamp(1.5rem, 4vw, 3rem);
   }
-  
+
   .hero-content p {
     font-size: clamp(0.75rem, 2vw, 1rem);
   }
@@ -283,27 +344,41 @@
 
 /* Custom cursors for project overlay */
 .cursor-left {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M20 24l-8-8 8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, auto;
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M20 24l-8-8 8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      16 16,
+    auto;
 }
 .cursor-right {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M12 24l8-8-8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 16 16, auto;
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg%3E%3Cpath d='M12 24l8-8-8-8' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      16 16,
+    auto;
 }
-.cursor-pointer { cursor: pointer; }
-.cursor-grabbing { cursor: grabbing; }
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-grabbing {
+  cursor: grabbing;
+}
 
 /* === Preloader visuals (scoped via class names) === */
 
 /* No-scroll class for studio animation */
-.no-scroll { 
-  overflow: hidden; 
-  height: 100vh; 
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
 }
 
 /* Background gradient sweep from grey (#fbfbfe) -> white (#ffffff) -> accent orange (#F36C21) */
 @keyframes preloader-sweep {
-  0%   { background: #fbfbfe; }
-  40%  { background: #ffffff; }
-  100% { background: #F36C21; }
+  0% {
+    background: #fbfbfe;
+  }
+  40% {
+    background: #ffffff;
+  }
+  100% {
+    background: #f36c21;
+  }
 }
 .preloader-bg {
   animation: preloader-sweep 1.2s ease-in forwards;
@@ -314,16 +389,27 @@
 .preloader-noise {
   mix-blend-mode: multiply;
   opacity: 0.06;
-  background-image:
-    radial-gradient(circle at 25% 35%, rgba(0,0,0,0.4) 0.5px, transparent 0.6px),
-    radial-gradient(circle at 75% 65%, rgba(0,0,0,0.35) 0.5px, transparent 0.6px);
+  background-image: radial-gradient(
+      circle at 25% 35%,
+      rgba(0, 0, 0, 0.4) 0.5px,
+      transparent 0.6px
+    ),
+    radial-gradient(
+      circle at 75% 65%,
+      rgba(0, 0, 0, 0.35) 0.5px,
+      transparent 0.6px
+    );
   background-size: 3px 3px, 3px 3px;
 }
 
 /* Gentle logo glow (kept very subtle) */
 .preloader-glow {
   filter: blur(12px);
-  background: radial-gradient(circle, rgba(243,108,33,0.12) 0%, transparent 60%);
+  background: radial-gradient(
+    circle,
+    rgba(243, 108, 33, 0.12) 0%,
+    transparent 60%
+  );
 }
 
 /* Reduced-motion users get a non-animated neutral white */
@@ -342,19 +428,30 @@
   --pre-bg: #ffffff;
 }
 
-.pre-bg { background: var(--pre-bg); }
+.pre-bg {
+  background: var(--pre-bg);
+}
 
 .pre-grain {
   mix-blend-mode: multiply;
   opacity: 0.06;
-  background-image:
-    radial-gradient(circle at 25% 35%, rgba(0,0,0,0.4) 0.5px, transparent 0.6px),
-    radial-gradient(circle at 75% 65%, rgba(0,0,0,0.35) 0.5px, transparent 0.6px);
+  background-image: radial-gradient(
+      circle at 25% 35%,
+      rgba(0, 0, 0, 0.4) 0.5px,
+      transparent 0.6px
+    ),
+    radial-gradient(
+      circle at 75% 65%,
+      rgba(0, 0, 0, 0.35) 0.5px,
+      transparent 0.6px
+    );
   background-size: 3px 3px, 3px 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pre-grain { display: none; }
+  .pre-grain {
+    display: none;
+  }
 }
 
 /* Aspect Ratio Responsive Background Images */
@@ -449,16 +546,15 @@
   object-position: 100% center;
 }
 
-
 /* Aspect Ratio Hero Split Styles */
 :root {
   --hero-height: 100%;
   --second-height: 0%;
   --third-height: 0%;
   --available-height: 100%; /* default for safety */
-  --hero-height-px: 100px;   /* default for safety */
-  --second-height-px: 0px;  /* default for safety */
-  --third-height-px: 0px;   /* default for safety */
+  --hero-height-px: 100px; /* default for safety */
+  --second-height-px: 0px; /* default for safety */
+  --third-height-px: 0px; /* default for safety */
 }
 
 body {
@@ -483,7 +579,7 @@ body {
 .panel {
   position: relative;
   flex: 0 0 auto;
-  width: max-content;      /* content defines width */
+  width: max-content; /* content defines width */
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -510,8 +606,8 @@ body {
 .second-render img,
 .third-render img {
   height: 100%;
-  width: auto;                 /* key: width derives from height */
-  object-fit: contain;         /* no cropping */
+  width: auto; /* key: width derives from height */
+  object-fit: contain; /* no cropping */
   object-position: left center;
   display: block;
   background: transparent;
@@ -519,21 +615,39 @@ body {
 
 /* State-based classes are kept, but heights are now set inline by Framer Motion
    using px variables from the component. These lines remain for structure only. */
-.initial .hero { /* height set inline to var(--available-height) */ }
-.initial .second-render { height: 0; opacity: 0; }
-.initial .third-render { height: 0; opacity: 0; }
+.initial .hero {
+  /* height set inline to var(--available-height) */
+}
+.initial .second-render {
+  height: 0;
+  opacity: 0;
+}
+.initial .third-render {
+  height: 0;
+  opacity: 0;
+}
 
-.activated .hero { /* height set inline to var(--hero-height-px) */ }
-.activated .second-render { /* height set inline to var(--second-height-px) */ opacity: 1; }
-.activated .third-render { /* height set inline to var(--third-height-px) */ opacity: 1; }
+.activated .hero {
+  /* height set inline to var(--hero-height-px) */
+}
+.activated .second-render {
+  /* height set inline to var(--second-height-px) */
+  opacity: 1;
+}
+.activated .third-render {
+  /* height set inline to var(--third-height-px) */
+  opacity: 1;
+}
 
 /* Remove any old trigger button footprint */
-.activation-trigger { display: none !important; }
+.activation-trigger {
+  display: none !important;
+}
 
 /* Projects Container with Snap-Assist */
 .projects-container {
   scroll-snap-type: y proximity; /* gentler than mandatory */
-  scroll-behavior: smooth;       /* native smoothness */
+  scroll-behavior: smooth; /* native smoothness */
   height: 100vh;
   overflow-y: auto;
 }
@@ -547,11 +661,16 @@ body {
 
 /* Subtle pulsing glow animation */
 @keyframes pulseGlow {
-  0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0.5)); }
-  50%  { filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
-  100% { filter: drop-shadow(0 0 0px rgba(255,255,255,0.5)); }
+  0% {
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+  }
+  100% {
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0.5));
+  }
 }
-
 
 /* Hide unwanted extra text */
 .extra-text {
@@ -578,7 +697,6 @@ body {
   background: rgba(0, 0, 0, 0.9);
   transform: translateY(-2px);
 }
-
 
 @layer base {
   * {

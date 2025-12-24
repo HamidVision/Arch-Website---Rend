@@ -50,7 +50,6 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@types/three": "^0.180.0",
     "built": "^1.3.2",
     "chokidar": "^3.6.0",
     "class-variance-authority": "^0.7.1",
@@ -60,6 +59,7 @@
     "gray-matter": "^4.0.3",
     "gsap": "^3.13.0",
     "js-yaml": "^4.1.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.542.0",
     "marked": "^12.0.2",
     "next": "^14.0.0",
@@ -70,7 +70,6 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.180.0",
     "vaul": "^1.1.2",
     "xstate": "^5.20.2"
   },
