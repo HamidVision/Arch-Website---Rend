@@ -44,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
   const [isProjectsOpen, setIsProjectsOpen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
   const [shouldOpenOverlay, setShouldOpenOverlay] = useState(false);
+  const [isPortfolioHovered, setIsPortfolioHovered] = useState(false); // Moved hover state to Header level
   const { showLoading, handleLogoClick } = useLogoNavigation();
   const router = useRouter();
   const pathname = usePathname();
@@ -118,6 +119,7 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
     );
   };
   
+  // Get portfolio button label based on current path
   const getPortfolioButtonLabel = () => {
     const pathSegments = pathname.split('/').filter(segment => segment !== '');
     const pathDepth = pathSegments.length;
@@ -131,34 +133,9 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
     }
   };
 
-  const PortfolioToggleIcon: React.FC = () => {
-    const [isHovered, setIsHovered] = useState(false);
-    const strokeColor = textColorClass?.includes('black') ? 'black' : 'white';
-    const buttonLabel = getPortfolioButtonLabel();
-    
-    return (
-      <div className="relative group">
-        <button 
-          onClick={handlePortfolioToggle} 
-          className="focus:outline-none" 
-          aria-label={buttonLabel}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <PortfolioIconAnimated
-            isHovered={isHovered}
-            isActive={isProjectsOpen}
-            strokeColor={strokeColor}
-            size={24}
-          />
-        </button>
-        {/* Tooltip */}
-        <div className="absolute top-full mt-2 right-0 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-          {buttonLabel}
-        </div>
-      </div>
-    );
-  };
+  // Compute stroke color for portfolio icon
+  const portfolioStrokeColor = textColorClass?.includes('black') ? 'black' : 'white';
+  const portfolioButtonLabel = getPortfolioButtonLabel();
 
   const base = 'fixed top-0 left-0 w-full z-[70] transition-colors duration-300';
   const solidBg = backgroundClass || 'bg-black/60 backdrop-blur-sm';
@@ -186,7 +163,27 @@ const Header: React.FC<HeaderProps> = ({ forceSolid = false, backgroundClass, te
             </div>
           </button>
           <div className="flex items-center space-x-6">
-            <PortfolioToggleIcon />
+            {/* Portfolio Icon - Inlined to prevent remounting issues */}
+            <div className="relative group">
+              <button 
+                onClick={handlePortfolioToggle} 
+                className="focus:outline-none" 
+                aria-label={portfolioButtonLabel}
+                onMouseEnter={() => setIsPortfolioHovered(true)}
+                onMouseLeave={() => setIsPortfolioHovered(false)}
+              >
+                <PortfolioIconAnimated
+                  isHovered={isPortfolioHovered}
+                  isActive={isProjectsOpen}
+                  strokeColor={portfolioStrokeColor}
+                  size={24}
+                />
+              </button>
+              {/* Tooltip */}
+              <div className="absolute top-full mt-2 right-0 px-2 py-1 bg-black/80 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                {portfolioButtonLabel}
+              </div>
+            </div>
             {/* Pass isOpen to hamburger to handle animation */}
             <HamburgerIcon onClick={() => setIsMenuOpen(!isMenuOpen)} isOpen={isMenuOpen} />
           </div>

@@ -37,8 +37,8 @@ export default function BorderCrossingPage() {
 
 
   return (
-    <div className="relative h-screen overflow-hidden bg-black">
-      <main className="relative h-screen overflow-hidden bg-black">
+    <div className="relative h-screen overflow-hidden bg-white">
+      <main className="relative h-screen overflow-hidden bg-white">
         {/* Header with dark icons for light background */}
         <Header textColorClass="text-black" logoVariant="dark" />
         

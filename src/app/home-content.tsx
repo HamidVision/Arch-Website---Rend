@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import NavigationMenu from '@/components/NavigationMenu';
 import PortfolioIconAnimated from '@/components/animations/PortfolioIconAnimated';
+import AnimatedHeroBackground from '@/components/animations/AnimatedHeroBackground';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 
 const ProjectsOverlay = dynamic(() => import('@/components/ProjectsOverlay'), { ssr: false });
@@ -76,23 +77,13 @@ export default function HomeContent() {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      {/* Hero Background Image with Auto-Scroll on Mobile */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 w-[200%] sm:w-full h-full animate-hero-pan sm:animate-none">
-          <Image 
-            src="/images/hero.jpg" 
-            alt="Architectural Hero Background"
-            fill
-            className="object-cover"
-            priority
-            sizes="200vw"
-            style={{
-              objectPosition: 'left center'
-            }}
-          />
-        </div>
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
+      {/* Animated Hero Background with Ken Burns + Day-Night Cycle */}
+      <AnimatedHeroBackground 
+        dayImage="/images/hero.jpg"
+        nightImage="/images/hero_night.jpg"
+        cycleDuration={20}  // 20 seconds per phase (day/night)
+        kenBurnsDuration={40}  // 40 seconds for full Ken Burns cycle
+      />
       
       {/* Transparent Header */}
       <header className="fixed top-0 left-0 w-full z-[70]">
