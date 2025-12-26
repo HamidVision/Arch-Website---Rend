@@ -1,11 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Header from '@/components/Header';
+import emailjs from '@emailjs/browser';
+
+// EmailJS Configuration
+// Get these from your EmailJS dashboard: https://dashboard.emailjs.com
+const EMAILJS_SERVICE_ID = 'service_lslwn4r'; // Create at: Email Services
+const EMAILJS_TEMPLATE_ID = 'template_hcw67f9'; // Create at: Email Templates
+const EMAILJS_PUBLIC_KEY = 'eTq5k94OpgIhdeCmK'; // Get from: Account > API Keys
 
 const ContactPage: React.FC = () => {
+  const formRef = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,19 +39,18 @@ const ContactPage: React.FC = () => {
     setSubmitStatus('idle');
     
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || 'Contact Form Submission',
+          message: formData.message,
         },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send message');
-      }
+        EMAILJS_PUBLIC_KEY
+      );
       
       // Reset form on success
       setFormData({
@@ -56,12 +63,13 @@ const ContactPage: React.FC = () => {
       
       setSubmitStatus('success');
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error('EmailJS error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="h-screen bg-black text-white overflow-hidden">

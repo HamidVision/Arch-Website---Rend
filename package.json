@@ -42,6 +42,7 @@
     "prescript": "npm run preflight"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@google/generative-ai": "^0.21.0",
     "@lottiefiles/dotlottie-react": "^0.17.10",
     "@modelcontextprotocol/sdk": "^1.17.4",
