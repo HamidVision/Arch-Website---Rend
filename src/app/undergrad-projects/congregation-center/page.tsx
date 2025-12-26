@@ -457,22 +457,7 @@ export default function CongregationCenterPage() {
                                maxHeight: '100%'
                              }}
                            />
-                           {/* Enscape Logo Overlay */}
-                           <div 
-                             className="absolute bottom-4 right-4 z-10 opacity-100"
-                             style={{
-                               width: '120px',
-                               height: 'auto'
-                             }}
-                           >
-                            <Image
-                              src="/undergrad-projects/congregation-center/enscape-logo.png"
-                              alt="Enscape Logo"
-                              width={90}
-                              height={28}
-                              className="object-contain"
-                            />
-                           </div>
+
                          </div>
                        ) : activeButton === 2 ? (
                          /* Content for Button 2 - Display c2.jpg image */

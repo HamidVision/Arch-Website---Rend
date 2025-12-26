@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoading } from '@/context/LoadingContext';
 import { usePathname } from 'next/navigation';
+import InteractiveSocialPanel from './InteractiveSocialPanel';
 
 interface NavigationMenuProps {
   isOpen: boolean;
@@ -164,6 +165,11 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
 
         {/* Copyright Footer */}
         <div className="absolute bottom-8 left-0 right-0 text-center px-6 pointer-events-none z-[220]">
+          {/* Social Panel */}
+          <div className="pointer-events-auto mb-6 flex justify-center">
+             <InteractiveSocialPanel />
+          </div>
+
           <p className="text-[10px] md:text-xs text-white/30 font-light tracking-wide uppercase">
             &copy; 2025 Hamid Esmaeillou. All Rights Reserved.
           </p>

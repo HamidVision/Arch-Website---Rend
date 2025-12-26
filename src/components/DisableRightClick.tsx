@@ -2,8 +2,14 @@
 
 import { useEffect } from 'react';
 
+// Set to true to temporarily allow right-click for debugging
+const DEBUG_MODE = true;
+
 export default function DisableRightClick() {
   useEffect(() => {
+    // Skip right-click prevention in debug mode
+    if (DEBUG_MODE) return;
+
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
     };
