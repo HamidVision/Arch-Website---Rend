@@ -231,11 +231,11 @@ const NookPage: React.FC = () => {
 
 
   return (
-    <div className="relative h-screen overflow-hidden bg-black">
+    <div className="relative h-screen overflow-hidden bg-white">
       <AnimatePresence>
         {isMounted && (
           <motion.main 
-            className="relative h-screen overflow-hidden bg-black"
+            className="relative h-screen overflow-hidden bg-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

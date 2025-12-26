@@ -2,20 +2,22 @@
 
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
+
+// Use usage-safe layout effect to avoid SSR warnings
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export default function RouteTransitionWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Dynamically adjust body background based on project section to prevent transition flashes
-  useEffect(() => {
-    if (pathname?.startsWith('/graduate-projects')) {
-      document.body.style.backgroundColor = '#000000';
-    } else if (pathname?.startsWith('/undergrad-projects')) {
+  // Dynamically adjust body background based on project section
+  // Default is BLACK (defined in globals.css). We only explicitly set WHITE for undergrad.
+  useIsomorphicLayoutEffect(() => {
+    if (pathname?.startsWith('/undergrad-projects') || pathname?.startsWith('/graduate-projects')) {
       document.body.style.backgroundColor = '#ffffff';
     } else {
-      // Reset to default (defined by CSS/Layout) for other pages
-      document.body.style.backgroundColor = '';
+      // For Home or other pages, enforce Black
+      document.body.style.backgroundColor = '#000000';
     }
   }, [pathname]);
   

@@ -233,11 +233,11 @@ const WellnessBazaarPage: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden bg-black">
+    <div className="relative h-screen overflow-hidden bg-white">
       <AnimatePresence>
         {isMounted && (
           <motion.main 
-            className="relative h-screen overflow-hidden bg-black"
+            className="relative h-screen overflow-hidden bg-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -256,7 +256,7 @@ const WellnessBazaarPage: React.FC = () => {
         >
           <div className="h-full w-max flex">
             {/* Background Image Section with Text Overlay */}
-            <div className="h-screen flex-shrink-0 relative bg-black" style={{ width: 'max-content' }}>
+            <div className="h-screen flex-shrink-0 relative bg-white" style={{ width: 'max-content' }}>
               <img
                 src={isMobile ? "/graduate-projects/wellness-bazaar/wellness-hero-mobile.jpg" : "/graduate-projects/wellness-bazaar/wellness-hero.jpg"}
                 alt="Wellness Bazaar - Main View"

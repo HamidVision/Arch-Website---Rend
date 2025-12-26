@@ -9,6 +9,7 @@ interface HELoadingComponentProps {
   logoUrl?: string;
   subtitle?: string;
   tagline?: string;
+  theme?: 'light' | 'dark';
 }
 
 import { useLoading } from '@/context/LoadingContext';
@@ -20,7 +21,8 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
   timeoutMs = 2000,
   logoUrl = '/brand/logo.svg',
   subtitle = 'Architecture & Design Studio',
-  tagline = 'Creating spaces that inspire'
+  tagline = 'Creating spaces that inspire',
+  theme = 'light'
 }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -72,7 +74,7 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-[100] bg-white flex items-center justify-center"
+          className={`fixed inset-0 z-[100] flex items-center justify-center ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}
           initial={{ opacity: 1 }}
           animate={{ opacity: isAnimating ? 0 : 1 }}
           exit={{ opacity: 0 }}
@@ -99,7 +101,7 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
             <div className="text-center">
               {/* Subtitle */}
               <motion.h2
-                className="text-base sm:text-lg font-light text-gray-600 tracking-wider uppercase"
+                className={`text-base sm:text-lg font-light tracking-wider uppercase ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
@@ -109,7 +111,7 @@ const HELoadingComponent: React.FC<HELoadingComponentProps> = ({
 
               {/* Tagline */}
               <motion.p
-                className="text-xs sm:text-sm text-gray-500 italic mt-1"
+                className={`text-xs sm:text-sm italic mt-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}

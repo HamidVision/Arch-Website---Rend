@@ -158,7 +158,8 @@
     scroll-behavior: smooth;
   }
 
-  body {
+  html, body {
+    background-color: #000000;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   :root {

@@ -107,8 +107,8 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
   const handleReadMore = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Hack: Set body to black immediately to prevent white flash during router unmount
-    document.body.style.backgroundColor = '#000000'; 
+    // Set body to white immediately to prevent black flash
+    document.body.style.backgroundColor = '#ffffff'; 
 
     if (prefetchStatus === 'loaded') {
       // Images ready - immediate transition
