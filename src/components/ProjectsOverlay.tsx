@@ -366,7 +366,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                      transition={{ duration: 0.5 }}
                      onClick={() => handleTileClick(tiles[currentIndex].id)}
                    >
-                     <div className={`relative w-full h-full overflow-hidden bg-gradient-to-br ${tiles[currentIndex].color} group-hover:scale-105 transition-transform duration-300`}>
+                     <div className={`relative w-full h-full overflow-hidden bg-transparent group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(0,0,0,0.12)] transition-all duration-300`}>
                        {/* Background image or gradient */}
                        {tiles[currentIndex].image ? (
                          <img
@@ -425,7 +425,7 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
                       transition={{ duration: 0.6, delay: index * 0.1 }}
                       onClick={() => handleTileClick(tile.id)}
                     >
-                      <div className={`relative w-full h-full rounded-lg overflow-hidden bg-gradient-to-br ${tile.color} group-hover:scale-105 transition-transform duration-300`}>
+                      <div className="relative w-full h-full rounded-lg overflow-hidden bg-transparent group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(0,0,0,0.12)] transition-all duration-300">
                         {/* Background image or gradient */}
                         {tile.image ? (
                           <img

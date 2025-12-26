@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 // Set to true to temporarily allow right-click for debugging
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 export default function DisableRightClick() {
   useEffect(() => {

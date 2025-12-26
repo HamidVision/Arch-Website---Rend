@@ -360,7 +360,7 @@ const AboutPage: React.FC = () => {
                   My professional life has been a continuous exploration of how to bridge the gap between abstract computational models and the tangible realities of architectural design. While my research focused on developing sophisticated computer vision models like YOLOv8 to analyze pedestrian behavior, this wasn&apos;t a departure from architecture, but rather an evolution of my approach to it. I see these algorithms as powerful new lenses through which we can understand and optimize the spaces we inhabit.
                   </p>
                   <p>
-                  My ambition is to redefine architectural practice by integrating intelligent systems that can predict, adapt, and learn from human interaction. This enables the creation of truly smart buildings and urban environments—spaces that are not just aesthetically pleasing but are also optimized for human flow, comfort, and sustainability. I invite you to explore my work and discover how this synergistic approach can bring a new dimension of intelligence and innovation to your projects.
+                  My ambition is to redefine architectural practice by integrating intelligent systems that can predict, adapt, and learn from human interaction. This enables the creation of truly smart buildings and urban environments spaces that are not just aesthetically pleasing but are also optimized for human flow, comfort, and sustainability. I invite you to explore my work and discover how this synergistic approach can bring a new dimension of intelligence and innovation to your projects.
                   </p>
                 </div>
               </motion.div>

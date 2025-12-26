@@ -84,7 +84,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
         animate="visible"
         exit="exit"
         variants={menuContainerVariants}
-        className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex items-center justify-center overflow-y-auto"
+        className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex items-start md:items-center justify-center overflow-y-auto"
       >
         <button 
           onClick={onClose}
@@ -97,8 +97,8 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
           </svg>
         </button>
 
-        <nav className="text-center w-full max-w-lg px-6 py-20">
-          <motion.ul layout className="space-y-6 md:space-y-8 flex flex-col items-center">
+        <nav className="text-center w-full max-w-lg px-6 pt-28 pb-10 md:py-20">
+          <motion.ul layout className="space-y-4 md:space-y-8 flex flex-col items-center">
             {MENU_ITEMS.map((item) => {
               const checkIsActive = (href: string) => pathname === href;
               const isExpanded = expandedItem === item.label;
@@ -114,7 +114,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
                   <div 
                     onClick={(e) => handleNavigation(e, item)}
                     className={`
-                      text-2xl md:text-3xl font-light tracking-widest uppercase cursor-pointer transition-colors duration-300
+                      text-xl md:text-3xl font-light tracking-widest uppercase cursor-pointer transition-colors duration-300
                       ${checkIsActive(item.href) ? 'text-white' : 'text-gray-400 hover:text-white'}
                       ${isExpanded ? 'text-white' : ''}
                     `}
@@ -132,7 +132,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
                         transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
                         className="overflow-hidden"
                       >
-                        <ul className="pt-6 pb-2 space-y-4 flex flex-col items-center">
+                        <ul className="pt-4 pb-2 space-y-2 md:pt-6 md:space-y-4 flex flex-col items-center">
                           {item.children.map((subItem, index) => (
                             <motion.li
                               key={subItem.label}
@@ -145,7 +145,7 @@ const NavigationMenu: React.FC<NavigationMenuProps> = ({ isOpen, onClose }) => {
                                 href={subItem.href}
                                 onClick={(e) => handleNavigation(e, subItem)}
                                 className={`
-                                  block text-lg font-light tracking-wider uppercase transition-colors
+                                  block text-sm md:text-lg font-light tracking-wider uppercase transition-colors
                                   ${checkIsActive(subItem.href) ? 'text-white' : 'text-gray-500 hover:text-gray-300'}
                                 `}
                               >
