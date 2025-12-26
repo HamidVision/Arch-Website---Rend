@@ -1,14 +1,14 @@
-// Reverted to original state to fix layout issues
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import HorizontalScrollIndicator from './HorizontalScrollIndicator';
 
 interface AspectRatioHeroSplitProps {
   heroSrc: string;
   heroAlt: string;
   secondSrc: string;
   secondAlt: string;
-  thirdSrc: string;          // NEW: for site-analysis-l2.jpg
-  thirdAlt: string;          // NEW
+  thirdSrc: string;
+  thirdAlt: string;
   overlaySrc: string;
   overlayPositionInitial: { top: string; left: string; width: string; height?: string };
   overlayPositionActivated: { top: string; left: string; width: string; height?: string };
@@ -28,8 +28,10 @@ export default function AspectRatioHeroSplit({
   className = ''
 }: AspectRatioHeroSplitProps) {
   const [toggleState, setToggleState] = useState(0); // 0: initial, 1: second image, 2: third image
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const hasScrolledRef = useRef(false);
 
   // Dynamic header height calculation
   const getHeaderHeight = (): number => {
@@ -123,11 +125,25 @@ export default function AspectRatioHeroSplit({
       if (e.deltaY !== 0) {
         e.preventDefault();
         el.scrollLeft += e.deltaY;
+        
+        // Hide indicator on first scroll
+        if (!hasScrolledRef.current) {
+          hasScrolledRef.current = true;
+          setShowScrollIndicator(false);
+        }
       }
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
+
+  // Show indicator after initial animation
+  const onAnimationComplete = () => {
+    if (toggleState === 0 && !hasScrolledRef.current) {
+      // Small delay to ensure user sees the page settle
+      setTimeout(() => setShowScrollIndicator(true), 500); 
+    }
+  };
 
   const overlayPos = toggleState === 0 ? overlayPositionInitial : overlayPositionActivated;
 
@@ -138,6 +154,9 @@ export default function AspectRatioHeroSplit({
 
   return (
     <div ref={containerRef} className={`horizontal-section ${className}`}>
+      {/* Scroll Indicator */}
+      <HorizontalScrollIndicator show={showScrollIndicator} />
+
       <div ref={panelRef} className={`panel ${toggleState === 0 ? 'initial' : 'activated'}`}>
         {/* Hero section: initial occupies full available height; activated uses computed px */}
         <motion.section
@@ -148,6 +167,7 @@ export default function AspectRatioHeroSplit({
             opacity: 1
           }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
+          onAnimationComplete={onAnimationComplete} // Trigger indicator
           style={{ position: 'relative' }}
         >
           <img src={heroSrc} alt={heroAlt} draggable={false} loading="eager" />
@@ -213,3 +233,4 @@ export default function AspectRatioHeroSplit({
     </div>
   );
 }
+

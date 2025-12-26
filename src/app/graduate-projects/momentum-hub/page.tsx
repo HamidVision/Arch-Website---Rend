@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Import GSAP with proper client-side handling
 import { gsap } from 'gsap';
@@ -10,6 +10,8 @@ import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
 import Header from '@/components/Header';
+import HorizontalScrollIndicator from '@/components/HorizontalScrollIndicator';
+
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -25,6 +27,9 @@ export default function MomentumHubPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isHD, setIsHD] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const hasScrolledRef = useRef(false);
   const { showLoading, handleLogoClick } = useLogoNavigation();
 
   // Detect mobile and HD viewport
@@ -39,6 +44,17 @@ export default function MomentumHubPage() {
     window.addEventListener('resize', checkViewport);
     return () => window.removeEventListener('resize', checkViewport);
   }, []);
+
+  // Handle hydration to prevent flicker
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const onAnimationComplete = () => {
+    if (!hasScrolledRef.current) {
+      setShowScrollIndicator(true);
+    }
+  };
 
   // Add CSS keyframes for pulse animation and mosaic reveal
   useEffect(() => {
@@ -74,38 +90,38 @@ export default function MomentumHubPage() {
   });
 
   // Handle mouse wheel scrolling for horizontal movement
+  // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
+    if (!isMounted) return;
+    const container = containerRef.current;
+    if (!container) return;
+    
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      if (containerRef.current) {
-        // Convert vertical scroll to horizontal scroll
-        containerRef.current.scrollLeft += e.deltaY;
+      if (!hasScrolledRef.current) {
+        setShowScrollIndicator(false);
+        hasScrolledRef.current = true;
       }
+
+      // Convert vertical scroll to horizontal scroll
+      container.scrollLeft += e.deltaY;
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false });
-      return () => container.removeEventListener('wheel', handleWheel);
-    }
-  }, []);
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [isMounted]);
 
 
-  // Scroll-triggered animation for content box images with automatic glow hints
+
+  // Scroll-triggered animation for content box images using IntersectionObserver
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!isMounted) return;
 
-    const container = containerRef.current;
-    const contentBoxes = [
-      { ref: contentBox1Ref, triggerPoint: 0.2 },
-      { ref: contentBox2Ref, triggerPoint: 0.4 },
-      { ref: contentBox3Ref, triggerPoint: 0.6 },
-      { ref: contentBox4Ref, triggerPoint: 0.8 }
-    ];
+    const contentBoxes = [contentBox1Ref, contentBox2Ref, contentBox3Ref, contentBox4Ref];
 
     // Set initial state for all images using CSS
-    contentBoxes.forEach(({ ref }) => {
+    contentBoxes.forEach((ref) => {
       if (ref.current) {
         const img = ref.current.querySelector('img');
         if (img) {
@@ -132,51 +148,35 @@ export default function MomentumHubPage() {
       }
     }
 
-    // Track which images have been animated and their glow timers
-    const animatedImages = new Set();
-    const glowTimers = new Map();
-
-    // Custom scroll handler for horizontal scrolling
-    const handleScroll = () => {
-      if (!container) return;
-
-      const scrollLeft = container.scrollLeft;
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      const scrollProgress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
-
-      contentBoxes.forEach(({ ref, triggerPoint }) => {
-        if (ref.current && !animatedImages.has(ref.current)) {
-          const img = ref.current.querySelector('img');
-          if (img && scrollProgress >= triggerPoint) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          const img = target.querySelector('img');
+          if (img) {
             img.style.opacity = '1';
             img.style.transform = 'scale(1)';
-            animatedImages.add(ref.current);
             
             // Start glow animation after fade+scale completes (2.5 seconds delay)
             const timer = setTimeout(() => {
-              if (ref.current) {
-                ref.current.style.animation = 'pulse-glow 1.5s ease-in-out infinite';
-              }
+              target.style.animation = 'pulse-glow 1.5s ease-in-out infinite';
             }, 2500);
             
-            glowTimers.set(ref.current, timer);
+             // Store timer for cleanup if needed (though difficult with IO logic here, we assume one-off)
           }
+          observer.unobserve(target);
         }
       });
-    };
+    }, { threshold: 0.4, root: containerRef.current });
 
-    // Add scroll listener
-    container.addEventListener('scroll', handleScroll);
-
-    // Check initial state
-    handleScroll();
+    contentBoxes.forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
 
     return () => {
-      container.removeEventListener('scroll', handleScroll);
-      // Clear all glow timers on cleanup
-      glowTimers.forEach(timer => clearTimeout(timer));
+      observer.disconnect();
     };
-  }, []);
+  }, [isMounted]);
 
   // Typewriter animation function
   const startTypewriter = (boxType: keyof typeof typewriterStates, fullText: string) => {
@@ -342,9 +342,19 @@ export default function MomentumHubPage() {
           />
         </div>
       )}
-      <main className="relative h-screen overflow-hidden bg-black">
-        {/* Header with dark icons for light background */}
-        <Header textColorClass="text-black" logoVariant="dark" />
+      <AnimatePresence>
+        {isMounted && (
+          <motion.main 
+            className="relative h-screen overflow-hidden bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            onAnimationComplete={onAnimationComplete}
+          >
+            <HorizontalScrollIndicator show={showScrollIndicator} colorScheme="dark" />
+            
+            {/* Header with dark icons for light background */}
+            <Header textColorClass="text-black" logoVariant="dark" />
         
         {/* Main Content Container with horizontal scrolling */}
         <div 
@@ -821,8 +831,9 @@ export default function MomentumHubPage() {
             </div>
           </div>
         </div>
-      </main>
-      
+      </motion.main>
+        )}
+      </AnimatePresence>
 
       </div>
   );

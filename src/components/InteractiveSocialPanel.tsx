@@ -5,29 +5,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // --- CONFIGURATION ---
 const SOCIAL_LINKS = {
-  orchid: {
-    url: 'https://orcid.org/0000-0000-0000-0000',
-    label: 'ORCID',
-    color: '#A6CE39', // ORCID green
-    hoverText: 'View ORCID Profile',
-  },
-  linkedin: {
-    url: 'https://www.linkedin.com/in/your_linkedin_profile',
-    label: 'LinkedIn',
-    color: '#0A66C2', // LinkedIn blue
-    hoverText: 'Connect on LinkedIn',
-  },
   github: {
-    url: 'https://github.com/your_github_username',
+    url: 'https://github.com/HamidVision',
     label: 'GitHub',
     color: '#6e5494', // GitHub purple
     hoverText: 'View GitHub Profile',
   },
+  linkedin: {
+    url: 'https://www.linkedin.com/in/hamid-e/',
+    label: 'LinkedIn',
+    color: '#0A66C2', // LinkedIn blue
+    hoverText: 'Connect on LinkedIn',
+  },
+  orchid: {
+    url: 'https://orcid.org/0000-0003-2715-6550',
+    label: 'ORCID',
+    color: '#A6CE39', // ORCID green
+    hoverText: 'View ORCID Profile',
+  },
   instagram: {
-    url: 'https://www.instagram.com/your_instagram_handle',
+    url: '#',
     label: 'Instagram',
     color: '#E4405F', // Instagram pink
-    hoverText: 'Follow on Instagram',
+    hoverText: 'Coming Soon',
+    disabled: true,
   },
 };
 
@@ -59,9 +60,9 @@ const InstagramIcon = () => (
 );
 
 const icons: Record<SocialKey, React.FC> = {
-  orchid: OrcidIcon,
-  linkedin: LinkedInIcon,
   github: GitHubIcon,
+  linkedin: LinkedInIcon,
+  orchid: OrcidIcon,
   instagram: InstagramIcon,
 };
 
@@ -121,14 +122,15 @@ const InteractiveSocialPanel: React.FC = () => {
           const social = SOCIAL_LINKS[key];
           const Icon = icons[key];
           const isHovered = hoveredIcon === key;
+          const isDisabled = 'disabled' in social && social.disabled;
 
           return (
             <motion.a
               key={key}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative p-4 rounded-xl transition-all duration-300 cursor-pointer"
+              href={isDisabled ? undefined : social.url}
+              target={isDisabled ? undefined : "_blank"}
+              rel={isDisabled ? undefined : "noopener noreferrer"}
+              className={`relative p-4 rounded-xl transition-all duration-300 ${isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
               style={{
                 backgroundColor: isHovered 
                   ? `${social.color}20` 
@@ -141,9 +143,10 @@ const InteractiveSocialPanel: React.FC = () => {
               }}
               onMouseEnter={() => setHoveredIcon(key)}
               onMouseLeave={() => setHoveredIcon(null)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={`Open ${social.label}`}
+              whileHover={{ scale: isDisabled ? 1 : 1.1 }}
+              whileTap={{ scale: isDisabled ? 1 : 0.95 }}
+              aria-label={isDisabled ? `${social.label} - Coming Soon` : `Open ${social.label}`}
+              onClick={isDisabled ? (e) => e.preventDefault() : undefined}
             >
               <motion.div
                 animate={{
@@ -158,7 +161,7 @@ const InteractiveSocialPanel: React.FC = () => {
               <motion.div
                 className="absolute inset-0 rounded-xl pointer-events-none"
                 animate={{
-                  boxShadow: isHovered 
+                  boxShadow: isHovered && !isDisabled
                     ? `0 0 30px ${social.color}40, 0 0 60px ${social.color}20`
                     : '0 0 0px transparent',
                 }}

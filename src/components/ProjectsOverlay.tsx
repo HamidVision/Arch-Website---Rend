@@ -12,9 +12,29 @@ interface ProjectsOverlayProps {
 const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Show scroll hint every time overlay opens, hide on first scroll
   const [showScrollHint, setShowScrollHint] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  // Add CSS keyframes for scroll indicator pulse animation
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes scroll-indicator-pulse {
+        0%, 100% {
+          box-shadow: 0 0 8px rgba(85, 85, 85, 0.4), 0 0 16px rgba(85, 85, 85, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 16px rgba(85, 85, 85, 0.6), 0 0 32px rgba(85, 85, 85, 0.4);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const tiles = [
     {
@@ -90,6 +110,11 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
     const delta = e.deltaY;
     const container = scrollContainerRef.current;
     
+    // Hide scroll hint on first wheel use
+    if (showScrollHint) {
+      setShowScrollHint(false);
+    }
+    
     if (container) {
       // Reduce scroll sensitivity for smoother transitions
       const scrollSensitivity = 0.5; // Reduce from 1.0 to 0.5
@@ -149,11 +174,6 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
         scrollTimeout = setTimeout(() => {
           const scrollPosition = container.scrollLeft;
           
-          // Hide scroll hint after user scrolls
-          if (scrollPosition > 50) {
-            setShowScrollHint(false);
-          }
-          
           // Get actual tile width from DOM for accurate calculation
           const firstTile = container.querySelector('[data-tile]') as HTMLElement;
           const tileWidth = firstTile ? firstTile.offsetWidth + 24 : 864; // tile width + gap
@@ -189,6 +209,115 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
         >
+          {/* Custom Scroll Indicator - Bottom center, below tiles */}
+          {!isZoomed && showScrollHint && (
+            <motion.div 
+              style={{ 
+                position: 'fixed',
+                bottom: '100px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '12px',
+                zIndex: 70
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              {/* SCROLL text - horizontal */}
+              <span 
+                style={{ 
+                  fontSize: '10px',
+                  letterSpacing: '0.3em',
+                  color: '#555',
+                  fontWeight: 400
+                }}
+              >
+                SCROLL
+              </span>
+              
+              {/* Animated elements row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Animated horizontal line that draws and erases */}
+                <svg width="50" height="2" style={{ overflow: 'visible' }}>
+                  <motion.line
+                    x1="0"
+                    y1="1"
+                    x2="50"
+                    y2="1"
+                    stroke="#555"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: [0, 1, 1, 0] }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      times: [0, 0.4, 0.6, 1],
+                      ease: "easeInOut"
+                    }}
+                  />
+                </svg>
+                
+                {/* Horizontal oval with animated dot */}
+                <motion.div
+                  style={{
+                    width: '32px',
+                    height: '18px',
+                    border: '1.5px solid #555',
+                    borderRadius: '9px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    animation: 'scroll-indicator-pulse 2s ease-in-out infinite'
+                  }}
+                >
+                  <motion.div 
+                    style={{
+                      width: '5px',
+                      height: '5px',
+                      backgroundColor: '#555',
+                      borderRadius: '50%'
+                    }}
+                    animate={{ x: [-7, 7, -7] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </motion.div>
+                
+                {/* Second animated line (mirror) */}
+                <svg width="50" height="2" style={{ overflow: 'visible' }}>
+                  <motion.line
+                    x1="0"
+                    y1="1"
+                    x2="50"
+                    y2="1"
+                    stroke="#555"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: [0, 1, 1, 0] }}
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                      times: [0, 0.4, 0.6, 1],
+                      ease: "easeInOut",
+                      delay: 0.3
+                    }}
+                  />
+                </svg>
+              </div>
+            </motion.div>
+          )}
+          
           {/* Horizontal Scrolling Container */}
           <div className={`${isZoomed ? 'w-full h-full flex items-center justify-center' : 'flex-1 overflow-hidden flex items-center'}`}>
             <div
@@ -339,25 +468,6 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
             </div>
           </div>
 
-          {/* Scroll Hint Indicator - Only show when not scrolled */}
-          {!isZoomed && showScrollHint && (
-            <motion.div 
-              className="fixed right-8 top-1/2 -translate-y-1/2 z-[70]"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: [0, 8, 0] }}
-              transition={{ 
-                opacity: { delay: 1, duration: 0.5 },
-                x: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
-              }}
-            >
-              <div className="flex items-center gap-2 text-black/50 text-xs tracking-wider">
-                <span>SCROLL</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </motion.div>
-          )}
 
           {/* Progress Bar - Only show when not zoomed */}
           {!isZoomed && (

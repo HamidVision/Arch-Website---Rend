@@ -221,28 +221,6 @@ export default function HomeContent() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Scroll indicator (shown after center icon is dismissed) */}
-        {phase === 'slid' && !showCenterIcon && (
-          <motion.div 
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
-            transition={{ duration: 1, delay: 0.5 }}
-          >
-            <motion.div
-              className="w-6 h-10 border border-white/30 rounded-full flex justify-center"
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <motion.div 
-                className="w-1 h-2 bg-white/50 rounded-full mt-2"
-                animate={{ opacity: [0.5, 1, 0.5], y: [0, 8, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
       </main>
 
       {/* Projects Overlay */}

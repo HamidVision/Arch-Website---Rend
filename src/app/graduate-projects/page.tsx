@@ -1,35 +1,128 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 // import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import { useImagePreloader } from '@/hooks/useImagePreloader';
 import dynamic from 'next/dynamic';
 import ViewProjectButton from '@/components/ViewProjectButton';
 import CurtainButton from '@/components/CurtainButton';
 import NavigationMenu from '@/components/NavigationMenu';
 import PortfolioIconAnimated from '@/components/animations/PortfolioIconAnimated';
+import PageLoader from '@/components/PageLoader';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
-// Generic Project Tile with transition animation
+// Generic Project Tile with transition animation and tile-aware prefetching
 const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
   const [transitioning, setTransitioning] = useState(false);
   const router = useRouter();
+  const tileRef = useRef<HTMLDivElement>(null);
+  const viewTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Prefetch state
+  const [prefetchStatus, setPrefetchStatus] = useState<'idle' | 'prefetching' | 'loaded'>('idle');
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const pendingNavigationRef = useRef(false);
 
-  // Prefetch destination for smoother transition
+  // Prefetch destination route for smoother transition
   useEffect(() => {
     router.prefetch(`/graduate-projects/${project.id}`);
   }, [router, project.id]);
 
+  // Function to prefetch project images
+  const prefetchImages = useCallback(() => {
+    if (prefetchStatus !== 'idle' || !project.prefetchImages?.length) {
+      return;
+    }
+
+    setPrefetchStatus('prefetching');
+    setLoadProgress(0);
+
+    const images = project.prefetchImages;
+    let loadedCount = 0;
+
+    images.forEach((src: string) => {
+      const img = new window.Image();
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        const progress = Math.round((loadedCount / images.length) * 100);
+        setLoadProgress(progress);
+
+        if (loadedCount >= images.length) {
+          setPrefetchStatus('loaded');
+          // If user clicked while loading, trigger transition now
+          if (pendingNavigationRef.current) {
+            pendingNavigationRef.current = false;
+            setIsButtonLoading(false);
+            setTransitioning(true);
+          }
+        }
+      };
+      img.src = src;
+    });
+  }, [prefetchStatus, project.prefetchImages]);
+
+  // IntersectionObserver to detect when tile is in view
+  useEffect(() => {
+    const tile = tileRef.current;
+    if (!tile) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Start 1.5s timer when tile becomes visible
+            if (!viewTimerRef.current && prefetchStatus === 'idle') {
+              viewTimerRef.current = setTimeout(() => {
+                prefetchImages();
+              }, 1500);
+            }
+          } else {
+            // Clear timer if tile leaves view before 1.5s
+            if (viewTimerRef.current) {
+              clearTimeout(viewTimerRef.current);
+              viewTimerRef.current = null;
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of tile is visible
+    );
+
+    observer.observe(tile);
+
+    return () => {
+      observer.disconnect();
+      if (viewTimerRef.current) {
+        clearTimeout(viewTimerRef.current);
+      }
+    };
+  }, [prefetchImages, prefetchStatus]);
+
   const handleReadMore = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Hack: Set body to white immediately to prevent black flash during router unmount
-    document.body.style.backgroundColor = '#ffffff'; 
-    if (!transitioning) setTransitioning(true);
+    // Hack: Set body to black immediately to prevent white flash during router unmount
+    document.body.style.backgroundColor = '#000000'; 
+
+    if (prefetchStatus === 'loaded') {
+      // Images ready - immediate transition
+      setTransitioning(true);
+    } else if (prefetchStatus === 'prefetching') {
+      // Still loading - show loading state on button, wait for completion
+      setIsButtonLoading(true);
+      pendingNavigationRef.current = true;
+    } else {
+      // Haven't started prefetching - start now and show loading
+      setIsButtonLoading(true);
+      pendingNavigationRef.current = true;
+      prefetchImages();
+    }
   };
 
   const onHeroSlideComplete = () => {
@@ -39,6 +132,7 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
 
   return (
     <motion.div
+      ref={tileRef}
       id={id}
       className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group ${transitioning ? 'bg-white z-20' : 'bg-black'}`}
       initial={{ opacity: 0 }}
@@ -77,6 +171,8 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
               isWidescreen={true}
               className="!px-8 !py-3" // Ensure padding matches if needed
               variant={project.id === 'the-nook' ? 'inverse' : 'default'}
+              isLoading={isButtonLoading}
+              loadingProgress={isButtonLoading ? loadProgress : undefined}
             />
           </motion.div>
         </div>
@@ -129,6 +225,8 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
               onClick={handleReadMore} 
               isWidescreen={false}
               variant={project.id === 'the-nook' ? 'inverse' : 'default'}
+              isLoading={isButtonLoading}
+              loadingProgress={isButtonLoading ? loadProgress : undefined}
             />
           </motion.div>
         </div>
@@ -149,6 +247,90 @@ const GraduateProjectsPage: React.FC = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Images to preload for this page
+  const imagesToPreload = useMemo(() => [
+    '/graduate-projects/grad-hero.jpg',
+    '/graduate-projects/momentum-hub/momentum-tile.jpg',
+    '/graduate-projects/nook/nook-tile.jpg',
+    '/graduate-projects/wellness-bazaar/wellness-tile.jpg',
+  ], []);
+
+  // Preload images with 4 second timeout
+  const { loaded: imagesLoaded, progress } = useImagePreloader(imagesToPreload, true, { timeout: 4000 });
+
+  // ============================================
+  // Phase State Machine for Scroll Animation
+  // ============================================
+  // Phases: 'preloading' -> 'revealing' -> 'ready'
+  // Scroll indicator only shows when phase is 'ready' and user hasn't scrolled
+  type PagePhase = 'preloading' | 'revealing' | 'ready';
+  const [phase, setPhase] = useState<PagePhase>('preloading');
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+  // Phase transition: preloading -> revealing (when images loaded)
+  useEffect(() => {
+    if (imagesLoaded && phase === 'preloading') {
+      setPhase('revealing');
+    }
+  }, [imagesLoaded, phase]);
+
+  // Phase transition: revealing -> ready (after content entrance animation)
+  useEffect(() => {
+    if (phase === 'revealing') {
+      // Wait for content entrance animation (600ms) + small buffer
+      const timer = setTimeout(() => {
+        setPhase('ready');
+        setShowScrollIndicator(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [phase]);
+
+  // Handle scroll to hide indicator (only for this page's vertical scroll)
+  useEffect(() => {
+    if (phase !== 'ready' || !showScrollIndicator) return;
+
+    const handleScroll = () => {
+      if (showScrollIndicator) {
+        setShowScrollIndicator(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [phase, showScrollIndicator]);
+
+  // Inject CSS keyframes for scroll indicator pulse animation (scoped to this page)
+  useEffect(() => {
+    const styleId = 'graduate-scroll-indicator-style';
+    // Only inject if not already present
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        @keyframes graduate-scroll-pulse {
+          0%, 100% {
+            box-shadow: 0 0 8px rgba(238, 125, 48, 0.4), 0 0 16px rgba(238, 125, 48, 0.2);
+          }
+          50% {
+            box-shadow: 0 0 16px rgba(238, 125, 48, 0.6), 0 0 32px rgba(238, 125, 48, 0.4);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    return () => {
+      // Clean up on unmount
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
+    };
+  }, []);
+  // ============================================
+  // End Phase State Machine
+  // ============================================
+
   // Snap-assist hook for auto-centering project tiles
   // useSnapAssistSmooth({
   //   containerSelector: '.projects-container',
@@ -168,7 +350,8 @@ const GraduateProjectsPage: React.FC = () => {
       description: 'A dynamic community center designed to foster innovation, collaboration, and sustainable urban development through adaptive architecture.',
       color: 'from-orange-600 to-red-600',
       image: '/graduate-projects/momentum-hub/momentum-tile.jpg',
-      needsDarkHeader: false // Dark tile image - needs white icons
+      needsDarkHeader: false, // Dark tile image - needs white icons
+      prefetchImages: ['/graduate-projects/momentum-hub/momentum-hero.jpg']
     },
     {
       id: 'the-nook',
@@ -177,7 +360,8 @@ const GraduateProjectsPage: React.FC = () => {
       description: 'An exploration of intimate architectural spaces that create moments of reflection and connection within urban environments.',
       color: 'from-purple-600 to-indigo-600',
       image: '/graduate-projects/nook/nook-tile.jpg',
-      needsDarkHeader: false // Dark tile image - needs white icons
+      needsDarkHeader: false, // Dark tile image - needs white icons
+      prefetchImages: ['/graduate-projects/nook/nook-hero.jpg']
     },
     {
       id: 'wellness-bazaar',
@@ -186,7 +370,8 @@ const GraduateProjectsPage: React.FC = () => {
       description: 'A comprehensive wellness complex integrating healthcare, community services, and sustainable design principles.',
       color: 'from-teal-600 to-green-600',
       image: '/graduate-projects/wellness-bazaar/wellness-tile.jpg',
-      needsDarkHeader: false // Dark tile image - needs white icons
+      needsDarkHeader: false, // Dark tile image - needs white icons
+      prefetchImages: ['/graduate-projects/wellness-bazaar/wellness-hero.jpg']
     }
   ];
 
@@ -306,6 +491,13 @@ const GraduateProjectsPage: React.FC = () => {
 
   return (
     <div className={`min-h-screen relative overflow-hidden ${isHorizontalScrollMode ? 'bg-white' : 'bg-black'}`}>
+
+      {/* Image Preloader */}
+      <AnimatePresence>
+        {!imagesLoaded && (
+          <PageLoader progress={progress} message="Loading projects..." variant="progress" />
+        )}
+      </AnimatePresence>
 
       {/* Navigation - Always visible */}
       <button
@@ -555,6 +747,93 @@ const GraduateProjectsPage: React.FC = () => {
       </main>
 
       
+      {/* Vertical Scroll Indicator - Only show on overview section when ready */}
+      <AnimatePresence>
+        {showScrollIndicator && !isHorizontalScrollMode && currentProject === 0 && (
+          <motion.div 
+            style={{ 
+              position: 'fixed',
+              bottom: '80px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
+              zIndex: 70
+            }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* SCROLL text */}
+            <span 
+              style={{ 
+                fontSize: '10px',
+                letterSpacing: '0.3em',
+                color: '#ee7d30',
+                fontWeight: 400
+              }}
+            >
+              SCROLL
+            </span>
+            
+            {/* Animated vertical line */}
+            <svg width="2" height="40" style={{ overflow: 'visible' }}>
+              <motion.line
+                x1="1"
+                y1="0"
+                x2="1"
+                y2="40"
+                stroke="#ee7d30"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: [0, 1, 1, 0] }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  times: [0, 0.4, 0.6, 1],
+                  ease: "easeInOut"
+                }}
+              />
+            </svg>
+            
+            {/* Vertical oval with animated dot */}
+            <motion.div
+              style={{
+                width: '18px',
+                height: '32px',
+                border: '1.5px solid #ee7d30',
+                borderRadius: '9px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                animation: 'graduate-scroll-pulse 2s ease-in-out infinite'
+              }}
+            >
+              <motion.div 
+                style={{
+                  width: '5px',
+                  height: '5px',
+                  backgroundColor: '#ee7d30',
+                  borderRadius: '50%'
+                }}
+                animate={{ y: [-7, 7, -7] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hamburger Menu Overlay */}
       <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>

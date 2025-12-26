@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
 import Header from '@/components/Header';
+import HorizontalScrollIndicator from '@/components/HorizontalScrollIndicator';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -50,9 +51,21 @@ export default function CongregationCenterPage() {
   const [showButton1Glow, setShowButton1Glow] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const hasScrolledRef = useRef(false);
   
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
+
+  // Set mounted state after hydration to prevent flash
+  useEffect(() => {
+    // Small delay to ensure everything is ready
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -64,12 +77,20 @@ export default function CongregationCenterPage() {
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
+    if (!isMounted) return; // Wait for mount
+
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
       if (containerRef.current) {
         // Convert vertical scroll to horizontal scroll
         containerRef.current.scrollLeft += e.deltaY;
+
+        // Hide indicator on first scroll
+        if (!hasScrolledRef.current) {
+          hasScrolledRef.current = true;
+          setShowScrollIndicator(false);
+        }
       }
     };
 
@@ -78,7 +99,14 @@ export default function CongregationCenterPage() {
       container.addEventListener('wheel', handleWheel, { passive: false });
       return () => container.removeEventListener('wheel', handleWheel);
     }
-  }, []);
+  }, [isMounted]);
+
+  // Show indicator after initial animation
+  const onAnimationComplete = () => {
+    if (!hasScrolledRef.current) {
+      setTimeout(() => setShowScrollIndicator(true), 500);
+    }
+  };
 
   // Progressive disclosure effect: Show Button 1 glow after 3-4 seconds
   useEffect(() => {
@@ -153,11 +181,23 @@ export default function CongregationCenterPage() {
 
   return (
     <div className="relative h-screen overflow-hidden bg-white">
-      <main className="relative h-screen overflow-hidden bg-white">
+      <AnimatePresence>
+        {isMounted ? (
+            <motion.main 
+              className="relative h-screen overflow-hidden bg-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              onAnimationComplete={onAnimationComplete}
+            >
         {/* Header with dark icons for light background */}
         <Header textColorClass="text-black" logoVariant="dark" />
         
+        {/* Scroll Indicator */}
+        <HorizontalScrollIndicator show={showScrollIndicator} />
+        
         {/* Main Content Container with horizontal scrolling */}
+
         <div 
           ref={containerRef}
           className="h-screen w-full overflow-x-auto overflow-y-hidden"
@@ -595,7 +635,9 @@ export default function CongregationCenterPage() {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
+        ) : null}
+      </AnimatePresence>
       
       {/* Mobile Full-Screen Content Overlay with Ken Burns Animation */}
       <AnimatePresence>

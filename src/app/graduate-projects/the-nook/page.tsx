@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
 import Header from '@/components/Header';
+import HorizontalScrollIndicator from '@/components/HorizontalScrollIndicator';
+
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -25,12 +27,25 @@ const NookPage: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileOverlay, setShowMobileOverlay] = useState(false);
   const [activeImage, setActiveImage] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const hasScrolledRef = useRef(false);
   
   // Image bounds for JavaScript-calculated positioning (desktop)
   const [imageBounds, setImageBounds] = useState({ left: 0, top: 0, width: 0, height: 0 });
   
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const onAnimationComplete = () => {
+    if (!hasScrolledRef.current) {
+      setShowScrollIndicator(true);
+    }
+  };
 
   // Detect mobile viewport
   useEffect(() => {
@@ -194,28 +209,42 @@ const NookPage: React.FC = () => {
 
   // Handle horizontal scrolling with mouse wheel
   useEffect(() => {
+    if (!isMounted) return;
+    const container = containerRef.current;
+    if (!container) return;
+    
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      if (containerRef.current) {
-        // Convert vertical scroll to horizontal scroll
-        containerRef.current.scrollLeft += e.deltaY;
+      if (!hasScrolledRef.current) {
+        setShowScrollIndicator(false);
+        hasScrolledRef.current = true;
       }
+
+      // Convert vertical scroll to horizontal scroll
+      container.scrollLeft += e.deltaY;
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false });
-      return () => container.removeEventListener('wheel', handleWheel);
-    }
-  }, []);
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [isMounted]);
 
 
   return (
     <div className="relative h-screen overflow-hidden bg-black">
-      <main className="relative h-screen overflow-hidden bg-black">
-        {/* Header with dark icons for light background */}
-        <Header textColorClass="text-black" logoVariant="dark" />
+      <AnimatePresence>
+        {isMounted && (
+          <motion.main 
+            className="relative h-screen overflow-hidden bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            onAnimationComplete={onAnimationComplete}
+          >
+            <HorizontalScrollIndicator show={showScrollIndicator} colorScheme="dark" />
+
+            {/* Header with dark icons for light background */}
+            <Header textColorClass="text-black" logoVariant="dark" />
         
         {/* Main Content Container with horizontal scrolling */}
         <div 
@@ -386,7 +415,9 @@ const NookPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
+        )}
+      </AnimatePresence>
       
       {/* Mobile Ken Burns Full-Screen Overlay */}
       <AnimatePresence>
@@ -486,6 +517,7 @@ const NookPage: React.FC = () => {
           />
         </div>
       )}
+
     </div>
   );
 };

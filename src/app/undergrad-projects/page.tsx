@@ -1,54 +1,139 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 // import { useSnapAssistSmooth } from '@/hooks/useSnapAssistSmooth';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
+import { useImagePreloader } from '@/hooks/useImagePreloader';
 import dynamic from 'next/dynamic';
 import ViewProjectButton from '@/components/ViewProjectButton';
 import CurtainButton from '@/components/CurtainButton';
 import NavigationMenu from '@/components/NavigationMenu';
 import PortfolioIconAnimated from '@/components/animations/PortfolioIconAnimated';
+import PageLoader from '@/components/PageLoader';
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
-// Generic Project Tile with transition animation
+// Generic Project Tile with transition animation and tile-aware prefetching
 const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }> = ({ project, isWidescreen, id }) => {
   const [transitioning, setTransitioning] = useState(false);
   const router = useRouter();
+  const tileRef = useRef<HTMLDivElement>(null);
+  const viewTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Prefetch state
+  const [prefetchStatus, setPrefetchStatus] = useState<'idle' | 'prefetching' | 'loaded'>('idle');
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const pendingNavigationRef = useRef(false);
 
-  // Prefetch destination for smoother transition
+  // Prefetch destination route for smoother transition
   useEffect(() => {
     router.prefetch(`/undergrad-projects/${project.id}`);
   }, [router, project.id]);
 
+  // Function to prefetch project images
+  const prefetchImages = useCallback(() => {
+    if (prefetchStatus !== 'idle' || !project.prefetchImages?.length) {
+      return;
+    }
+
+    setPrefetchStatus('prefetching');
+    setLoadProgress(0);
+
+    const images = project.prefetchImages;
+    let loadedCount = 0;
+
+    images.forEach((src: string) => {
+      const img = new window.Image();
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        const progress = Math.round((loadedCount / images.length) * 100);
+        setLoadProgress(progress);
+
+        if (loadedCount >= images.length) {
+          setPrefetchStatus('loaded');
+          // If user clicked while loading, trigger transition now
+          if (pendingNavigationRef.current) {
+            pendingNavigationRef.current = false;
+            setIsButtonLoading(false);
+            setTransitioning(true);
+          }
+        }
+      };
+      img.src = src;
+    });
+  }, [prefetchStatus, project.prefetchImages]);
+
+  // IntersectionObserver to detect when tile is in view
+  useEffect(() => {
+    const tile = tileRef.current;
+    if (!tile) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Start 1.5s timer when tile becomes visible
+            if (!viewTimerRef.current && prefetchStatus === 'idle') {
+              viewTimerRef.current = setTimeout(() => {
+                prefetchImages();
+              }, 1500);
+            }
+          } else {
+            // Clear timer if tile leaves view before 1.5s
+            if (viewTimerRef.current) {
+              clearTimeout(viewTimerRef.current);
+              viewTimerRef.current = null;
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of tile is visible
+    );
+
+    observer.observe(tile);
+
+    return () => {
+      observer.disconnect();
+      if (viewTimerRef.current) {
+        clearTimeout(viewTimerRef.current);
+      }
+    };
+  }, [prefetchImages, prefetchStatus]);
+
   const handleReadMore = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Hack: Set body to white immediately to prevent black flash during router unmount
-    document.body.style.backgroundColor = '#ffffff'; 
-    if (!transitioning) setTransitioning(true);
+    
+    // Set body to white immediately to prevent black flash
+    document.body.style.backgroundColor = '#ffffff';
+
+    if (prefetchStatus === 'loaded') {
+      // Images ready - immediate transition
+      setTransitioning(true);
+    } else if (prefetchStatus === 'prefetching') {
+      // Still loading - show loading state on button, wait for completion
+      setIsButtonLoading(true);
+      pendingNavigationRef.current = true;
+    } else {
+      // Haven't started prefetching - start now and show loading
+      setIsButtonLoading(true);
+      pendingNavigationRef.current = true;
+      prefetchImages();
+    }
   };
 
   const onHeroSlideComplete = () => {
-    // Navigate immediately - no fade out
+    // Navigate after transition animation completes
     router.push(`/undergrad-projects/${project.id}`);
-  };
-
-  const onTextFadeComplete = () => {
-    // After text fades, start the hero slide
-    if (transitioning) {
-      // Small delay to ensure text fade is complete
-      setTimeout(() => {
-        // The hero slide will trigger onAnimationComplete
-      }, 100);
-    }
   };
 
   return (
     <motion.div
+      ref={tileRef}
       id={id}
       className={`project-card relative h-screen w-full ${isWidescreen ? 'flex' : 'overflow-visible'} cursor-pointer group ${transitioning ? 'bg-white z-20' : 'bg-black'}`}
       initial={{ opacity: 0 }}
@@ -78,15 +163,17 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
           {/* READ MORE Button */}
           <motion.div
             className="absolute bottom-16 sm:bottom-8 right-6 sm:right-8 z-10"
-            initial={{ opacity: 0, y: 10 }} // Match button entrance
+            initial={{ opacity: 0, y: 10 }}
             animate={transitioning ? { opacity: 0, y: -6 } : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <CurtainButton 
               onClick={handleReadMore} 
               isWidescreen={true}
-              className="!px-8 !py-3" // Ensure padding matches if needed
+              className="!px-8 !py-3"
               variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
+              isLoading={isButtonLoading}
+              loadingProgress={isButtonLoading ? loadProgress : undefined}
             />
           </motion.div>
         </div>
@@ -102,8 +189,6 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
           animate={transitioning ? { x: '-100vw' } : { x: '0vw' }}
           transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
           onAnimationComplete={() => transitioning && onHeroSlideComplete()}
-          onError={(e) => {/* Image load error */}}
-          onLoad={() => {/* Image loaded successfully */}}
         />
         {!isWidescreen && <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />}
       </div>
@@ -139,6 +224,8 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
               onClick={handleReadMore} 
               isWidescreen={false}
               variant={project.id === 'border-crossing' ? 'inverse' : 'default'}
+              isLoading={isButtonLoading}
+              loadingProgress={isButtonLoading ? loadProgress : undefined}
             />
           </motion.div>
         </div>
@@ -146,6 +233,7 @@ const ProjectTile: React.FC<{ project: any; isWidescreen: boolean; id?: string }
     </motion.div>
   );
 };
+
 
 const UndergradProjectsPage: React.FC = () => {
   const router = useRouter();
@@ -164,6 +252,90 @@ const UndergradProjectsPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Images to preload for this page
+  const imagesToPreload = useMemo(() => [
+    '/undergrad-projects/main-tile.jpg',
+    '/undergrad-projects/site-analysis/site-tile.jpg',
+    '/undergrad-projects/border-crossing/border-tile.jpg',
+    '/undergrad-projects/congregation-center/congregation-tile.jpg',
+  ], []);
+
+  // Preload images with 4 second timeout
+  const { loaded: imagesLoaded, progress } = useImagePreloader(imagesToPreload, true, { timeout: 4000 });
+
+  // ============================================
+  // Phase State Machine for Scroll Animation
+  // ============================================
+  // Phases: 'preloading' -> 'revealing' -> 'ready'
+  // Scroll indicator only shows when phase is 'ready' and user hasn't scrolled
+  type PagePhase = 'preloading' | 'revealing' | 'ready';
+  const [phase, setPhase] = useState<PagePhase>('preloading');
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+  // Phase transition: preloading -> revealing (when images loaded)
+  useEffect(() => {
+    if (imagesLoaded && phase === 'preloading') {
+      setPhase('revealing');
+    }
+  }, [imagesLoaded, phase]);
+
+  // Phase transition: revealing -> ready (after content entrance animation)
+  useEffect(() => {
+    if (phase === 'revealing') {
+      // Wait for content entrance animation (600ms) + small buffer
+      const timer = setTimeout(() => {
+        setPhase('ready');
+        setShowScrollIndicator(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [phase]);
+
+  // Handle scroll to hide indicator (only for this page's vertical scroll)
+  useEffect(() => {
+    if (phase !== 'ready' || !showScrollIndicator) return;
+
+    const handleScroll = () => {
+      if (showScrollIndicator) {
+        setShowScrollIndicator(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [phase, showScrollIndicator]);
+
+  // Inject CSS keyframes for scroll indicator pulse animation (scoped to this page)
+  useEffect(() => {
+    const styleId = 'undergrad-scroll-indicator-style';
+    // Only inject if not already present
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        @keyframes undergrad-scroll-pulse {
+          0%, 100% {
+            box-shadow: 0 0 8px rgba(238, 125, 48, 0.4), 0 0 16px rgba(238, 125, 48, 0.2);
+          }
+          50% {
+            box-shadow: 0 0 16px rgba(238, 125, 48, 0.6), 0 0 32px rgba(238, 125, 48, 0.4);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    return () => {
+      // Clean up on unmount
+      const existingStyle = document.getElementById(styleId);
+      if (existingStyle) {
+        document.head.removeChild(existingStyle);
+      }
+    };
+  }, []);
+  // ============================================
+  // End Phase State Machine
+  // ============================================
 
   // Snap-assist hook for auto-centering project tiles
   // useSnapAssistSmooth({
@@ -185,7 +357,12 @@ const UndergradProjectsPage: React.FC = () => {
       color: 'from-emerald-600 to-teal-600',
       image: '/undergrad-projects/site-analysis/site-tile.jpg',
       detailImage: '/undergrad-projects/site-analysis/site-analysis.jpg',
-      needsDarkHeader: false // Dark background - needs white icons
+      needsDarkHeader: false, // Dark background - needs white icons
+      prefetchImages: [
+        '/undergrad-projects/site-analysis/site-analysis.jpg',
+        '/undergrad-projects/site-analysis/site-analysis-l1.jpg',
+        '/undergrad-projects/site-analysis/site-analysis-l2.jpg',
+      ]
     },
     {
       id: 'border-crossing',
@@ -194,7 +371,10 @@ const UndergradProjectsPage: React.FC = () => {
       description: 'Exploration of architectural thresholds, spatial transitions, and the design of boundary conditions that define and connect spaces.',
       color: 'from-blue-600 to-indigo-600',
       image: '/undergrad-projects/border-crossing/border-tile.jpg',
-      needsDarkHeader: true // Light/white background at top - needs black icons
+      needsDarkHeader: true, // Light/white background at top - needs black icons
+      prefetchImages: [
+        '/undergrad-projects/border-crossing/border-crossing-hero.jpg',
+      ]
     },
     {
       id: 'congregation-center',
@@ -203,7 +383,15 @@ const UndergradProjectsPage: React.FC = () => {
       description: 'Design for communal spaces that foster connection, facilitate gatherings, and create meaningful social interactions.',
       color: 'from-purple-600 to-pink-600',
       image: '/undergrad-projects/congregation-center/congregation-tile.jpg',
-      needsDarkHeader: true // Light background (white left side) - needs black icons
+      needsDarkHeader: true, // Light background (white left side) - needs black icons
+      prefetchImages: [
+        '/undergrad-projects/congregation-center/congregation-hero.jpg',
+        '/undergrad-projects/congregation-center/c2.jpg',
+        '/undergrad-projects/congregation-center/c3.jpg',
+        '/undergrad-projects/congregation-center/c4.jpg',
+        '/undergrad-projects/congregation-center/c5.jpg',
+        '/undergrad-projects/congregation-center/c6.jpg',
+      ]
     }
   ];
 
@@ -326,6 +514,13 @@ const UndergradProjectsPage: React.FC = () => {
 
   return (
     <div className={`min-h-screen relative overflow-hidden ${isHorizontalScrollMode ? 'bg-white' : 'bg-black'}`}>
+
+      {/* Image Preloader */}
+      <AnimatePresence>
+        {!imagesLoaded && (
+          <PageLoader progress={progress} message="Loading projects..." variant="progress" />
+        )}
+      </AnimatePresence>
 
       {/* Navigation - Always visible */}
       <button
@@ -578,6 +773,93 @@ const UndergradProjectsPage: React.FC = () => {
       </main>
 
       
+      {/* Vertical Scroll Indicator - Only show on overview section when ready */}
+      <AnimatePresence>
+        {showScrollIndicator && !isHorizontalScrollMode && currentProject === 0 && (
+          <motion.div 
+            style={{ 
+              position: 'fixed',
+              bottom: '80px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '12px',
+              zIndex: 70
+            }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* SCROLL text */}
+            <span 
+              style={{ 
+                fontSize: '10px',
+                letterSpacing: '0.3em',
+                color: '#ee7d30',
+                fontWeight: 400
+              }}
+            >
+              SCROLL
+            </span>
+            
+            {/* Animated vertical line */}
+            <svg width="2" height="40" style={{ overflow: 'visible' }}>
+              <motion.line
+                x1="1"
+                y1="0"
+                x2="1"
+                y2="40"
+                stroke="#ee7d30"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: [0, 1, 1, 0] }}
+                transition={{
+                  duration: 2.5,
+                  repeat: Infinity,
+                  times: [0, 0.4, 0.6, 1],
+                  ease: "easeInOut"
+                }}
+              />
+            </svg>
+            
+            {/* Vertical oval with animated dot */}
+            <motion.div
+              style={{
+                width: '18px',
+                height: '32px',
+                border: '1.5px solid #ee7d30',
+                borderRadius: '9px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                animation: 'undergrad-scroll-pulse 2s ease-in-out infinite'
+              }}
+            >
+              <motion.div 
+                style={{
+                  width: '5px',
+                  height: '5px',
+                  backgroundColor: '#ee7d30',
+                  borderRadius: '50%'
+                }}
+                animate={{ y: [-7, 7, -7] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hamburger Menu Overlay */}
       <NavigationMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>

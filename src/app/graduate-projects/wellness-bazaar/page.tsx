@@ -8,6 +8,8 @@ import dynamic from 'next/dynamic';
 import { useLogoNavigation } from '@/hooks/useLogoNavigation';
 import NavigationMenu from '@/components/NavigationMenu';
 import Header from '@/components/Header';
+import HorizontalScrollIndicator from '@/components/HorizontalScrollIndicator';
+
 
 const HELoadingComponent = dynamic(() => import('@/components/HE_Loading_Component'), { ssr: false });
 
@@ -60,9 +62,23 @@ const WellnessBazaarPage: React.FC = () => {
   const [isHD, setIsHD] = useState(false);
   const [showMobileOverlay, setShowMobileOverlay] = useState(false);
   const [mobileActiveContent, setMobileActiveContent] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const hasScrolledRef = useRef(false);
   
   // Use standardized logo navigation hook
   const { showLoading, handleLogoClick } = useLogoNavigation();
+
+  // Handle hydration to prevent flicker
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const onAnimationComplete = () => {
+    if (!hasScrolledRef.current) {
+      setShowScrollIndicator(true);
+    }
+  };
 
   // Detect mobile and HD viewport
   useEffect(() => {
@@ -115,21 +131,25 @@ const WellnessBazaarPage: React.FC = () => {
 
   // Handle mouse wheel scrolling for horizontal movement
   useEffect(() => {
+    if (!isMounted) return;
+    const container = containerRef.current;
+    if (!container) return;
+    
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      if (containerRef.current) {
-        // Convert vertical scroll to horizontal scroll
-        containerRef.current.scrollLeft += e.deltaY;
+      if (!hasScrolledRef.current) {
+        setShowScrollIndicator(false);
+        hasScrolledRef.current = true;
       }
+
+      // Convert vertical scroll to horizontal scroll
+      container.scrollLeft += e.deltaY;
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel, { passive: false });
-      return () => container.removeEventListener('wheel', handleWheel);
-    }
-  }, []);
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [isMounted]);
 
   // Progressive disclosure effect: Show Button 1 glow after 3-4 seconds
   useEffect(() => {
@@ -214,9 +234,19 @@ const WellnessBazaarPage: React.FC = () => {
 
   return (
     <div className="relative h-screen overflow-hidden bg-black">
-      <main className="relative h-screen overflow-hidden bg-black">
-        {/* Header with dark icons for light background */}
-        <Header textColorClass="text-black" logoVariant="dark" />
+      <AnimatePresence>
+        {isMounted && (
+          <motion.main 
+            className="relative h-screen overflow-hidden bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            onAnimationComplete={onAnimationComplete}
+          >
+            <HorizontalScrollIndicator show={showScrollIndicator} colorScheme="dark" />
+
+            {/* Header with dark icons for light background */}
+            <Header textColorClass="text-black" logoVariant="dark" />
 
         {/* Main Content Container with horizontal scrolling */}
         <div 
@@ -735,7 +765,9 @@ const WellnessBazaarPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
+        )}
+      </AnimatePresence>
 
 
       {/* Mobile Ken Burns Full-Screen Overlay */}
@@ -861,6 +893,7 @@ const WellnessBazaarPage: React.FC = () => {
           />
         </div>
       )}
+
     </div>
   );
 };
