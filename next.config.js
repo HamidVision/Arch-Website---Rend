@@ -1,15 +1,16 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const isNetlify = process.env.NETLIFY === 'true';
+const isVercel = process.env.VERCEL === '1';
 
-// Use basePath only for GitHub Pages, not for Netlify
-const basePath = (isProd && !isNetlify) ? '/Arch-Website---Rend' : '';
+// Use basePath only for GitHub Pages, not for Netlify or Vercel
+const basePath = (isProd && !isNetlify && !isVercel) ? '/Arch-Website---Rend' : '';
 
 const nextConfig = {
   // Static export configuration
   trailingSlash: true,
   basePath: basePath,
-  assetPrefix: (isProd && !isNetlify) ? `${basePath}/` : '',
+  assetPrefix: (isProd && !isNetlify && !isVercel) ? `${basePath}/` : '',
   
   // Static export for deployment
   output: 'export',

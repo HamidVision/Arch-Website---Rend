@@ -1,0 +1,37 @@
+# Vercel Ignore File
+# Files and directories to exclude from deployment
+
+# Development files
+.env.local
+.env.development
+.env.smtp.example
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Development scripts
+scripts/
+
+# Temporary files
+Temporary/
+*.log
+build_log.txt
+
+# Other platform configs
+netlify.toml
+.netlifyignore
