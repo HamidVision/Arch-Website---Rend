@@ -8,33 +8,48 @@ import DisableRightClick from '@/components/DisableRightClick';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Hamid Esmaeillou | Architecture Portfolio',
-  description: 'Professional architecture portfolio showcasing sustainable design projects, computational design, and research-driven innovation by Hamid Esmaeillou.',
-  keywords: 'architecture, design, sustainability, portfolio, research, Hamid Esmaeillou, computational design',
-  authors: [{ name: 'Hamid Esmaeillou' }],
-  robots: 'index, follow',
   metadataBase: new URL('https://archml.io'),
+  title: {
+    default: 'Hamid Esmaeillou | Architecture & Machine Learning',
+    template: '%s | Hamid Esmaeillou'
+  },
+  description: 'Architecture portfolio showcasing sustainable design projects and research in machine learning, computer vision, and their applications in architectural design and urban planning.',
+  keywords: [
+    'architecture',
+    'machine learning',
+    'computer vision',
+    'AI in architecture',
+    'sustainable design',
+    'architectural research',
+    'computational design',
+    'urban design',
+    'Hamid Esmaeillou'
+  ],
+  authors: [{ name: 'Hamid Esmaeillou' }],
+  creator: 'Hamid Esmaeillou',
+  robots: {
+    index: true,
+    follow: true
+  },
   openGraph: {
-    title: 'Hamid Esmaeillou | Architecture Portfolio',
-    description: 'Explore architectural projects showcasing sustainable design, computational innovation, and research-driven approaches.',
-    url: 'https://archml.io',
-    siteName: 'Hamid Esmaeillou Architecture',
-    images: [
-      {
-        url: '/images/hero.jpg',
-        width: 1920,
-        height: 1080,
-        alt: 'Hamid Esmaeillou Architecture Portfolio',
-      },
-    ],
-    locale: 'en_US',
     type: 'website',
+    locale: 'en_US',
+    url: 'https://archml.io',
+    siteName: 'Hamid Esmaeillou | ArchML',
+    title: 'Hamid Esmaeillou | Architecture & Machine Learning',
+    description: 'Exploring the intersection of architecture, machine learning, and computer vision through innovative design projects and research.',
+    images: [{
+      url: '/images/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Hamid Esmaeillou - Architecture & Machine Learning Portfolio'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hamid Esmaeillou | Architecture Portfolio',
-    description: 'Explore architectural projects showcasing sustainable design and computational innovation.',
-    images: ['/images/hero.jpg'],
+    title: 'Hamid Esmaeillou | Architecture & ML Research',
+    description: 'Architecture portfolio featuring machine learning and computer vision applications in design',
+    images: ['/images/og-image.jpg']
   },
   icons: {
     icon: '/brand/logo-HE-optimized.svg',
@@ -79,10 +94,13 @@ export default function RootLayout({
             <h1 style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 300, letterSpacing: '0.1em' }}>
               HAMID ESMAEILLOU
             </h1>
-            <p style={{ fontSize: '1rem', color: '#888', marginBottom: '2rem' }}>
-              Architecture & Design Portfolio
+            <p style={{ fontSize: '1rem', color: '#888', marginBottom: '0.5rem' }}>
+              Architecture & Machine Learning
             </p>
-            <p style={{ fontSize: '0.875rem', color: '#666', maxWidth: '400px', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.875rem', color: '#666', marginBottom: '2rem' }}>
+              Exploring AI applications in architectural design
+            </p>
+            <p style={{ fontSize: '0.75rem', color: '#555', maxWidth: '400px', lineHeight: 1.6 }}>
               JavaScript is required to view this interactive portfolio. 
               Please enable JavaScript in your browser settings.
             </p>

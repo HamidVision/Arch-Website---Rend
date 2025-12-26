@@ -267,8 +267,8 @@ export default function HomeContent() {
             variant="splash"
             timeoutMs={2000}
             logoUrl="/brand/logo-loading.png"
-            subtitle="Architecture & Design Studio"
-            tagline="Creating spaces that inspire"
+            subtitle="Architecture & Machine Learning"
+            tagline="Designing with intelligence"
           />
         </div>
       )}

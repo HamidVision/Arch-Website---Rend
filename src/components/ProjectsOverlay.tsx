@@ -12,6 +12,7 @@ interface ProjectsOverlayProps {
 const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showScrollHint, setShowScrollHint] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -147,6 +148,11 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           const scrollPosition = container.scrollLeft;
+          
+          // Hide scroll hint after user scrolls
+          if (scrollPosition > 50) {
+            setShowScrollHint(false);
+          }
           
           // Get actual tile width from DOM for accurate calculation
           const firstTile = container.querySelector('[data-tile]') as HTMLElement;
@@ -332,6 +338,26 @@ const ProjectsOverlay: React.FC<ProjectsOverlayProps> = ({ isZoomed, onClose }) 
               )}
             </div>
           </div>
+
+          {/* Scroll Hint Indicator - Only show when not scrolled */}
+          {!isZoomed && showScrollHint && (
+            <motion.div 
+              className="fixed right-8 top-1/2 -translate-y-1/2 z-[70]"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: [0, 8, 0] }}
+              transition={{ 
+                opacity: { delay: 1, duration: 0.5 },
+                x: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+              }}
+            >
+              <div className="flex items-center gap-2 text-black/50 text-xs tracking-wider">
+                <span>SCROLL</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </motion.div>
+          )}
 
           {/* Progress Bar - Only show when not zoomed */}
           {!isZoomed && (

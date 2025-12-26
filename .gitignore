@@ -90,3 +90,6 @@ external-assests/**/*.psd
 
 # Cleanup
 Temporary/
+
+# Private documentation (contains API keys and service configs)
+website_services.md
